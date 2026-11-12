@@ -23,7 +23,7 @@ canvas{display:block;width:100%;height:100%;min-height:620px;touch-action:none}.
 <main>
 <aside>
 <h1>Tentakelring 3D</h1>
-<p class="sub">Parametrische Vorschau · Stand v0.4</p>
+<p class="sub">Parametrische Vorschau · Stand v0.5</p>
 <h2>Tentakel</h2>
 <div class="control">
 <div class="label"><label for="forward">Mitläufige Tentakel</label><strong id="forwardOut">2</strong></div>
@@ -61,6 +61,7 @@ canvas{display:block;width:100%;height:100%;min-height:620px;touch-action:none}.
 <input id="taper" type="range" min="0.5" max="0.95" step="0.01" value="0.75">
 <div class="scale"><span>ab halber Runde</span><span>letzte 5 %</span></div>
 </div>
+<label class="check"><input id="showBase" type="checkbox" checked> Bodenplatte anzeigen</label>
 <label class="check"><input id="showRing" type="checkbox" checked> Referenzring anzeigen</label>
 <label class="check"><input id="showCups" type="checkbox"> Saugnäpfe anzeigen</label>
 <h2>Referenzring</h2>
@@ -72,7 +73,7 @@ Randhöhe 2,90 mm · Grundplatte 1,35 mm
 </div>
 <div class="note">
 <b>Geometrie</b><br>
-Je 0–3 mitläufige (türkise) und gegenläufige (korallfarbene) Tentakel. Die Startpunkte jeder Gruppe liegen gleichmäßig auf dem Kreis. Der Versatz verdreht die gegenläufige Startgruppe gegenüber der mitläufigen. Die Starthöhe entspricht dem negativen Durchmesser. Die Anzahl der Umdrehungen ist einstellbar; die Spitzen laufen im letzten Abschnitt aus. Die Körper werden am Innenzylinder Ø 25,30 mm beschnitten und mit einer Fläche auf dessen Wand geschlossen.
+Je 0–3 mitläufige (türkise) und gegenläufige (korallfarbene) Tentakel. Die Startpunkte jeder Gruppe liegen gleichmäßig auf dem Kreis. Der Versatz verdreht die gegenläufige Startgruppe gegenüber der mitläufigen. Die Starthöhe entspricht dem negativen Durchmesser. Die Anzahl der Umdrehungen ist einstellbar; die Spitzen laufen im letzten Abschnitt aus. Die Körper werden am Innenzylinder Ø 25,30 mm beschnitten und mit einer Fläche auf dessen Wand geschlossen. Unterhalb der Bodenplatten-Unterkante (z = 0 mm) werden sie entfernt und mit einer ebenen Fläche geschlossen.
 </div>
 <div class="buttons"><button id="reset">Parameter zurücksetzen</button><button id="viewReset">Ansicht zurücksetzen</button></div>
 </aside>
@@ -86,7 +87,7 @@ Je 0–3 mitläufige (türkise) und gegenläufige (korallfarbene) Tentakel. Die 
 (function(){
 "use strict";
 const canvas=document.getElementById("view"),ctx=canvas.getContext("2d");
-const input={forward:document.getElementById("forward"),reverse:document.getElementById("reverse"),offset:document.getElementById("offset"),turns:document.getElementById("turns"),pitch:document.getElementById("pitch"),diam:document.getElementById("diam"),taper:document.getElementById("taper"),showRing:document.getElementById("showRing"),showCups:document.getElementById("showCups")};
+const input={forward:document.getElementById("forward"),reverse:document.getElementById("reverse"),offset:document.getElementById("offset"),turns:document.getElementById("turns"),pitch:document.getElementById("pitch"),diam:document.getElementById("diam"),taper:document.getElementById("taper"),showBase:document.getElementById("showBase"),showRing:document.getElementById("showRing"),showCups:document.getElementById("showCups")};
 const out={forward:document.getElementById("forwardOut"),reverse:document.getElementById("reverseOut"),offset:document.getElementById("offsetOut"),turns:document.getElementById("turnsOut"),startZ:document.getElementById("startZOut"),pitch:document.getElementById("pitchOut"),diam:document.getElementById("diamOut"),taper:document.getElementById("taperOut")};
 const base={outerD:27.85,wallID:25.30,holeD:14.90,totalH:4.25,baseH:1.35,rimH:2.90};
 let yaw=-0.55,elev=0.42,zoom=1,drag=null,raf=0;
@@ -97,7 +98,7 @@ const dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
 const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
 const unit=a=>{const n=Math.hypot(a[0],a[1],a[2])||1;return [a[0]/n,a[1]/n,a[2]/n]};
 const fmt=x=>Number(x).toFixed(2).replace(".",",");
-function params(){return {forward:+input.forward.value,reverse:+input.reverse.value,offset:+input.offset.value,turns:+input.turns.value,pitch:+input.pitch.value,diam:+input.diam.value,taper:+input.taper.value,showRing:input.showRing.checked};}
+function params(){return {forward:+input.forward.value,reverse:+input.reverse.value,offset:+input.offset.value,turns:+input.turns.value,pitch:+input.pitch.value,diam:+input.diam.value,taper:+input.taper.value,showBase:input.showBase.checked,showRing:input.showRing.checked};}
 function project(p,w,h,scale){
  const cy=Math.cos(yaw),sy=Math.sin(yaw),x=p[0]*cy-p[1]*sy,y=p[0]*sy+p[1]*cy;
  const ce=Math.cos(elev),se=Math.sin(elev);
@@ -121,12 +122,12 @@ function cylinderMesh(list,r,z0,z1,color,segments,inner){
   }
  }
 }
-function annulusMesh(list,ro,ri,z,color,segments){
+function annulusMesh(list,ro,ri,z,color,segments,flip=false){
  for(let i=0;i<segments;i++){
   const a=i*2*Math.PI/segments,b=(i+1)*2*Math.PI/segments;
   const p=(r,t)=>[r*Math.cos(t),r*Math.sin(t),z];
   const oa=p(ro,a),ob=p(ro,b),ib=p(ri,b),ia=p(ri,a);
-  tri(list,oa,ob,ib,color);tri(list,oa,ib,ia,color);
+  if(flip){tri(list,oa,ib,ob,color);tri(list,oa,ia,ib,color);}else{tri(list,oa,ob,ib,color);tri(list,oa,ib,ia,color);}
  }
 }
 function tentacles(p){
@@ -136,8 +137,91 @@ function tentacles(p){
  }
  return result;
 }
+function clipAtFloor(list,surface,color){
+ const eps=1e-9,vertices=new Map(),clipped=[],onPlane=new Map();
+ const key=v=>v.map(n=>Math.round(n*1e8)).join(",");
+ const snap=v=>{
+  if(Math.abs(v[2])>eps)return v;
+  const q=[v[0],v[1],0],k=key(q);
+  if(!vertices.has(k))vertices.set(k,q);
+  return vertices.get(k);
+ };
+ const intersection=(a,b)=>{
+  const t=a[2]/(a[2]-b[2]),v=[a[0]+t*(b[0]-a[0]),a[1]+t*(b[1]-a[1]),0];
+  const r=Math.hypot(v[0],v[1]),ri=base.wallID/2;
+  if(r<ri&&r>0){v[0]*=ri/r;v[1]*=ri/r;}
+  return snap(v);
+ };
+ const addTriangle=(a,b,c)=>{
+  if(Math.hypot(...cross(sub(b,a),sub(c,a)))<=1e-12)return;
+  clipped.push([a,b,c]);
+ };
+ for(const face of surface){
+  const poly=[];
+  for(let j=0;j<3;j++){
+   const a=snap(face[j]),b=snap(face[(j+1)%3]),insideA=a[2]>=0,insideB=b[2]>=0;
+   if(insideA)poly.push(a);
+   if(insideA!==insideB)poly.push(intersection(a,b));
+  }
+  const clean=poly.filter((v,i)=>key(v)!==key(poly[(i+poly.length-1)%poly.length]));
+  for(let j=1;j<clean.length-1;j++)addTriangle(clean[0],clean[j],clean[j+1]);
+ }
+ for(const face of clipped)for(let j=0;j<3;j++){
+  const a=face[j],b=face[(j+1)%3];
+  if(a[2]!==0||b[2]!==0)continue;
+  const ka=key(a),kb=key(b);if(ka===kb)continue;
+  const k=ka<kb?ka+"|"+kb:kb+"|"+ka;
+  if(onPlane.has(k))onPlane.delete(k);else onPlane.set(k,[a,b]);
+ }
+ const adjacency=new Map();
+ for(const [a,b] of onPlane.values()){
+  for(const [v,w] of [[a,b],[b,a]]){const k=key(v);if(!adjacency.has(k))adjacency.set(k,[]);adjacency.get(k).push(w);}
+ }
+ const edgeKey=(a,b)=>{const ka=key(a),kb=key(b);return ka<kb?ka+"|"+kb:kb+"|"+ka;};
+ const unused=new Map(onPlane);
+ let capCoordinates;
+ const cross2=(a,b,c)=>{a=capCoordinates.get(a);b=capCoordinates.get(b);c=capCoordinates.get(c);return (b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0]);};
+ for(const [edge,ends] of onPlane){
+  if(!unused.has(edge))continue;
+  const loop=[ends[0]];let previous=ends[0],current=ends[1];unused.delete(edge);
+  while(key(current)!==key(loop[0])){
+   loop.push(current);
+   const next=(adjacency.get(key(current))||[]).find(v=>key(v)!==key(previous)&&unused.has(edgeKey(current,v)));
+   if(!next)throw new Error("Schnittkontur ist nicht geschlossen.");
+   unused.delete(edgeKey(current,next));previous=current;current=next;
+  }
+  capCoordinates=new Map();let angle=Math.atan2(loop[0][1],loop[0][0]);
+  for(const v of loop){let next=Math.atan2(v[1],v[0]);while(next-angle>Math.PI)next-=2*Math.PI;while(next-angle<-Math.PI)next+=2*Math.PI;angle=next;capCoordinates.set(v,[Math.hypot(v[0],v[1]),angle]);}
+  let area=0;for(let i=0;i<loop.length;i++){const a=capCoordinates.get(loop[i]),b=capCoordinates.get(loop[(i+1)%loop.length]);area+=a[0]*b[1]-b[0]*a[1];}
+  if(area>0)loop.reverse();
+  const remaining=loop.slice();
+  while(remaining.length>3){
+   let ear=-1,bestSpan=Infinity;
+   for(let i=0;i<remaining.length;i++){
+    const a=remaining[(i+remaining.length-1)%remaining.length],b=remaining[i],d=remaining[(i+1)%remaining.length];
+    const angles=[a,b,d].map(v=>capCoordinates.get(v)[1]),span=Math.max(...angles)-Math.min(...angles);
+    if(span>=bestSpan||cross2(a,b,d)>=-1e-12)continue;
+    const contains=remaining.some(v=>v!==a&&v!==b&&v!==d&&cross2(a,b,v)<=1e-12&&cross2(b,d,v)<=1e-12&&cross2(d,a,v)<=1e-12);
+    if(contains)continue;
+    ear=i;bestSpan=span;
+   }
+   if(ear<0)throw new Error("Schnittfläche konnte nicht geschlossen werden.");
+   addTriangle(remaining[(ear+remaining.length-1)%remaining.length],remaining[ear],remaining[(ear+1)%remaining.length]);
+   remaining.splice(ear,1);
+  }
+  if(remaining.length===3)addTriangle(...remaining);
+ }
+ for(const face of clipped)tri(list,...face,color);
+}
+const tentacleMeshCache=new Map();
 function tubeMesh(list,phase,direction,p,baseColor){
- const nt=Math.ceil(180*p.turns),nf=32,nc=6,R=(base.wallID+base.outerD)/4,ri=base.wallID/2,startZ=-p.diam;
+ const cacheKey=JSON.stringify([phase,direction,p.diam,p.pitch,p.turns,p.taper]);
+ if(tentacleMeshCache.has(cacheKey)){
+  for(const face of tentacleMeshCache.get(cacheKey))tri(list,...face,baseColor);
+  return;
+ }
+ const firstTriangle=list.length;
+ const nt=Math.ceil(180*p.turns),nf=32,nc=6,R=(base.wallID+base.outerD)/4,ri=base.wallID/2,startZ=-p.diam,surface=[];
  const h=R*2*Math.PI,b=p.pitch/Math.hypot(h,p.pitch),times=Array.from({length:nt+1},(_,i)=>i/nt);
  const initialRadius=p.diam/2,gap=R-ri;
  if(initialRadius>gap){
@@ -176,7 +260,7 @@ function tubeMesh(list,phase,direction,p,baseColor){
   return {C,arc,cut};
  });
  const emit=(a,b,c)=>{
-  if(Math.hypot(...cross(sub(b,a),sub(c,a)))>1e-12)tri(list,a,b,c,baseColor);
+  if(Math.hypot(...cross(sub(b,a),sub(c,a)))>1e-12)surface.push([a,b,c]);
  };
  const strip=(a,b)=>{
   for(let j=0;j<a.length-1;j++){emit(a[j],a[j+1],b[j+1]);emit(a[j],b[j+1],b[j]);}
@@ -187,6 +271,9 @@ function tubeMesh(list,phase,direction,p,baseColor){
  }
  const first=rows[0],boundary=first.arc.concat(first.cut.slice(1,-1));
  for(let j=0;j<boundary.length;j++)emit(first.C,boundary[(j+1)%boundary.length],boundary[j]);
+ clipAtFloor(list,surface,baseColor);
+ if(tentacleMeshCache.size>=12)tentacleMeshCache.clear();
+ tentacleMeshCache.set(cacheKey,list.slice(firstTriangle).map(t=>t.p));
 }
 function drawCups(p,w,h,scale){
  const R=(base.wallID/2+base.outerD/2)/2,startZ=-p.diam;
@@ -198,7 +285,7 @@ function drawCups(p,w,h,scale){
    const tangent=unit([-direction*R*2*Math.PI*Math.sin(ang),direction*R*2*Math.PI*Math.cos(ang),p.pitch]);
    const facing=unit(sub(camera,mul(tangent,dot(camera,tangent))));
    const surf=add(center,mul(facing,p.diam*.39)),q=project(surf,w,h,scale);
-   if(q.d<0)continue;
+   if(q.d<0||surf[2]<0||Math.hypot(surf[0],surf[1])<base.wallID/2)continue;
    const ahead=project(add(surf,mul(tangent,.1)),w,h,scale),angle=Math.atan2(ahead.y-q.y,ahead.x-q.x);
    const size=Math.max(2.4,p.diam*scale*.11);
    ctx.save();ctx.translate(q.x,q.y);ctx.rotate(angle);
@@ -217,12 +304,15 @@ function render(){
  const p=params();out.forward.textContent=p.forward;out.reverse.textContent=p.reverse;out.offset.textContent=p.offset+"°";out.turns.textContent=fmt(p.turns);out.startZ.textContent="−"+fmt(p.diam)+" mm";out.pitch.textContent=fmt(p.pitch)+" mm";out.diam.textContent=fmt(p.diam)+" mm";out.taper.textContent=Math.round(p.taper*100)+" %";
  const scale=Math.min(cw/43,ch/38)*zoom;
  const triangles=[];
- if(p.showRing){
+ if(p.showBase){
   cylinderMesh(triangles,base.outerD/2,0,base.baseH,[112,132,141],96,base.holeD/2);
-  cylinderMesh(triangles,base.outerD/2,base.baseH,base.totalH,[132,150,157],96,base.wallID/2);
-  annulusMesh(triangles,base.outerD/2,base.holeD/2,0,[88,105,113],96);
+  annulusMesh(triangles,base.outerD/2,base.holeD/2,0,[88,105,113],96,true);
   annulusMesh(triangles,base.outerD/2,base.holeD/2,base.baseH,[151,168,175],96);
+ }
+ if(p.showRing){
+  cylinderMesh(triangles,base.outerD/2,base.baseH,base.totalH,[132,150,157],96,base.wallID/2);
   annulusMesh(triangles,base.outerD/2,base.wallID/2,base.totalH,[178,192,197],96);
+  annulusMesh(triangles,base.outerD/2,base.wallID/2,base.baseH,[112,132,141],96,true);
  }
  for(const t of tentacles(p))tubeMesh(triangles,t.phase,t.direction,p,t.color);
  triangles.sort((a,b)=>a.d-b.d);
@@ -231,8 +321,8 @@ function render(){
  ctx.fillStyle="rgba(220,235,239,.72)";ctx.font="12px system-ui";ctx.fillText(p.forward+" mitläufig · "+p.reverse+" gegenläufig · "+p.offset+"° Versatz · "+fmt(p.turns)+" Umdrehungen",18,ch-18);
 }
 function schedule(){if(!raf)raf=requestAnimationFrame(()=>{raf=0;render();});}
-for(const el of [input.forward,input.reverse,input.offset,input.turns,input.pitch,input.diam,input.taper,input.showRing,input.showCups])el.addEventListener("input",schedule);
-document.getElementById("reset").addEventListener("click",()=>{input.forward.value=2;input.reverse.value=0;input.offset.value=0;input.turns.value=1;input.pitch.value=3;input.diam.value=2.5;input.taper.value=.75;input.showRing.checked=true;input.showCups.checked=false;schedule();});
+for(const el of [input.forward,input.reverse,input.offset,input.turns,input.pitch,input.diam,input.taper,input.showBase,input.showRing,input.showCups])el.addEventListener("input",schedule);
+document.getElementById("reset").addEventListener("click",()=>{input.forward.value=2;input.reverse.value=0;input.offset.value=0;input.turns.value=1;input.pitch.value=3;input.diam.value=2.5;input.taper.value=.75;input.showBase.checked=true;input.showRing.checked=true;input.showCups.checked=false;schedule();});
 document.getElementById("viewReset").addEventListener("click",()=>{yaw=-.55;elev=.42;zoom=1;schedule();});
 canvas.addEventListener("pointerdown",e=>{drag={x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId);});
 canvas.addEventListener("pointermove",e=>{if(!drag)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;drag={x:e.clientX,y:e.clientY};yaw+=dx*.008;elev=Math.max(-.15,Math.min(1.2,elev+dy*.006));schedule();});

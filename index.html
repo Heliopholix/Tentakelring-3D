@@ -23,7 +23,7 @@ canvas{display:block;width:100%;height:100%;min-height:620px;touch-action:none}.
 <main>
 <aside>
 <h1>Tentakelring 3D</h1>
-<p class="sub">Parametrische Vorschau · Stand v0.3</p>
+<p class="sub">Parametrische Vorschau · Stand v0.4</p>
 <h2>Tentakel</h2>
 <div class="control">
 <div class="label"><label for="forward">Mitläufige Tentakel</label><strong id="forwardOut">2</strong></div>
@@ -72,7 +72,7 @@ Randhöhe 2,90 mm · Grundplatte 1,35 mm
 </div>
 <div class="note">
 <b>Geometrie</b><br>
-Je 0–3 mitläufige (türkise) und gegenläufige (korallfarbene) Tentakel. Die Startpunkte jeder Gruppe liegen gleichmäßig auf dem Kreis. Der Versatz verdreht die gegenläufige Startgruppe gegenüber der mitläufigen. Die Starthöhe entspricht dem negativen Durchmesser. Die Anzahl der Umdrehungen ist einstellbar; die Spitzen laufen im letzten Abschnitt aus. Der Körper wird als runder Querschnitt dargestellt.
+Je 0–3 mitläufige (türkise) und gegenläufige (korallfarbene) Tentakel. Die Startpunkte jeder Gruppe liegen gleichmäßig auf dem Kreis. Der Versatz verdreht die gegenläufige Startgruppe gegenüber der mitläufigen. Die Starthöhe entspricht dem negativen Durchmesser. Die Anzahl der Umdrehungen ist einstellbar; die Spitzen laufen im letzten Abschnitt aus. Die Körper werden am Innenzylinder Ø 25,30 mm beschnitten und mit einer Fläche auf dessen Wand geschlossen.
 </div>
 <div class="buttons"><button id="reset">Parameter zurücksetzen</button><button id="viewReset">Ansicht zurücksetzen</button></div>
 </aside>
@@ -137,21 +137,56 @@ function tentacles(p){
  return result;
 }
 function tubeMesh(list,phase,direction,p,baseColor){
- const nt=Math.ceil(180*p.turns),nf=24,R=(base.wallID/2+base.outerD/2)/2,startZ=-p.diam,rows=[];
- for(let i=0;i<=nt;i++){
-  const t=i/nt,ang=direction*2*Math.PI*p.turns*t+phase,z=startZ+p.pitch*p.turns*t;
-  const C=[R*Math.cos(ang),R*Math.sin(ang),z];
-  const T=unit([-direction*R*2*Math.PI*Math.sin(ang),direction*R*2*Math.PI*Math.cos(ang),p.pitch]);
+ const nt=Math.ceil(180*p.turns),nf=32,nc=6,R=(base.wallID+base.outerD)/4,ri=base.wallID/2,startZ=-p.diam;
+ const h=R*2*Math.PI,b=p.pitch/Math.hypot(h,p.pitch),times=Array.from({length:nt+1},(_,i)=>i/nt);
+ const initialRadius=p.diam/2,gap=R-ri;
+ if(initialRadius>gap){
+  const transition=1-gap/initialRadius*(1-p.taper);
+  if(transition>0&&transition<1&&!times.some(t=>Math.abs(t-transition)<1e-10))times.push(transition);
+ }
+ times.sort((a,b)=>a-b);
+ const rows=times.map(t=>{
+  const ang=direction*2*Math.PI*p.turns*t+phase,z=startZ+p.pitch*p.turns*t,C=[R*Math.cos(ang),R*Math.sin(ang),z];
+  const T=unit([-direction*h*Math.sin(ang),direction*h*Math.cos(ang),p.pitch]);
   const N=[Math.cos(ang),Math.sin(ang),0],B=unit(cross(T,N));
-  const taper=t<=p.taper?1:Math.max(0,(1-t)/(1-p.taper)),rad=p.diam*.5*taper;
-  rows.push(Array.from({length:nf},(_,j)=>{const ph=2*Math.PI*j/nf;return add(C,mul(add(mul(N,Math.cos(ph)),mul(B,Math.sin(ph))),rad));}));
+  const taper=t<=p.taper?1:Math.max(0,(1-t)/(1-p.taper)),rad=initialRadius*taper,clipped=rad>gap+1e-10;
+  let limit=Math.PI;
+  if(clipped){
+   const qa=rad*rad*(1-b*b),qb=2*R*rad,qc=R*R+rad*rad*b*b-ri*ri;
+   const cosine=-2*qc/(qb+Math.sqrt(Math.max(0,qb*qb-4*qa*qc)));
+   limit=Math.acos(Math.max(-1,Math.min(1,cosine)));
+  }
+  const arc=Array.from({length:nf+1},(_,j)=>{
+   const ph=-limit+2*limit*j/nf;
+   return add(C,mul(add(mul(N,Math.cos(ph)),mul(B,Math.sin(ph))),rad));
+  });
+  let cut;
+  if(clipped){
+   const delta=Math.atan2(rad*Math.sin(limit)*b,R+rad*Math.cos(limit));
+   cut=Array.from({length:nc+1},(_,j)=>{
+    if(j===0)return arc[nf];
+    if(j===nc)return arc[0];
+    const theta=delta*(1-2*j/nc);
+    return [ri*Math.cos(ang+theta),ri*Math.sin(ang+theta),z-direction*h*ri/p.pitch*Math.sin(theta)];
+   });
+  }else{
+   arc[nf]=arc[0];
+   cut=Array.from({length:nc+1},()=>arc[0]);
+  }
+  return {C,arc,cut};
+ });
+ const emit=(a,b,c)=>{
+  if(Math.hypot(...cross(sub(b,a),sub(c,a)))>1e-12)tri(list,a,b,c,baseColor);
+ };
+ const strip=(a,b)=>{
+  for(let j=0;j<a.length-1;j++){emit(a[j],a[j+1],b[j+1]);emit(a[j],b[j+1],b[j]);}
+ };
+ for(let i=0;i<rows.length-1;i++){
+  strip(rows[i].arc,rows[i+1].arc);
+  strip(rows[i].cut,rows[i+1].cut);
  }
- for(let i=0;i<nt;i++)for(let j=0;j<nf;j++){
-  const k=(j+1)%nf,a=rows[i][j],b=rows[i][k],c=rows[i+1][k],d=rows[i+1][j];
-  tri(list,a,b,c,baseColor);tri(list,a,c,d,baseColor);
- }
- const c0=[R*Math.cos(phase),R*Math.sin(phase),startZ];
- for(let j=0;j<nf;j++)tri(list,c0,rows[0][(j+1)%nf],rows[0][j],baseColor);
+ const first=rows[0],boundary=first.arc.concat(first.cut.slice(1,-1));
+ for(let j=0;j<boundary.length;j++)emit(first.C,boundary[(j+1)%boundary.length],boundary[j]);
 }
 function drawCups(p,w,h,scale){
  const R=(base.wallID/2+base.outerD/2)/2,startZ=-p.diam;

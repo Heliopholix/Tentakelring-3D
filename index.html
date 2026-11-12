@@ -23,7 +23,7 @@ canvas{display:block;width:100%;height:100%;min-height:620px;touch-action:none}.
 <main>
 <aside>
 <h1>Tentakelring 3D</h1>
-<p class="sub">Parametrische Vorschau · Stand v0.12</p>
+<p class="sub">Parametrische Vorschau · Stand v0.13</p>
 <h2>Tentakel</h2>
 <div class="control">
 <div class="label"><label for="forward">Mitläufige Tentakel</label><strong id="forwardOut">2</strong></div>
@@ -47,7 +47,7 @@ canvas{display:block;width:100%;height:100%;min-height:620px;touch-action:none}.
 </div>
 
 <p class="sub" id="weaveInfo" aria-live="polite"></p>
-<p class="sub">Fester Mindestbiegeradius für Kreuzungen und Ablegen: ein Tentakeldurchmesser. Die Übergänge werden automatisch berechnet. Die Kreuzungsbahnen bleiben seitlich erhalten; die Ablage verändert nur ihre Höhe.</p>
+<p class="sub">Der gewählte Mindestbiegeradius gilt für Kreuzungen und Ablegen. Die Übergänge werden automatisch berechnet. Die Kreuzungsbahnen bleiben seitlich erhalten; die Ablage verändert nur ihre Höhe.</p>
 <div class="label"><span>Starthöhe</span><strong id="startZOut">−2,50 mm</strong></div>
 <div class="control">
 <div class="label"><span>Steigung pro Umdrehung</span><strong id="pitchOut">3,00 mm</strong></div>
@@ -65,6 +65,17 @@ canvas{display:block;width:100%;height:100%;min-height:620px;touch-action:none}.
 <div class="scale"><span>ab halber Runde</span><span>letzte 5 %</span></div>
 </div>
 <h2>Abstände und Absenkung</h2>
+<div class="control">
+<div class="label"><label for="bendFactor">Mindestbiegeradius</label><strong id="bendFactorOut">1,00 × Ø</strong></div>
+<input id="bendFactor" type="range" min="0.5" max="5" step="0.05" value="1">
+<div class="scale"><span>0,5 × Ø</span><span>5 × Ø</span></div>
+</div>
+<div class="control">
+<div class="label"><label for="overlap">Überlappung zwischen Tentakeln</label><strong id="overlapOut">10 %</strong></div>
+<input id="overlap" type="range" min="0" max="40" step="1" value="10">
+<div class="scale"><span>0 %</span><span>40 %</span></div>
+</div>
+<p class="sub">Der Biegeradius bezieht sich auf die Mittellinie. Die Überlappung ist ein Zielwert beim Ablegen, keine Obergrenze. Der Eingriff in die Bodenplatte bleibt bei 10 % des lokalen Radius.</p>
 <label class="check"><input id="gravity" type="checkbox" checked> Von unten nach oben ablegen</label>
 <p class="sub" id="gravityInfo" aria-live="polite"></p>
 <p class="sub">Zuerst werden alle Kreuzungsbahnen vollständig berechnet. Danach darf die Ablage ausschließlich Z absenken, und nur für Mittellinien über Z = 0. Kreuzungspartner werden gemeinsam verschoben; ihre seitliche Führung und Kreuzungswinkel bleiben erhalten. Auflage zählt nur auf ursprünglich tieferen Bahnabschnitten oder der Platte.</p>
@@ -99,7 +110,7 @@ Randhöhe 2,90 mm · Grundplatte 1,35 mm
 </div>
 <div class="note">
 <b>Geometrie</b><br>
-Je 0–5 Tentakel pro Richtung, mit einstellbarer Steigung, Umdrehungszahl und Streuung. Die Ablage verändert die fertigen Kreuzungsbahnen nur nach unten. Mittellinien bei Z ≤ 0 bleiben unverändert. Kreuzungspartner teilen sich einen vertikalen Versatz; die seitliche Bahn bleibt unverändert. Der feste Mindestbiegeradius entspricht dem Tentakeldurchmesser. Verbleibende Abstände und zu enge Ausgangsbögen werden angezeigt. Die Körper werden am Innenzylinder Ø 25,30 mm und an z = 0 beschnitten und geschlossen.</div>
+Je 0–5 Tentakel pro Richtung, mit einstellbarer Steigung, Umdrehungszahl und Streuung. Die Ablage verändert die fertigen Kreuzungsbahnen nur nach unten. Mittellinien bei Z ≤ 0 bleiben unverändert. Kreuzungspartner teilen sich einen vertikalen Versatz; die seitliche Bahn bleibt unverändert. Der Mindestbiegeradius ist als Faktor des Ausgangsdurchmessers einstellbar; die Überlappung steuert den Zielabstand beim Ablegen. Verbleibende Abstände und zu enge Ausgangsbögen werden angezeigt. Die Körper werden am Innenzylinder Ø 25,30 mm und an z = 0 beschnitten und geschlossen.</div>
 <div class="buttons"><button id="reset">Parameter zurücksetzen</button><button id="viewReset">Ansicht zurücksetzen</button></div>
 </aside>
 <section class="stage">
@@ -143,8 +154,8 @@ function paintTriangles(triangles,cw,ch,scale,w,h){
  gl.enableVertexAttribArray(color);gl.vertexAttribPointer(color,3,gl.FLOAT,false,24,12);
  gl.drawArrays(gl.TRIANGLES,0,triangles.length*3);
 }
-const input={turnsScatter:document.getElementById("turnsScatter"),gravity:document.getElementById("gravity"),startScatter:document.getElementById("startScatter"),pitchScatter:document.getElementById("pitchScatter"),forward:document.getElementById("forward"),reverse:document.getElementById("reverse"),offset:document.getElementById("offset"),turns:document.getElementById("turns"),pitch:document.getElementById("pitch"),diam:document.getElementById("diam"),taper:document.getElementById("taper"),showBase:document.getElementById("showBase"),showRing:document.getElementById("showRing"),showCups:document.getElementById("showCups")};
-const out={turnsScatter:document.getElementById("turnsScatterOut"),gravity:document.getElementById("gravityInfo"),startScatter:document.getElementById("startScatterOut"),pitchScatter:document.getElementById("pitchScatterOut"),variant:document.getElementById("variantOut"),weaveInfo:document.getElementById("weaveInfo"),forward:document.getElementById("forwardOut"),reverse:document.getElementById("reverseOut"),offset:document.getElementById("offsetOut"),turns:document.getElementById("turnsOut"),startZ:document.getElementById("startZOut"),pitch:document.getElementById("pitchOut"),diam:document.getElementById("diamOut"),taper:document.getElementById("taperOut")};
+const input={bendFactor:document.getElementById("bendFactor"),overlap:document.getElementById("overlap"),turnsScatter:document.getElementById("turnsScatter"),gravity:document.getElementById("gravity"),startScatter:document.getElementById("startScatter"),pitchScatter:document.getElementById("pitchScatter"),forward:document.getElementById("forward"),reverse:document.getElementById("reverse"),offset:document.getElementById("offset"),turns:document.getElementById("turns"),pitch:document.getElementById("pitch"),diam:document.getElementById("diam"),taper:document.getElementById("taper"),showBase:document.getElementById("showBase"),showRing:document.getElementById("showRing"),showCups:document.getElementById("showCups")};
+const out={bendFactor:document.getElementById("bendFactorOut"),overlap:document.getElementById("overlapOut"),turnsScatter:document.getElementById("turnsScatterOut"),gravity:document.getElementById("gravityInfo"),startScatter:document.getElementById("startScatterOut"),pitchScatter:document.getElementById("pitchScatterOut"),variant:document.getElementById("variantOut"),weaveInfo:document.getElementById("weaveInfo"),forward:document.getElementById("forwardOut"),reverse:document.getElementById("reverseOut"),offset:document.getElementById("offsetOut"),turns:document.getElementById("turnsOut"),startZ:document.getElementById("startZOut"),pitch:document.getElementById("pitchOut"),diam:document.getElementById("diamOut"),taper:document.getElementById("taperOut")};
 const base={outerD:27.85,wallID:25.30,holeD:14.90,totalH:4.25,baseH:1.35,rimH:2.90};
 let variantSeed=1,viewCenterZ=0;
 let yaw=-0.55,elev=0.42,zoom=1,drag=null,raf=0;
@@ -155,7 +166,9 @@ const dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
 const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
 const unit=a=>{const n=Math.hypot(a[0],a[1],a[2])||1;return [a[0]/n,a[1]/n,a[2]/n]};
 const fmt=x=>Number(x).toFixed(2).replace(".",",");
-function params(){return {turnsScatter:+input.turnsScatter.value,gravity:input.gravity.checked,seed:variantSeed,startScatter:+input.startScatter.value,pitchScatter:+input.pitchScatter.value,forward:+input.forward.value,reverse:+input.reverse.value,offset:+input.offset.value,turns:+input.turns.value,pitch:+input.pitch.value,diam:+input.diam.value,taper:+input.taper.value,showBase:input.showBase.checked,showRing:input.showRing.checked};}
+function bendRadius(p){return p.diam*(p.bendFactor??1);}
+function contactRatio(p){return 1-(p.overlap??10)/100;}
+function params(){return {bendFactor:+input.bendFactor.value,overlap:+input.overlap.value,turnsScatter:+input.turnsScatter.value,gravity:input.gravity.checked,seed:variantSeed,startScatter:+input.startScatter.value,pitchScatter:+input.pitchScatter.value,forward:+input.forward.value,reverse:+input.reverse.value,offset:+input.offset.value,turns:+input.turns.value,pitch:+input.pitch.value,diam:+input.diam.value,taper:+input.taper.value,showBase:input.showBase.checked,showRing:input.showRing.checked};}
 function project(p,w,h,scale){
  const cy=Math.cos(yaw),sy=Math.sin(yaw),x=p[0]*cy-p[1]*sy,y=p[0]*sy+p[1]*cy;
  const ce=Math.cos(elev),se=Math.sin(elev);
@@ -198,7 +211,7 @@ function randomSigned(seed,index,direction,channel){
  return x/4294967296*2-1;
 }
 function tentacles(p){
- const cacheKey=JSON.stringify([p.turnsScatter,p.gravity,p.forward,p.reverse,p.offset,p.turns,p.pitch,p.diam,p.taper,p.startScatter,p.pitchScatter,p.seed]);
+ const cacheKey=JSON.stringify([p.bendFactor,p.overlap,p.turnsScatter,p.gravity,p.forward,p.reverse,p.offset,p.turns,p.pitch,p.diam,p.taper,p.startScatter,p.pitchScatter,p.seed]);
  if(crossingPlanCache&&crossingPlanCache.key===cacheKey)return crossingPlanCache.result;
  const result=[];
  for(const [count,direction,offset,color,fill] of [[p.forward,1,0,[11,177,183],"#b8f1e7"],[p.reverse,-1,p.offset*Math.PI/180,[230,110,91],"#ffd0b4"]]){
@@ -206,7 +219,7 @@ function tentacles(p){
    const angle=offset+2*Math.PI*i/count+randomSigned(p.seed,i,direction,0)*(p.startScatter||0)*Math.PI/180;
    const pitch=Math.max(.1,Math.min(30,p.pitch*(1+randomSigned(p.seed,i,direction,1)*(p.pitchScatter||0)/100)));
    const turns=Math.max(.1,Math.min(3,p.turns*(1+randomSigned(p.seed,i,direction,3)*(p.turnsScatter||0)/100)));
-   const returnLength=4*p.diam;
+   const returnLength=4*bendRadius(p);
    result.push({index:i,phase:((angle%(2*Math.PI))+2*Math.PI)%(2*Math.PI),direction,pitch,turns,returnLength,color,fill,events:[],preference:direction===-1?-1:1});
   }
  }
@@ -233,8 +246,8 @@ function tentacles(p){
  const join=(a,b)=>{a=root(a);b=root(b);if(a!==b)parents[b]=a;};
  for(const strand of result){
   const pathLength=Math.hypot((base.wallID+base.outerD)/4*2*Math.PI,strand.pitch)*strand.turns;
-  const length=Math.max(strand.returnLength,4*p.diam)/pathLength;
-  strand.effectiveReturnLength=Math.max(strand.returnLength,4*p.diam);
+  const length=Math.max(strand.returnLength,4*bendRadius(p))/pathLength;
+  strand.effectiveReturnLength=Math.max(strand.returnLength,4*bendRadius(p));
   strand.events.forEach((event,i,all)=>{
    event.left=length;event.right=length;
    if(i&&event.t-all[i-1].t<=2*length+1e-10)join(event.id,all[i-1].id);
@@ -443,7 +456,7 @@ function gravityRelax(strands,p){
     if(q.strand===node.strand&&Math.abs(q.t-node.t)*node.strand.gravityLength<2*p.diam)continue;
     const v=sub(q.b,q.a),w=sub(C,q.a),len2=dot(v,v),u=Math.max(0,Math.min(1,dot(w,v)/Math.max(1e-18,len2)));
     // Full 3D nearest distance comes from the global segment index above.
-    const target=.9*Math.min(diam,node.r+q.r),xy=v[0]*v[0]+v[1]*v[1];
+    const target=contactRatio(p)*Math.min(diam,node.r+q.r),xy=v[0]*v[0]+v[1]*v[1];
     if(target<1e-8)continue;
     let t;
     if(xy<1e-15){if(w[0]*w[0]+w[1]*w[1]>target*target)continue;t=v[2]>0?1:0;}
@@ -467,7 +480,7 @@ function gravityRelax(strands,p){
    const nodes=node.strand.path.sag;
    for(let i=Math.max(0,node.index-1);i<=Math.min(nodes.length-2,node.index);i++)for(let j=0;j<=64;j++){
     const t=nodes[i].t+(nodes[i+1].t-nodes[i].t)*j/64,original=curveState(t,node.strand,p,false),r=localRadius(p,t);
-    variable.checks.push({t,strand:node.strand,allowed:Math.max(original.curvature,.97/p.diam),floor:Math.min(original.C[2],floorSupport(original.C,r))});
+    variable.checks.push({t,strand:node.strand,allowed:Math.max(original.curvature,.97/bendRadius(p)),floor:Math.min(original.C[2],floorSupport(original.C,r))});
    }
   }
  }
@@ -496,7 +509,7 @@ function gravityRelax(strands,p){
   for(const t of samples){
    const q=curveState(t,strand,p),r=localRadius(p,t),drop=sagValue(t,strand.path)[0];
    if(drop>.01)stats.moved++;stats.maxDrop=Math.max(stats.maxDrop,drop);
-   if(q.C[2]+r>0&&r>.01){stats.minRadius=Math.min(stats.minRadius,1/Math.max(1e-15,q.curvature));if(q.curvature>1/p.diam*(1+1e-4))stats.unresolved++;}
+   if(q.C[2]+r>0&&r>.01){stats.minRadius=Math.min(stats.minRadius,1/Math.max(1e-15,q.curvature));if(q.curvature>1/bendRadius(p)*(1+1e-4))stats.unresolved++;}
   }
   strand.maxZ=Math.max(base.totalH,...samples.map(t=>curveState(t,strand,p).C[2]+localRadius(p,t)));
  }
@@ -798,7 +811,8 @@ function render(){
  ctx.setTransform(dpr,0,0,dpr,0,0);
  const cw=rect.width,ch=rect.height;ctx.clearRect(0,0,cw,ch);
  const p=params(),strands=tentacles(p);
- out.gravity.textContent=(p.gravity?"Abgelegt · Mindestbiegeradius: "+fmt(p.diam)+" mm":"Ablegen aus")+(p.gravity?(strands.gravity.unresolved?" · "+strands.gravity.unresolved+" Prüfstellen: Biegeradius noch unterschritten":" · Biegeradiusprüfung bestanden"):"")+(p.gravity&&strands.gravity.gaps?" · "+strands.gravity.gaps+" freie Prüfstellen":"");out.turnsScatter.textContent="±"+p.turnsScatter+" %";out.startScatter.textContent="±"+p.startScatter+"°";out.pitchScatter.textContent="±"+p.pitchScatter+" %";out.variant.textContent="Variante "+variantSeed;document.getElementById("reroll").disabled=!(p.turnsScatter||p.startScatter||p.pitchScatter);out.weaveInfo.textContent=p.gravity?"Kreuzungen zuerst berechnet · danach nur nach unten ablegen":strands.crossings+" Kreuzungen · "+strands.clusters+(strands.clusters===1?" gemeinsamer Bereich":" gemeinsame Bereiche")+(strands.conflicts?" · "+strands.conflicts+" mit Vorrang für Uhrzeigersinn":"");out.forward.textContent=p.forward;out.reverse.textContent=p.reverse;out.offset.textContent=p.offset+"°";out.turns.textContent=fmt(p.turns);out.startZ.textContent="−"+fmt(p.diam)+" mm";out.pitch.textContent=fmt(p.pitch)+" mm";out.diam.textContent=fmt(p.diam)+" mm";out.taper.textContent=Math.round(p.taper*100)+" %";
+ out.bendFactor.textContent=fmt(p.bendFactor)+" × Ø · "+fmt(bendRadius(p))+" mm";out.overlap.textContent=p.overlap+" %";
+ out.gravity.textContent=(p.gravity?"Abgelegt · Mindestbiegeradius: "+fmt(bendRadius(p))+" mm":"Ablegen aus")+(p.gravity?(strands.gravity.unresolved?" · "+strands.gravity.unresolved+" Prüfstellen: Biegeradius noch unterschritten":" · Biegeradiusprüfung bestanden"):"")+(p.gravity&&strands.gravity.gaps?" · "+strands.gravity.gaps+" freie Prüfstellen":"");out.turnsScatter.textContent="±"+p.turnsScatter+" %";out.startScatter.textContent="±"+p.startScatter+"°";out.pitchScatter.textContent="±"+p.pitchScatter+" %";out.variant.textContent="Variante "+variantSeed;document.getElementById("reroll").disabled=!(p.turnsScatter||p.startScatter||p.pitchScatter);out.weaveInfo.textContent=p.gravity?"Kreuzungen zuerst berechnet · danach nur nach unten ablegen":strands.crossings+" Kreuzungen · "+strands.clusters+(strands.clusters===1?" gemeinsamer Bereich":" gemeinsame Bereiche")+(strands.conflicts?" · "+strands.conflicts+" mit Vorrang für Uhrzeigersinn":"");out.forward.textContent=p.forward;out.reverse.textContent=p.reverse;out.offset.textContent=p.offset+"°";out.turns.textContent=fmt(p.turns);out.startZ.textContent="−"+fmt(p.diam)+" mm";out.pitch.textContent=fmt(p.pitch)+" mm";out.diam.textContent=fmt(p.diam)+" mm";out.taper.textContent=Math.round(p.taper*100)+" %";
  const height=Math.max(base.totalH,...strands.map(s=>s.maxZ)),extent=Math.max(base.outerD/2,...strands.map(s=>s.maxR));
  viewCenterZ=height/2;
  const scale=Math.min(cw/(2*extent+4),ch/(2*extent*Math.abs(Math.sin(elev))+height*Math.abs(Math.cos(elev))+8))*zoom;
@@ -821,8 +835,8 @@ function render(){
 function schedule(){if(!raf)raf=requestAnimationFrame(()=>{raf=0;render();});}
 let parameterTimer=0;
 function parametersChanged(){clearTimeout(parameterTimer);out.gravity.textContent="Abstände werden berechnet …";parameterTimer=setTimeout(schedule,180);}
-for(const el of [input.turnsScatter,input.gravity,input.startScatter,input.pitchScatter,input.forward,input.reverse,input.offset,input.turns,input.pitch,input.diam,input.taper,input.showBase,input.showRing,input.showCups])el.addEventListener("input",parametersChanged);
-document.getElementById("reset").addEventListener("click",()=>{variantSeed=1;input.turnsScatter.value=0;input.gravity.checked=true;input.startScatter.value=0;input.pitchScatter.value=0;input.forward.value=2;input.reverse.value=0;input.offset.value=0;input.turns.value=1;input.pitch.value=3;input.diam.value=2.5;input.taper.value=.75;input.showBase.checked=true;input.showRing.checked=true;input.showCups.checked=false;schedule();});
+for(const el of [input.bendFactor,input.overlap,input.turnsScatter,input.gravity,input.startScatter,input.pitchScatter,input.forward,input.reverse,input.offset,input.turns,input.pitch,input.diam,input.taper,input.showBase,input.showRing,input.showCups])el.addEventListener("input",parametersChanged);
+document.getElementById("reset").addEventListener("click",()=>{variantSeed=1;input.bendFactor.value=1;input.overlap.value=10;input.turnsScatter.value=0;input.gravity.checked=true;input.startScatter.value=0;input.pitchScatter.value=0;input.forward.value=2;input.reverse.value=0;input.offset.value=0;input.turns.value=1;input.pitch.value=3;input.diam.value=2.5;input.taper.value=.75;input.showBase.checked=true;input.showRing.checked=true;input.showCups.checked=false;schedule();});
 document.getElementById("reroll").addEventListener("click",()=>{variantSeed++;schedule();});
 document.getElementById("viewReset").addEventListener("click",()=>{yaw=-.55;elev=.42;zoom=1;schedule();});
 canvas.addEventListener("pointerdown",e=>{drag={x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId);});

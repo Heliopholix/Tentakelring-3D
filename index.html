@@ -23,7 +23,7 @@ canvas{display:block;width:100%;height:100%;min-height:620px;touch-action:none}.
 <main>
 <aside>
 <h1>Tentakelring 3D</h1>
-<p class="sub">Parametrische Vorschau · Stand v0.16</p>
+<p class="sub">Parametrische Vorschau · Stand v0.17</p>
 <h2>Tentakel</h2>
 <div class="control">
 <div class="label"><label for="forward">Mitläufige Tentakel</label><strong id="forwardOut">2</strong></div>
@@ -75,7 +75,7 @@ canvas{display:block;width:100%;height:100%;min-height:620px;touch-action:none}.
 <input id="overlap" type="range" min="0" max="40" step="1" value="10">
 <div class="scale"><span>0 %</span><span>40 %</span></div>
 </div>
-<p class="sub">Der Biegeradius bezieht sich auf die Mittellinie und folgt dem lokalen Durchmesser einschließlich Verjüngung. Die Spitze endet ab Ø 0,3 mm mit einer halbkugelförmigen Kuppel. Der Überlappungsregler bestimmt auch den anfänglichen Kreuzungsabstand: Summe beider lokalen Radien × (1 − Überlappung). Die weitere Berechnung entspricht Version 0.14. Der Eingriff in die Bodenplatte bleibt bei 10 % des lokalen Radius.</p>
+<p class="sub">Der Biegeradius bezieht sich auf die Mittellinie und folgt dem lokalen Durchmesser einschließlich Verjüngung. Die Spitze endet ab Ø 0,3 mm mit einer halbkugelförmigen Kuppel. Der Überlappungsregler bestimmt auch den anfänglichen Kreuzungsabstand: Summe beider lokalen Radien × (1 − Überlappung). Die Ablage erfolgt in zwei Schritten: zuerst Kontakt gemäß Überlappungsziel, danach Glättung und Biegekorrektur der Mittellinie. Der Eingriff in die Bodenplatte bleibt bei 10 % des lokalen Radius.</p>
 <label class="check"><input id="gravity" type="checkbox" checked> Von unten nach oben ablegen</label>
 <p class="sub" id="gravityInfo" aria-live="polite"></p>
 <p class="sub">Zuerst werden alle Kreuzungsbahnen vollständig berechnet. Danach darf die Ablage ausschließlich Z absenken, und nur für Mittellinien über Z = 0. Kreuzungspartner werden gemeinsam verschoben; ihre seitliche Führung und Kreuzungswinkel bleiben erhalten. Auflage zählt nur auf ursprünglich tieferen Bahnabschnitten oder der Platte.</p>
@@ -350,9 +350,21 @@ function sagValue(t,path){
  if(!nodes||nodes.length<2)return [0,0,0];
  let lo=0,hi=nodes.length-1;
  while(hi-lo>1){const mid=(lo+hi)>>1;if(nodes[mid].t>t)hi=mid;else lo=mid;}
- const a=nodes[lo],b=nodes[hi],dt=b.t-a.t,u=Math.max(0,Math.min(1,(t-a.t)/dt));
- const delta=b.variable.value-a.variable.value;
- return [a.variable.value+delta*(10*u**3-15*u**4+6*u**5),delta*30*u*u*(1-u)**2/dt,delta*60*u*(1-u)*(1-2*u)/(dt*dt)];
+ const slope=i=>{
+  // Keep the paired crossing tangents fixed, but let ordinary supports
+  // carry a continuous slope instead of forcing a horizontal shelf.
+  if(nodes[i].variable.members.length>1)return 0;
+  const secant=j=>(nodes[j+1].variable.value-nodes[j].variable.value)/(nodes[j+1].t-nodes[j].t);
+  if(i===0)return secant(0);
+  if(i===nodes.length-1)return secant(i-1);
+  const left=secant(i-1),right=secant(i);
+  return left*right<=0?0:2*left*right/(left+right);
+ };
+ const a=nodes[lo],b=nodes[hi],dt=b.t-a.t,u=Math.max(0,Math.min(1,(t-a.t)/dt)),delta=b.variable.value-a.variable.value;
+ const m0=slope(lo)*dt,m1=slope(hi)*dt,A=delta-m0,B=m1-m0,c3=10*A-4*B,c4=-15*A+7*B,c5=6*A-3*B;
+ return [a.variable.value+m0*u+c3*u**3+c4*u**4+c5*u**5,
+  (m0+3*c3*u*u+4*c4*u**3+5*c5*u**4)/dt,
+  (6*c3*u+12*c4*u*u+20*c5*u**3)/(dt*dt)];
 }
 function evaluatePath(t,phase,direction,p,path){
  const q=evaluateUnsettledPath(t,phase,direction,p,path);
@@ -425,7 +437,7 @@ function gravityRelax(strands,p){
   strand.gravityParams={...p,pitch:strand.pitch,turns:strand.turns};
   const length=Math.hypot((base.wallID+base.outerD)/4*2*Math.PI,strand.pitch)*strand.turns;
   strand.gravityLength=length;
-  const count=Math.max(4,Math.ceil(length/Math.max(3,2*p.diam))),times=Array.from({length:count+1},(_,i)=>i/count*tentacleEnd(p));
+  const count=Math.max(4,Math.ceil(length/Math.max(.75,.75*p.diam))),times=Array.from({length:count+1},(_,i)=>i/count*tentacleEnd(p));
   for(const section of strand.path)for(const knot of section.knots)if(knot.t<=tentacleEnd(p))times.push(knot.t);
   times.push(p.taper);times.sort((a,b)=>a-b);
   const nodes=times.filter((t,i)=>!i||t-times[i-1]>1e-8).map(t=>{
@@ -452,7 +464,7 @@ function gravityRelax(strands,p){
   }
   const nearestLine=centerlineIndex(segments);
   return node=>{
-   const C=curveState(node.t,node.strand,p).C,diam=2*node.r,reach=Math.max(diam,p.diam*.5),ids=new Set();
+   const C=curveState(node.t,node.strand,p).C,diam=2*node.r,reach=Math.max(diam,contactRatio(p)*(node.r+p.diam*.5)),ids=new Set();
    for(let x=Math.floor((C[0]-reach)/cell);x<=Math.floor((C[0]+reach)/cell);x++)
    for(let y=Math.floor((C[1]-reach)/cell);y<=Math.floor((C[1]+reach)/cell);y++)for(const id of columns.get(x+","+y)||[])ids.add(id);
    const nearest=nearestLine(C,{strand:node.strand,t:node.t,diameter:p.diam}).distance;
@@ -463,7 +475,7 @@ function gravityRelax(strands,p){
     if(q.strand===node.strand&&Math.abs(q.t-node.t)*node.strand.gravityLength<2*p.diam)continue;
     const v=sub(q.b,q.a),w=sub(C,q.a),len2=dot(v,v),u=Math.max(0,Math.min(1,dot(w,v)/Math.max(1e-18,len2)));
     // Full 3D nearest distance comes from the global segment index above.
-    const target=contactRatio(p)*Math.min(diam,node.r+q.r),xy=v[0]*v[0]+v[1]*v[1];
+    const target=contactRatio(p)*(node.r+q.r),xy=v[0]*v[0]+v[1]*v[1];
     if(target<1e-8)continue;
     let t;
     if(xy<1e-15){if(w[0]*w[0]+w[1]*w[1]>target*target)continue;t=v[2]>0?1:0;}
@@ -485,17 +497,13 @@ function gravityRelax(strands,p){
   variable.checks=[];
   for(const node of variable.members){
    const nodes=node.strand.path.sag;
-   for(let i=Math.max(0,node.index-1);i<=Math.min(nodes.length-2,node.index);i++)for(let j=0;j<=64;j++){
+   for(let i=Math.max(0,node.index-2);i<=Math.min(nodes.length-2,node.index+1);i++)for(let j=0;j<=64;j++){
     const t=nodes[i].t+(nodes[i+1].t-nodes[i].t)*j/64,original=curveState(t,node.strand,p,false),r=localRadius(p,t);
-    variable.checks.push({t,strand:node.strand,allowed:Math.max(original.curvature,.97/bendRadius(p,t)),floor:Math.min(original.C[2],floorSupport(original.C,r))});
+    variable.checks.push({t,strand:node.strand,allowed:.97/bendRadius(p,t),floor:Math.min(original.C[2],floorSupport(original.C,r))});
    }
   }
  }
- const valid=variable=>variable.checks.every(check=>{
-  const q=curveState(check.t,check.strand,p);
-  return q.C[2]>=check.floor-1e-7&&q.curvature<=check.allowed*(1+1e-7)+1e-10;
- });
- if(p.gravity!==false)for(let iteration=0;iteration<24;iteration++){
+ if(p.gravity!==false)for(let iteration=0;iteration<80;iteration++){
   const query=buildColumns();let changed=0;
   const targets=variables.map(variable=>{
    let desired=Infinity,unsupported=false;
@@ -503,13 +511,54 @@ function gravityRelax(strands,p){
    if(unsupported)variable.active=true;
    return variable.active?Math.min(variable.maxDrop,desired):variable.value;
   });
+  // Phase 1: contact only. Curvature must not veto an otherwise
+  // attainable downward move.
   variables.forEach((variable,i)=>{
-   const old=variable.value,delta=Math.min(p.diam,targets[i]-old);if(delta<.001)return;
-   let accepted=false;
-   for(let scale=1;scale>=1/256;scale*=.5){variable.value=old+delta*scale;if(valid(variable)){accepted=true;changed=Math.max(changed,delta*scale);break;}}
-   if(!accepted){variable.value=old;variable.limited=true;}
+   const old=variable.value,delta=Math.max(0,Math.min(p.diam,targets[i]-old));
+   variable.value=old+delta;changed=Math.max(changed,delta);
   });
   stats.iterations=iteration+1;if(changed<.002)break;
+ }
+
+ const contactQuery=buildColumns();let residual=0;
+ for(const variable of variables){
+  variable.contactDrop=variable.value;
+  for(const node of variable.members)residual=Math.max(residual,Math.max(0,Math.min(variable.maxDrop,contactQuery(node).desired)-variable.value));
+ }
+ stats.contactResidual=residual;
+ // Phase 2: correct the centreline only after the contact phase has finished.
+ // Drop values stay within [0,maxDrop], so no point rises above its original
+ // path. Paired crossings keep their common displacement.
+ const energy=variable=>{
+  let e=0;
+  for(let ci=0;ci<variable.checks.length;ci+=4){
+   const c=variable.checks[ci];
+   const q=curveState(c.t,c.strand,p),ratio=q.curvature*bendRadius(p,c.t);
+   e+=Math.max(0,ratio-.97)**2+100*(Math.max(0,c.floor-q.C[2])/p.diam)**2;
+  }
+  return e/Math.max(1,variable.checks.length)+.002*((variable.value-variable.contactDrop)/p.diam)**2;
+ };
+ if(p.gravity!==false)for(let iteration=0;iteration<16;iteration++){
+  let changed=0;
+  for(const variable of variables){
+   const old=variable.value,before=energy(variable);if(before<1e-8)continue;
+   let target=0,count=0;
+   for(const node of variable.members){
+    const nodes=node.strand.path.sag,i=node.index;if(!i||i===nodes.length-1)continue;
+    const left=nodes[i-1],right=nodes[i+1],u=(node.t-left.t)/(right.t-left.t);
+    const z=(left.C[2]-left.variable.value)*(1-u)+(right.C[2]-right.variable.value)*u;
+    target+=node.C[2]-z;count++;
+   }
+   const proposed=count?target/count:old;
+   let best=before,value=old;
+   for(const delta of [(proposed-old)*.5,proposed-old,p.diam*.1,-p.diam*.1]){
+    const factor=1;
+    variable.value=Math.max(0,Math.min(variable.maxDrop,old+delta*factor));
+    const e=energy(variable);if(e<best-1e-10){best=e;value=variable.value;}
+   }
+   variable.value=value;changed=Math.max(changed,Math.abs(value-old));
+  }
+  stats.bendIterations=iteration+1;if(changed<.001)break;
  }
  for(const strand of strands){
   const samples=pathTimes(strand.gravityParams,strand.path,240);
@@ -523,9 +572,10 @@ function gravityRelax(strands,p){
  const finalQuery=buildColumns();
  for(const variable of variables)for(const node of variable.members){
   const C=curveState(node.t,node.strand,p).C;
-  if(node.r>.05&&C[2]>floorSupport(C,node.r)+.02&&finalQuery(node).nearest>2*node.r+.02)stats.gaps++;
+  if(node.C[2]>0&&finalQuery(node).desired-variable.value>.02)stats.gaps++;
  }
- stats.bendLimited=variables.filter(v=>v.limited).length;
+ stats.bendLimited=0;
+ stats.contactAdjustment=Math.max(0,...variables.map(v=>Math.abs(v.value-(v.contactDrop||0))));
  return stats;
 }
 
@@ -830,7 +880,7 @@ function render(){
  const cw=rect.width,ch=rect.height;ctx.clearRect(0,0,cw,ch);
  const p=params(),strands=tentacles(p);
  out.bendFactor.textContent=fmt(p.bendFactor)+" × Ø · "+fmt(bendRadius(p))+" mm am Ansatz";out.overlap.textContent=p.overlap+" %";
- out.gravity.textContent=(p.gravity?"Abgelegt · Biegeradius: "+fmt(p.bendFactor)+" × lokaler Ø":"Ablegen aus")+(p.gravity?(strands.gravity.unresolved?" · "+strands.gravity.unresolved+" Prüfstellen: Biegeradius noch unterschritten":" · Biegeradiusprüfung bestanden"):"")+(p.gravity&&strands.gravity.gaps?" · "+strands.gravity.gaps+" freie Prüfstellen":"");out.turnsScatter.textContent="±"+p.turnsScatter+" %";out.startScatter.textContent="±"+p.startScatter+"°";out.pitchScatter.textContent="±"+p.pitchScatter+" %";out.variant.textContent="Variante "+variantSeed;document.getElementById("reroll").disabled=!(p.turnsScatter||p.startScatter||p.pitchScatter);out.weaveInfo.textContent=p.gravity?"Kreuzungen zuerst berechnet · danach nur nach unten ablegen":strands.crossings+" Kreuzungen · "+strands.clusters+(strands.clusters===1?" gemeinsamer Bereich":" gemeinsame Bereiche")+(strands.conflicts?" · "+strands.conflicts+" mit Vorrang für Uhrzeigersinn":"");out.forward.textContent=p.forward;out.reverse.textContent=p.reverse;out.offset.textContent=p.offset+"°";out.turns.textContent=fmt(p.turns);out.startZ.textContent="−"+fmt(p.diam)+" mm";out.pitch.textContent=fmt(p.pitch)+" mm";out.diam.textContent=fmt(p.diam)+" mm";out.taper.textContent=Math.round(p.taper*100)+" %";
+ out.gravity.textContent=(p.gravity?"Abgelegt · Biegeradius: "+fmt(p.bendFactor)+" × lokaler Ø":"Ablegen aus")+(p.gravity?(strands.gravity.unresolved?" · "+strands.gravity.unresolved+" Prüfstellen: Biegeradius noch unterschritten":" · Biegeradiusprüfung bestanden"):"")+(p.gravity?" · Kontaktphase Restfehler an Stützpunkten: "+fmt(strands.gravity.contactResidual||0)+" mm":"")+(p.gravity&&strands.gravity.gaps?" · "+strands.gravity.gaps+" freie Prüfstellen nach Biegekorrektur":"");out.turnsScatter.textContent="±"+p.turnsScatter+" %";out.startScatter.textContent="±"+p.startScatter+"°";out.pitchScatter.textContent="±"+p.pitchScatter+" %";out.variant.textContent="Variante "+variantSeed;document.getElementById("reroll").disabled=!(p.turnsScatter||p.startScatter||p.pitchScatter);out.weaveInfo.textContent=p.gravity?"Kreuzungen zuerst berechnet · danach nur nach unten ablegen":strands.crossings+" Kreuzungen · "+strands.clusters+(strands.clusters===1?" gemeinsamer Bereich":" gemeinsame Bereiche")+(strands.conflicts?" · "+strands.conflicts+" mit Vorrang für Uhrzeigersinn":"");out.forward.textContent=p.forward;out.reverse.textContent=p.reverse;out.offset.textContent=p.offset+"°";out.turns.textContent=fmt(p.turns);out.startZ.textContent="−"+fmt(p.diam)+" mm";out.pitch.textContent=fmt(p.pitch)+" mm";out.diam.textContent=fmt(p.diam)+" mm";out.taper.textContent=Math.round(p.taper*100)+" %";
  const height=Math.max(base.totalH,...strands.map(s=>s.maxZ)),extent=Math.max(base.outerD/2,...strands.map(s=>s.maxR));
  viewCenterZ=height/2;
  const scale=Math.min(cw/(2*extent+4),ch/(2*extent*Math.abs(Math.sin(elev))+height*Math.abs(Math.cos(elev))+8))*zoom;

@@ -23,7 +23,7 @@ canvas{display:block;width:100%;height:100%;min-height:620px;touch-action:none}.
 <main>
 <aside>
 <h1>Tentakelring 3D</h1>
-<p class="sub">Parametrische Vorschau · Stand v0.19</p>
+<p class="sub">Parametrische Vorschau · Stand v0.20</p>
 <h2>Tentakel</h2>
 <div class="control">
 <div class="label"><label for="forward">Mitläufige Tentakel</label><strong id="forwardOut">2</strong></div>
@@ -79,6 +79,12 @@ canvas{display:block;width:100%;height:100%;min-height:620px;touch-action:none}.
 <label class="check"><input id="gravity" type="checkbox" checked> Von unten nach oben ablegen</label>
 <p class="sub" id="gravityInfo" aria-live="polite"></p>
 <p class="sub">Zuerst werden alle Kreuzungsbahnen vollständig berechnet. Danach darf die Ablage ausschließlich Z absenken, und nur für Mittellinien über Z = 0. Kreuzungspartner werden gemeinsam verschoben; ihre seitliche Führung und Kreuzungswinkel bleiben erhalten. Auflage zählt nur auf ursprünglich tieferen Bahnabschnitten oder der Platte.</p>
+<h2>Noppenzone</h2>
+<div class="control"><div class="label"><label for="bandWidth">Breite der Noppenzone</label><strong id="bandWidthOut"></strong></div><input id="bandWidth" type="range" min="0" max="100" step="1" value="40"><div class="scale"><span>0 %</span><span>100 %</span></div></div>
+<div class="control"><div class="label"><label for="bandRotation">Drehung entlang des Tentakels</label><strong id="bandRotationOut"></strong></div><input id="bandRotation" type="range" min="-720" max="720" step="5" value="180"><div class="scale"><span>−720°</span><span>+720°</span></div></div>
+<div class="control"><div class="label"><label for="bandWidthVariation">Variation der Breite</label><strong id="bandWidthVariationOut"></strong></div><input id="bandWidthVariation" type="range" min="0" max="100" step="1" value="0"><div class="scale"><span>0 %</span><span>100 %</span></div></div>
+<div class="control"><div class="label"><label for="bandRotationVariation">Variation der Drehung</label><strong id="bandRotationVariationOut"></strong></div><input id="bandRotationVariation" type="range" min="0" max="180" step="1" value="0"><div class="scale"><span>0°</span><span>180°</span></div></div>
+<p class="sub">Das helle Band markiert die spätere Noppenzone. Seine Breite ist die gerade Breite quer über den lokalen Tentakelquerschnitt: 100 % entspricht dem Durchmesser und bedeckt eine halbe Umfangsseite. Die Drehung gilt vom Ansatz bis zur Spitze. Variationen ändern Breite und Winkel weich entlang der Bahn; „Neu würfeln“ erzeugt eine neue Variante. Noch keine Noppengeometrie.</p>
 <h2>Streuung</h2>
 <div class="control">
 <div class="label"><label for="turnsScatter">Umdrehungen streuen</label><strong id="turnsScatterOut">±0 %</strong></div>
@@ -154,8 +160,8 @@ function paintTriangles(triangles,cw,ch,scale,w,h){
  gl.enableVertexAttribArray(color);gl.vertexAttribPointer(color,3,gl.FLOAT,false,24,12);
  gl.drawArrays(gl.TRIANGLES,0,triangles.length*3);
 }
-const input={bendFactor:document.getElementById("bendFactor"),overlap:document.getElementById("overlap"),turnsScatter:document.getElementById("turnsScatter"),gravity:document.getElementById("gravity"),startScatter:document.getElementById("startScatter"),pitchScatter:document.getElementById("pitchScatter"),forward:document.getElementById("forward"),reverse:document.getElementById("reverse"),offset:document.getElementById("offset"),turns:document.getElementById("turns"),pitch:document.getElementById("pitch"),diam:document.getElementById("diam"),taper:document.getElementById("taper"),showBase:document.getElementById("showBase"),showRing:document.getElementById("showRing"),showCups:document.getElementById("showCups")};
-const out={bendFactor:document.getElementById("bendFactorOut"),overlap:document.getElementById("overlapOut"),turnsScatter:document.getElementById("turnsScatterOut"),gravity:document.getElementById("gravityInfo"),startScatter:document.getElementById("startScatterOut"),pitchScatter:document.getElementById("pitchScatterOut"),variant:document.getElementById("variantOut"),weaveInfo:document.getElementById("weaveInfo"),forward:document.getElementById("forwardOut"),reverse:document.getElementById("reverseOut"),offset:document.getElementById("offsetOut"),turns:document.getElementById("turnsOut"),startZ:document.getElementById("startZOut"),pitch:document.getElementById("pitchOut"),diam:document.getElementById("diamOut"),taper:document.getElementById("taperOut")};
+const input={bandWidth:document.getElementById("bandWidth"),bandRotation:document.getElementById("bandRotation"),bandWidthVariation:document.getElementById("bandWidthVariation"),bandRotationVariation:document.getElementById("bandRotationVariation"),bendFactor:document.getElementById("bendFactor"),overlap:document.getElementById("overlap"),turnsScatter:document.getElementById("turnsScatter"),gravity:document.getElementById("gravity"),startScatter:document.getElementById("startScatter"),pitchScatter:document.getElementById("pitchScatter"),forward:document.getElementById("forward"),reverse:document.getElementById("reverse"),offset:document.getElementById("offset"),turns:document.getElementById("turns"),pitch:document.getElementById("pitch"),diam:document.getElementById("diam"),taper:document.getElementById("taper"),showBase:document.getElementById("showBase"),showRing:document.getElementById("showRing"),showCups:document.getElementById("showCups")};
+const out={bandWidth:document.getElementById("bandWidthOut"),bandRotation:document.getElementById("bandRotationOut"),bandWidthVariation:document.getElementById("bandWidthVariationOut"),bandRotationVariation:document.getElementById("bandRotationVariationOut"),bendFactor:document.getElementById("bendFactorOut"),overlap:document.getElementById("overlapOut"),turnsScatter:document.getElementById("turnsScatterOut"),gravity:document.getElementById("gravityInfo"),startScatter:document.getElementById("startScatterOut"),pitchScatter:document.getElementById("pitchScatterOut"),variant:document.getElementById("variantOut"),weaveInfo:document.getElementById("weaveInfo"),forward:document.getElementById("forwardOut"),reverse:document.getElementById("reverseOut"),offset:document.getElementById("offsetOut"),turns:document.getElementById("turnsOut"),startZ:document.getElementById("startZOut"),pitch:document.getElementById("pitchOut"),diam:document.getElementById("diamOut"),taper:document.getElementById("taperOut")};
 const base={outerD:27.85,wallID:25.30,holeD:14.90,totalH:4.25,baseH:1.35,rimH:2.90};
 let variantSeed=1,viewCenterZ=0;
 let yaw=-0.55,elev=0.42,zoom=1,drag=null,raf=0;
@@ -168,18 +174,19 @@ const unit=a=>{const n=Math.hypot(a[0],a[1],a[2])||1;return [a[0]/n,a[1]/n,a[2]/
 const fmt=x=>Number(x).toFixed(2).replace(".",",");
 function bendRadius(p,t=0){return Math.max(.3,2*localRadius(p,t))*(p.bendFactor??1);}
 function contactRatio(p){return 1-(p.overlap??10)/100;}
-function params(){return {bendFactor:+input.bendFactor.value,overlap:+input.overlap.value,turnsScatter:+input.turnsScatter.value,gravity:input.gravity.checked,seed:variantSeed,startScatter:+input.startScatter.value,pitchScatter:+input.pitchScatter.value,forward:+input.forward.value,reverse:+input.reverse.value,offset:+input.offset.value,turns:+input.turns.value,pitch:+input.pitch.value,diam:+input.diam.value,taper:+input.taper.value,showBase:input.showBase.checked,showRing:input.showRing.checked};}
+function params(){return {bandWidth:+input.bandWidth.value,bandRotation:+input.bandRotation.value,bandWidthVariation:+input.bandWidthVariation.value,bandRotationVariation:+input.bandRotationVariation.value,bendFactor:+input.bendFactor.value,overlap:+input.overlap.value,turnsScatter:+input.turnsScatter.value,gravity:input.gravity.checked,seed:variantSeed,startScatter:+input.startScatter.value,pitchScatter:+input.pitchScatter.value,forward:+input.forward.value,reverse:+input.reverse.value,offset:+input.offset.value,turns:+input.turns.value,pitch:+input.pitch.value,diam:+input.diam.value,taper:+input.taper.value,showBase:input.showBase.checked,showRing:input.showRing.checked};}
 function project(p,w,h,scale){
  const cy=Math.cos(yaw),sy=Math.sin(yaw),x=p[0]*cy-p[1]*sy,y=p[0]*sy+p[1]*cy;
  const ce=Math.cos(elev),se=Math.sin(elev);
  return {x:w/2+scale*x,y:h/2+scale*(y*se-(p[2]-viewCenterZ)*ce),d:y*ce+p[2]*se};
 }
-function tri(list,a,b,c,color){
+function tri(list,a,b,c,color,band=false){
+ if(band)color=color.map(v=>Math.round(v*.45+255*.55));
  const n=unit(cross(sub(b,a),sub(c,a)));
  const light=unit([-0.45,-0.35,0.82]),ndl=Math.max(0,dot(n,light)),shade=.38+.52*ndl+.12*Math.pow(ndl,10);
  const cylinderCut=[a,b,c].every(v=>Math.abs(Math.hypot(v[0],v[1])-base.wallID/2)<1e-7);
  const rgb=cylinderCut?[55,75,84]:color.map(v=>Math.max(0,Math.min(255,Math.round(v*shade))));
- const depth=v=>{const yy=v[0]*Math.sin(yaw)+v[1]*Math.cos(yaw);return yy*Math.cos(elev)+v[2]*Math.sin(elev);};list.push({p:[a,b,c],d:(depth(a)+depth(b)+depth(c))/3,rgb,color:"rgb("+rgb.join(",")+")"});
+ const depth=v=>{const yy=v[0]*Math.sin(yaw)+v[1]*Math.cos(yaw);return yy*Math.cos(elev)+v[2]*Math.sin(elev);};list.push({p:[a,b,c],band,d:(depth(a)+depth(b)+depth(c))/3,rgb,color:"rgb("+rgb.join(",")+")"});
 }
 function cylinderMesh(list,r,z0,z1,color,segments,inner){
  for(let i=0;i<segments;i++){
@@ -1349,11 +1356,13 @@ function clipAtFloor(list,surface,color){
   if(r<ri&&r>0){v[0]*=ri/r;v[1]*=ri/r;}
   const point=snap(v);intersections.set(edge,point);return point;
  };
+ let currentBand=false;
  const addTriangle=(a,b,c)=>{
   if(Math.hypot(...cross(sub(b,a),sub(c,a)))<=1e-20)return;
-  clipped.push([a,b,c]);
+  clipped.push(Object.assign([a,b,c],{band:currentBand}));
  };
  for(const face of surface){
+  currentBand=!!face.band;
   if(face.every(v=>v[2]>eps)){clipped.push(face);continue;}
   const poly=[];
   for(let j=0;j<3;j++){
@@ -1364,6 +1373,7 @@ function clipAtFloor(list,surface,color){
   const clean=poly.filter((v,i)=>key(v)!==key(poly[(i+poly.length-1)%poly.length]));
   for(let j=1;j<clean.length-1;j++)addTriangle(clean[0],clean[j],clean[j+1]);
  }
+ currentBand=false;
  const capStart=clipped.length;
 
  for(const face of clipped)for(let j=0;j<3;j++){
@@ -1441,7 +1451,7 @@ function clipAtFloor(list,surface,color){
   }
  }
 
- for(const face of clipped)tri(list,...face,color);
+ for(const face of clipped)tri(list,...face,color,face.band);
 }
 function clipAtInnerCylinder(surface){
  const ri=base.wallID/2;
@@ -1466,11 +1476,13 @@ function clipAtInnerCylinder(surface){
   const v=[a[0]+t*dx,a[1]+t*dy,a[2]+t*(b[2]-a[2])],r=Math.hypot(v[0],v[1]);
   v[0]*=ri/r;v[1]*=ri/r;const point=snap(v);intersections.set(edge,point);return point;
  };
+ let currentBand=false;
  const addTriangle=(a,b,c)=>{
   if(Math.hypot(...cross(sub(b,a),sub(c,a)))<=1e-20)return;
-  clipped.push([a,b,c]);
+  clipped.push(Object.assign([a,b,c],{band:currentBand}));
  };
  for(const face of surface){
+  currentBand=!!face.band;
   const poly=[];
   for(let j=0;j<3;j++){
    const a=snap(face[j]),b=snap(face[(j+1)%3]),insideA=Math.hypot(a[0],a[1])>=ri-eps,insideB=Math.hypot(b[0],b[1])>=ri-eps;
@@ -1480,6 +1492,7 @@ function clipAtInnerCylinder(surface){
   const clean=poly.filter((v,i)=>key(v)!==key(poly[(i+poly.length-1)%poly.length]));
   for(let j=1;j<clean.length-1;j++)addTriangle(clean[0],clean[j],clean[j+1]);
  }
+ currentBand=false;
  const capStart=clipped.length;
  for(const face of clipped)for(let j=0;j<3;j++){
   const a=face[j],b=face[(j+1)%3];
@@ -1539,10 +1552,21 @@ function clipAtInnerCylinder(surface){
  return clipped;
 }
 const tentacleMeshCache=new Map();
+function bandProfile(t,phase,direction,p){
+ const u=t/tentacleEnd(p),seed=(p.seed||1)*.731+phase*1.37+direction*.93;
+ const wave=(u,shift)=>.65*Math.sin(2*Math.PI*u+seed+shift)+.35*Math.sin(4*Math.PI*u-seed*.7+shift);
+ const width=Math.max(0,Math.min(1,(p.bandWidth??0)/100*(1+(p.bandWidthVariation||0)/100*wave(u,0))));
+ const angle=(p.bandRotation||0)*Math.PI/180*u+(p.bandRotationVariation||0)*Math.PI/180*wave(u,1.7);
+ return {width,half:Math.asin(width),angle};
+}
+function bandAngle(j,nf,profile){
+ const n=8,span=2*profile.half;
+ return profile.angle-profile.half+(j<=n?span*j/n:span+(2*Math.PI-span)*(j-n)/(nf-n));
+}
 function tubeMesh(list,phase,direction,p,baseColor,path=[]){
- const cacheKey=JSON.stringify([phase,direction,p.diam,p.pitch,p.turns,p.taper,path,path.sag?.map(n=>[n.t,n.variable.value])]);
+ const cacheKey=JSON.stringify([phase,direction,p.diam,p.pitch,p.turns,p.taper,p.bandWidth,p.bandRotation,p.bandWidthVariation,p.bandRotationVariation,p.seed,path,path.sag?.map(n=>[n.t,n.variable.value])]);
  if(tentacleMeshCache.has(cacheKey)){
-  for(const face of tentacleMeshCache.get(cacheKey))tri(list,...face,baseColor);
+  for(const face of tentacleMeshCache.get(cacheKey))tri(list,...face,baseColor,face.band);
   return;
  }
  const firstTriangle=list.length,nf=32,surface=[],times=pathTimes(p,path),rows=[];
@@ -1553,7 +1577,7 @@ function tubeMesh(list,phase,direction,p,baseColor,path=[]){
   if(Math.hypot(...normal)<1e-6)normal=previousNormal?sub(previousNormal,mul(T,dot(previousNormal,T))):cross(T,[0,0,1]);
   const N=unit(normal),B=unit(cross(T,N)),rad=localRadius(p,t);previousNormal=N;
   rows.push({C,T,N,B,ring:Array.from({length:nf},(_,j)=>{
-   const angle=2*Math.PI*j/nf;
+   const angle=bandAngle(j,nf,bandProfile(t,phase,direction,p));
    return add(C,mul(add(mul(N,Math.cos(angle)),mul(B,Math.sin(angle))),rad));
   })});
  }
@@ -1562,19 +1586,19 @@ function tubeMesh(list,phase,direction,p,baseColor,path=[]){
  for(let i=1;i<=8;i++){
   const phi=i*Math.PI/16,C=add(endRow.C,mul(endRow.T,capRadius*Math.sin(phi))),r=capRadius*Math.cos(phi);
   rows.push({C,ring:Array.from({length:nf},(_,j)=>{
-   const angle=2*Math.PI*j/nf;
+   const angle=bandAngle(j,nf,bandProfile(tentacleEnd(p),phase,direction,p));
    return add(C,mul(add(mul(endRow.N,Math.cos(angle)),mul(endRow.B,Math.sin(angle))),r));
   })});
  }
- const emit=(a,b,c)=>{if(Math.hypot(...cross(sub(b,a),sub(c,a)))>1e-12)surface.push([a,b,c]);};
+ const emit=(a,b,c,band=false)=>{if(Math.hypot(...cross(sub(b,a),sub(c,a)))>1e-12)surface.push(Object.assign([a,b,c],{band}));};
  for(let i=0;i<rows.length-1;i++)for(let j=0;j<nf;j++){
   const k=(j+1)%nf,a=rows[i].ring[j],b=rows[i].ring[k],d=rows[i+1].ring[j],e=rows[i+1].ring[k];
-  emit(a,b,e);emit(a,e,d);
+  emit(a,b,e,(p.bandWidth??0)>0&&j<8);emit(a,e,d,(p.bandWidth??0)>0&&j<8);
  }
  for(let j=0;j<nf;j++)emit(rows[0].C,rows[0].ring[(j+1)%nf],rows[0].ring[j]);
  clipAtFloor(list,clipAtInnerCylinder(surface),baseColor);
  if(tentacleMeshCache.size>=12)tentacleMeshCache.clear();
- tentacleMeshCache.set(cacheKey,list.slice(firstTriangle).map(t=>t.p));
+ tentacleMeshCache.set(cacheKey,list.slice(firstTriangle).map(t=>Object.assign(t.p,{band:t.band})));
 }
 function drawCups(p,w,h,scale){
  const R=(base.wallID/2+base.outerD/2)/2,startZ=-p.diam;
@@ -1604,8 +1628,9 @@ function render(){
  ctx.setTransform(dpr,0,0,dpr,0,0);
  const cw=rect.width,ch=rect.height;ctx.clearRect(0,0,cw,ch);
  const p=params(),strands=tentacles(p);
+ out.bandWidth.textContent=p.bandWidth+" %";out.bandRotation.textContent=p.bandRotation+"°";out.bandWidthVariation.textContent=p.bandWidthVariation+" %";out.bandRotationVariation.textContent=p.bandRotationVariation+"°";
  out.bendFactor.textContent=fmt(p.bendFactor)+" × Ø · "+fmt(bendRadius(p))+" mm am Ansatz";out.overlap.textContent=p.overlap+" %";
- out.gravity.textContent=(p.gravity?"Abgelegt · Biegeradius: "+fmt(p.bendFactor)+" × lokaler Ø":"Ablegen aus")+(p.gravity?(strands.gravity.unresolved?" · "+strands.gravity.unresolved+" Prüfstellen: Biegeradius noch unterschritten":" · Biegeradiusprüfung bestanden"):"")+(p.gravity?" · Kontaktphase Restfehler an Stützpunkten: "+fmt(strands.gravity.contactResidual||0)+" mm":"")+(p.gravity&&strands.gravity.gaps?" · "+strands.gravity.gaps+" freie Prüfstellen nach Biegekorrektur":"");out.turnsScatter.textContent="±"+p.turnsScatter+" %";out.startScatter.textContent="±"+p.startScatter+"°";out.pitchScatter.textContent="±"+p.pitchScatter+" %";out.variant.textContent="Variante "+variantSeed;document.getElementById("reroll").disabled=!(p.turnsScatter||p.startScatter||p.pitchScatter);out.weaveInfo.textContent=p.gravity?"Kreuzungen zuerst berechnet · danach nur nach unten ablegen":strands.crossings+" Kreuzungen · "+strands.clusters+(strands.clusters===1?" gemeinsamer Bereich":" gemeinsame Bereiche")+(strands.conflicts?" · "+strands.conflicts+" mit Vorrang für Uhrzeigersinn":"");out.forward.textContent=p.forward;out.reverse.textContent=p.reverse;out.offset.textContent=p.offset+"°";out.turns.textContent=fmt(p.turns);out.startZ.textContent="−"+fmt(p.diam)+" mm";out.pitch.textContent=fmt(p.pitch)+" mm";out.diam.textContent=fmt(p.diam)+" mm";out.taper.textContent=Math.round(p.taper*100)+" %";
+ out.gravity.textContent=(p.gravity?"Abgelegt · Biegeradius: "+fmt(p.bendFactor)+" × lokaler Ø":"Ablegen aus")+(p.gravity?(strands.gravity.unresolved?" · "+strands.gravity.unresolved+" Prüfstellen: Biegeradius noch unterschritten":" · Biegeradiusprüfung bestanden"):"")+(p.gravity?" · Kontaktphase Restfehler an Stützpunkten: "+fmt(strands.gravity.contactResidual||0)+" mm":"")+(p.gravity&&strands.gravity.gaps?" · "+strands.gravity.gaps+" freie Prüfstellen nach Biegekorrektur":"");out.turnsScatter.textContent="±"+p.turnsScatter+" %";out.startScatter.textContent="±"+p.startScatter+"°";out.pitchScatter.textContent="±"+p.pitchScatter+" %";out.variant.textContent="Variante "+variantSeed;document.getElementById("reroll").disabled=!(p.turnsScatter||p.startScatter||p.pitchScatter||p.bandWidthVariation||p.bandRotationVariation);out.weaveInfo.textContent=p.gravity?"Kreuzungen zuerst berechnet · danach nur nach unten ablegen":strands.crossings+" Kreuzungen · "+strands.clusters+(strands.clusters===1?" gemeinsamer Bereich":" gemeinsame Bereiche")+(strands.conflicts?" · "+strands.conflicts+" mit Vorrang für Uhrzeigersinn":"");out.forward.textContent=p.forward;out.reverse.textContent=p.reverse;out.offset.textContent=p.offset+"°";out.turns.textContent=fmt(p.turns);out.startZ.textContent="−"+fmt(p.diam)+" mm";out.pitch.textContent=fmt(p.pitch)+" mm";out.diam.textContent=fmt(p.diam)+" mm";out.taper.textContent=Math.round(p.taper*100)+" %";
  const height=Math.max(base.totalH,...strands.map(s=>s.maxZ)),extent=Math.max(base.outerD/2,...strands.map(s=>s.maxR));
  viewCenterZ=height/2;
  const scale=Math.min(cw/(2*extent+4),ch/(2*extent*Math.abs(Math.sin(elev))+height*Math.abs(Math.cos(elev))+8))*zoom;
@@ -1628,8 +1653,8 @@ function render(){
 function schedule(){if(!raf)raf=requestAnimationFrame(()=>{raf=0;render();});}
 let parameterTimer=0;
 function parametersChanged(){clearTimeout(parameterTimer);out.gravity.textContent="Abstände werden berechnet …";parameterTimer=setTimeout(schedule,180);}
-for(const el of [input.bendFactor,input.overlap,input.turnsScatter,input.gravity,input.startScatter,input.pitchScatter,input.forward,input.reverse,input.offset,input.turns,input.pitch,input.diam,input.taper,input.showBase,input.showRing,input.showCups])el.addEventListener("input",parametersChanged);
-document.getElementById("reset").addEventListener("click",()=>{variantSeed=1;input.bendFactor.value=1;input.overlap.value=10;input.turnsScatter.value=0;input.gravity.checked=true;input.startScatter.value=0;input.pitchScatter.value=0;input.forward.value=2;input.reverse.value=0;input.offset.value=0;input.turns.value=1;input.pitch.value=3;input.diam.value=2.5;input.taper.value=.75;input.showBase.checked=true;input.showRing.checked=true;input.showCups.checked=false;schedule();});
+for(const el of [input.bandWidth,input.bandRotation,input.bandWidthVariation,input.bandRotationVariation,input.bendFactor,input.overlap,input.turnsScatter,input.gravity,input.startScatter,input.pitchScatter,input.forward,input.reverse,input.offset,input.turns,input.pitch,input.diam,input.taper,input.showBase,input.showRing,input.showCups])el.addEventListener("input",parametersChanged);
+document.getElementById("reset").addEventListener("click",()=>{variantSeed=1;input.bandWidth.value=40;input.bandRotation.value=180;input.bandWidthVariation.value=0;input.bandRotationVariation.value=0;input.bendFactor.value=1;input.overlap.value=10;input.turnsScatter.value=0;input.gravity.checked=true;input.startScatter.value=0;input.pitchScatter.value=0;input.forward.value=2;input.reverse.value=0;input.offset.value=0;input.turns.value=1;input.pitch.value=3;input.diam.value=2.5;input.taper.value=.75;input.showBase.checked=true;input.showRing.checked=true;input.showCups.checked=false;schedule();});
 document.getElementById("reroll").addEventListener("click",()=>{variantSeed++;schedule();});
 document.getElementById("viewReset").addEventListener("click",()=>{yaw=-.55;elev=.42;zoom=1;schedule();});
 canvas.addEventListener("pointerdown",e=>{drag={x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId);});

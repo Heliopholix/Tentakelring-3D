@@ -335,7 +335,9 @@ function sagValue(t,path){
  return [a.variable.value+delta*(10*u**3-15*u**4+6*u**5),delta*30*u*u*(1-u)**2/dt,delta*60*u*(1-u)*(1-2*u)/(dt*dt)];
 }
 function evaluatePath(t,phase,direction,p,path){
- const q=evaluateUnsettledPath(t,phase,direction,p,path),s=sagValue(t,path);
+ const q=evaluateUnsettledPath(t,phase,direction,p,path);
+ if(q.value[2]<=0)return q;
+ const s=sagValue(t,path);
  q.value[2]-=s[0];q.derivative[2]-=s[1];q.secondDerivative[2]-=s[2];return q;
 }
 function curveState(t,strand,p,settled=true){

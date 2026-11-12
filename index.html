@@ -23,7 +23,7 @@ canvas{display:block;width:100%;height:100%;min-height:620px;touch-action:none}.
 <main>
 <aside>
 <h1>Tentakelring 3D</h1>
-<p class="sub">Parametrische Vorschau · Stand v0.11</p>
+<p class="sub">Parametrische Vorschau · Stand v0.12</p>
 <h2>Tentakel</h2>
 <div class="control">
 <div class="label"><label for="forward">Mitläufige Tentakel</label><strong id="forwardOut">2</strong></div>
@@ -47,7 +47,7 @@ canvas{display:block;width:100%;height:100%;min-height:620px;touch-action:none}.
 </div>
 
 <p class="sub" id="weaveInfo" aria-live="polite"></p>
-<p class="sub">Fester Mindestbiegeradius für Kreuzungen und Ablegen: ein Tentakeldurchmesser. Die Übergänge werden automatisch berechnet. Die Steigung beschreibt die Ausgangsbahn; die endgültige Höhe entsteht aus der Auflage.</p>
+<p class="sub">Fester Mindestbiegeradius für Kreuzungen und Ablegen: ein Tentakeldurchmesser. Die Übergänge werden automatisch berechnet. Die Kreuzungsbahnen bleiben seitlich erhalten; die Ablage verändert nur ihre Höhe.</p>
 <div class="label"><span>Starthöhe</span><strong id="startZOut">−2,50 mm</strong></div>
 <div class="control">
 <div class="label"><span>Steigung pro Umdrehung</span><strong id="pitchOut">3,00 mm</strong></div>
@@ -67,7 +67,7 @@ canvas{display:block;width:100%;height:100%;min-height:620px;touch-action:none}.
 <h2>Abstände und Absenkung</h2>
 <label class="check"><input id="gravity" type="checkbox" checked> Von unten nach oben ablegen</label>
 <p class="sub" id="gravityInfo" aria-live="polite"></p>
-<p class="sub">Zuerst auf der Bodenplatte, dann auf bereits abgelegten Abschnitten. Ziel: automatisch geregelter Eingriff (20–35 %). Tangenten sind frei; 90°-Kreuzungen werden beim Ablegen angepasst. Verbleibende Brücken und Radiusabweichungen werden angezeigt.</p>
+<p class="sub">Zuerst werden alle Kreuzungsbahnen vollständig berechnet. Danach darf die Ablage ausschließlich Z absenken, und nur für Mittellinien über Z = 0. Kreuzungspartner werden gemeinsam verschoben; ihre seitliche Führung und Kreuzungswinkel bleiben erhalten. Auflage zählt nur auf ursprünglich tieferen Bahnabschnitten oder der Platte.</p>
 <h2>Streuung</h2>
 <div class="control">
 <div class="label"><label for="turnsScatter">Umdrehungen streuen</label><strong id="turnsScatterOut">±0 %</strong></div>
@@ -99,7 +99,7 @@ Randhöhe 2,90 mm · Grundplatte 1,35 mm
 </div>
 <div class="note">
 <b>Geometrie</b><br>
-Je 0–5 Tentakel pro Richtung, mit einstellbarer Steigung, Umdrehungszahl und Streuung. Das Ablegen erfolgt von unten nach oben mit automatisch geregelter Überlappung (20–35 %). Nur bereits aufliegende Abschnitte dienen als Unterlage. Kreuzungen und Übergänge verwenden denselben festen Mindestbiegeradius (Tentakeldurchmesser); ihre Tangenten dürfen sich anpassen. Die Körper werden am Innenzylinder Ø 25,30 mm und an z = 0 beschnitten und geschlossen.</div>
+Je 0–5 Tentakel pro Richtung, mit einstellbarer Steigung, Umdrehungszahl und Streuung. Die Ablage verändert die fertigen Kreuzungsbahnen nur nach unten. Mittellinien bei Z ≤ 0 bleiben unverändert. Kreuzungspartner teilen sich einen vertikalen Versatz; die seitliche Bahn bleibt unverändert. Der feste Mindestbiegeradius entspricht dem Tentakeldurchmesser. Verbleibende Abstände und zu enge Ausgangsbögen werden angezeigt. Die Körper werden am Innenzylinder Ø 25,30 mm und an z = 0 beschnitten und geschlossen.</div>
 <div class="buttons"><button id="reset">Parameter zurücksetzen</button><button id="viewReset">Ansicht zurücksetzen</button></div>
 </aside>
 <section class="stage">
@@ -396,80 +396,114 @@ function evaluateLaid(t,points){
  return {C,V,A:Q,curvature:Math.hypot(...cross(V,Q))/Math.max(1e-18,Math.hypot(...V)**3)};
 }
 function gravityRelax(strands,p){
- const stats={moved:0,maxDrop:0,bendLimited:0,gaps:0,unresolved:0,minRadius:Infinity,maxBridge:0,iterations:0};
- if(!strands.length||p.gravity===false)return stats;
- const ordered=[],placed=[],D=p.diam;
- for(const [layOrder,strand] of strands.entries()){
-  strand.layOrder=layOrder;
+ const stats={moved:0,maxDrop:0,bendLimited:0,gaps:0,unresolved:0,minRadius:Infinity,iterations:0};
+ if(!strands.length)return stats;
+ const variables=[],crossingVariables=new Map();
+ for(const strand of strands){
   strand.gravityParams={...p,pitch:strand.pitch,turns:strand.turns};
   const length=Math.hypot((base.wallID+base.outerD)/4*2*Math.PI,strand.pitch)*strand.turns;
   strand.gravityLength=length;
-  const n=Math.max(16,Math.ceil(length/.65)),points=[];
-  for(let i=0;i<=n;i++){
-   const t=i/n,old=curveState(t,strand,p,false).C,r=localRadius(p,t),R0=(base.wallID+base.outerD)/4,R=Math.hypot(old[0],old[1]),angle=strand.phase+strand.direction*2*Math.PI*strand.turns*t,C=[R0*Math.cos(angle),R0*Math.sin(angle),0];
-   const node={strand,i,t,r,old,C,step:length/n};ordered.push(node);points.push(C);
-  }
-  strand.path.laid=points;
+  const count=Math.max(4,Math.ceil(length/Math.max(3,2*p.diam))),times=Array.from({length:count+1},(_,i)=>i/count);
+  for(const section of strand.path)for(const knot of section.knots)times.push(knot.t);
+  times.push(p.taper);times.sort((a,b)=>a-b);
+  const nodes=times.filter((t,i)=>!i||t-times[i-1]>1e-8).map(t=>{
+   const event=strand.events.find(e=>Math.abs(e.t-t)<1e-8),crossing=event?.id;
+   let variable=crossing===undefined?null:crossingVariables.get(crossing);
+   if(!variable){variable={value:0,members:[],maxDrop:Infinity,active:false};variables.push(variable);if(crossing!==undefined)crossingVariables.set(crossing,variable);}
+   const C=curveState(t,strand,p,false).C,r=localRadius(p,t),node={t,variable,strand,C,r};
+   variable.maxDrop=Math.min(variable.maxDrop,Math.max(0,C[2]-floorSupport(C,r)));
+   variable.members.push(node);return node;
+  });
+  nodes.forEach((node,i)=>node.index=i);strand.path.sag=nodes;
  }
- ordered.sort((a,b)=>a.strand.layOrder-b.strand.layOrder||a.t-b.t);
- // Only points already placed on the plate or on an earlier supported point
- // are eligible supports. No pair can keep each other floating.
- for(const node of ordered){
-  let z=floorSupport(node.C,node.r);
-  for(const lower of placed){
-   if(lower.strand===node.strand&&Math.abs(lower.t-node.t)*node.strand.gravityLength<2*D)continue;
-   const target=(.8-.05*(p.layPass||0))*(node.r+lower.r),d2=(node.C[0]-lower.C[0])**2+(node.C[1]-lower.C[1])**2;
-   if(d2<target*target)z=Math.max(z,lower.C[2]+Math.sqrt(target*target-d2));
-  }
-  node.C[2]=z;placed.push(node);
- }
- // Free tangents: smooth connected pieces rather than fixing their direction
- // at every sample. One fixed bend radius D governs crossings and lay-down.
- for(let iteration=0;iteration<240;iteration++){
-  let changed=false;
+ // Crossing values are shared. Zero first/second derivatives of the quintic
+ // displacement retain the paired crossing tangents and local separation.
+ const buildColumns=()=>{
+  const cell=p.diam,columns=new Map(),segments=[];
   for(const strand of strands){
-   const points=strand.path.laid,next=points.map(v=>v.slice());
-   for(let i=1;i<points.length-1;i++){
-    const a=points[i-1],b=points[i],c=points[i+1],ab=sub(b,a),bc=sub(c,b),ac=sub(c,a);
-    const radius=Math.hypot(...ab)*Math.hypot(...bc)*Math.hypot(...ac)/Math.max(1e-18,2*Math.hypot(...cross(ab,ac)));
-    if(radius<1.18*D){
-     for(let j=0;j<3;j++)next[i][j]=.5*b[j]+.25*(a[j]+c[j]);
-     changed=true;
-    }
+   const times=pathTimes(strand.gravityParams,strand.path,120),points=times.map(t=>curveState(t,strand,p).C);
+   for(let i=1;i<times.length;i++){
+    const a=points[i-1],b=points[i],segment={strand,a,b,originalZ:(curveState(times[i-1],strand,p,false).C[2]+curveState(times[i],strand,p,false).C[2])/2,t:(times[i-1]+times[i])/2,r:localRadius(p,(times[i-1]+times[i])/2)},id=segments.length;segments.push(segment);
+    for(let x=Math.floor(Math.min(a[0],b[0])/cell);x<=Math.floor(Math.max(a[0],b[0])/cell);x++)
+    for(let y=Math.floor(Math.min(a[1],b[1])/cell);y<=Math.floor(Math.max(a[1],b[1])/cell);y++){const key=x+","+y;if(!columns.has(key))columns.set(key,[]);columns.get(key).push(id);}
    }
-   for(let i=0;i<points.length;i++)for(let j=0;j<3;j++)points[i][j]=next[i][j];
   }
-  stats.iterations=iteration+1;if(!changed)break;
+  const nearestLine=centerlineIndex(segments);
+  return node=>{
+   const C=curveState(node.t,node.strand,p).C,diam=2*node.r,reach=Math.max(diam,p.diam*.5),ids=new Set();
+   for(let x=Math.floor((C[0]-reach)/cell);x<=Math.floor((C[0]+reach)/cell);x++)
+   for(let y=Math.floor((C[1]-reach)/cell);y<=Math.floor((C[1]+reach)/cell);y++)for(const id of columns.get(x+","+y)||[])ids.add(id);
+   const nearest=nearestLine(C,{strand:node.strand,t:node.t,diameter:p.diam}).distance;
+   let support=floorSupport(C,node.r);
+   for(const id of ids){
+    const q=segments[id];
+    if(q.originalZ>=node.C[2]-1e-7)continue;
+    if(q.strand===node.strand&&Math.abs(q.t-node.t)*node.strand.gravityLength<2*p.diam)continue;
+    const v=sub(q.b,q.a),w=sub(C,q.a),len2=dot(v,v),u=Math.max(0,Math.min(1,dot(w,v)/Math.max(1e-18,len2)));
+    // Full 3D nearest distance comes from the global segment index above.
+    const target=.9*Math.min(diam,node.r+q.r),xy=v[0]*v[0]+v[1]*v[1];
+    if(target<1e-8)continue;
+    let t;
+    if(xy<1e-15){if(w[0]*w[0]+w[1]*w[1]>target*target)continue;t=v[2]>0?1:0;}
+    else{
+     const center=(w[0]*v[0]+w[1]*v[1])/xy,perp=w[0]*w[0]+w[1]*w[1]-center*center*xy,available=target*target-perp;
+     if(available<0)continue;
+     const half=Math.sqrt(available/xy),lo=Math.max(0,center-half),hi=Math.min(1,center+half);if(lo>hi)continue;
+     t=Math.max(lo,Math.min(hi,center+v[2]*Math.sqrt(available/(xy*len2))));
+    }
+    const point=add(q.a,mul(v,t)),horizontal=(C[0]-point[0])**2+(C[1]-point[1])**2;
+    const top=point[2]+Math.sqrt(Math.max(0,target*target-horizontal));
+    if(top<=C[2]+1e-7)support=Math.max(support,top);
+   }
+   return {nearest,desired:Math.max(0,node.C[2]-Math.min(C[2],support))};
+  };
+ };
+ // Precompute the affected intervals, including their original curvature.
+ for(const variable of variables){
+  variable.checks=[];
+  for(const node of variable.members){
+   const nodes=node.strand.path.sag;
+   for(let i=Math.max(0,node.index-1);i<=Math.min(nodes.length-2,node.index);i++)for(let j=0;j<=64;j++){
+    const t=nodes[i].t+(nodes[i+1].t-nodes[i].t)*j/64,original=curveState(t,node.strand,p,false),r=localRadius(p,t);
+    variable.checks.push({t,strand:node.strand,allowed:Math.max(original.curvature,.97/p.diam),floor:Math.min(original.C[2],floorSupport(original.C,r))});
+   }
+  }
  }
- // Compare finished curves with the actual plate and other lower centreline
- // segments. The display reports residual bridges rather than declaring success.
- const samples=[];
+ const valid=variable=>variable.checks.every(check=>{
+  const q=curveState(check.t,check.strand,p);
+  return q.C[2]>=check.floor-1e-7&&q.curvature<=check.allowed*(1+1e-7)+1e-10;
+ });
+ if(p.gravity!==false)for(let iteration=0;iteration<24;iteration++){
+  const query=buildColumns();let changed=0;
+  const targets=variables.map(variable=>{
+   let desired=Infinity,unsupported=false;
+   for(const node of variable.members){const q=query(node);if(node.C[2]>0&&node.variable.maxDrop>0)unsupported=true;desired=Math.min(desired,q.desired);}
+   if(unsupported)variable.active=true;
+   return variable.active?Math.min(variable.maxDrop,desired):variable.value;
+  });
+  variables.forEach((variable,i)=>{
+   const old=variable.value,delta=Math.min(p.diam,targets[i]-old);if(delta<.001)return;
+   let accepted=false;
+   for(let scale=1;scale>=1/256;scale*=.5){variable.value=old+delta*scale;if(valid(variable)){accepted=true;changed=Math.max(changed,delta*scale);break;}}
+   if(!accepted){variable.value=old;variable.limited=true;}
+  });
+  stats.iterations=iteration+1;if(changed<.002)break;
+ }
  for(const strand of strands){
-  const times=pathTimes(strand.gravityParams,strand.path,240);
-  strand.maxZ=base.totalH;
-  for(const t of times){
-   const q=evaluateLaid(t,strand.path.laid),r=localRadius(p,t),original=curveState(t,strand,p,false).C;
-   strand.maxZ=Math.max(strand.maxZ,q.C[2]+r);
-   stats.maxDrop=Math.max(stats.maxDrop,original[2]-q.C[2]);
-   if(Math.abs(original[2]-q.C[2])>.01)stats.moved++;
-   if(r>.02){stats.minRadius=Math.min(stats.minRadius,1/Math.max(1e-15,q.curvature));if(q.curvature>1/D*(1+1e-3))stats.unresolved++;}
-   samples.push({strand,t,r,C:q.C});
+  const samples=pathTimes(strand.gravityParams,strand.path,240);
+  for(const t of samples){
+   const q=curveState(t,strand,p),r=localRadius(p,t),drop=sagValue(t,strand.path)[0];
+   if(drop>.01)stats.moved++;stats.maxDrop=Math.max(stats.maxDrop,drop);
+   if(q.C[2]+r>0&&r>.01){stats.minRadius=Math.min(stats.minRadius,1/Math.max(1e-15,q.curvature));if(q.curvature>1/p.diam*(1+1e-4))stats.unresolved++;}
   }
+  strand.maxZ=Math.max(base.totalH,...samples.map(t=>curveState(t,strand,p).C[2]+localRadius(p,t)));
  }
- let previous=null,bridge=0;
- for(const a of samples){
-  if(!previous||previous.strand!==a.strand)bridge=0;
-  const step=previous&&previous.strand===a.strand?Math.hypot(...sub(a.C,previous.C)):0;previous=a;
-  if(a.r<.05||a.C[2]<=base.baseH+a.r+.025){bridge=0;continue;}
-  let supported=false;
-  for(const b of samples){
-   if(b.C[2]>=a.C[2]||b.strand===a.strand&&Math.abs(b.t-a.t)*a.strand.gravityLength<2*D)continue;
-   if(Math.hypot(...sub(a.C,b.C))<=a.r+b.r+.025){supported=true;break;}
-  }
-  if(!supported){stats.gaps++;bridge+=step;stats.maxBridge=Math.max(stats.maxBridge,bridge);}else bridge=0;
+ const finalQuery=buildColumns();
+ for(const variable of variables)for(const node of variable.members){
+  const C=curveState(node.t,node.strand,p).C;
+  if(node.r>.05&&C[2]>floorSupport(C,node.r)+.02&&finalQuery(node).nearest>2*node.r+.02)stats.gaps++;
  }
- if(stats.maxBridge>1&&(p.layPass||0)<3)return gravityRelax(strands,{...p,layPass:(p.layPass||0)+1});
- stats.overlap=20+5*(p.layPass||0);
+ stats.bendLimited=variables.filter(v=>v.limited).length;
  return stats;
 }
 
@@ -708,7 +742,7 @@ function clipAtInnerCylinder(surface){
 }
 const tentacleMeshCache=new Map();
 function tubeMesh(list,phase,direction,p,baseColor,path=[]){
- const cacheKey=JSON.stringify([phase,direction,p.diam,p.pitch,p.turns,p.taper,path,path.laid]);
+ const cacheKey=JSON.stringify([phase,direction,p.diam,p.pitch,p.turns,p.taper,path,path.sag?.map(n=>[n.t,n.variable.value])]);
  if(tentacleMeshCache.has(cacheKey)){
   for(const face of tentacleMeshCache.get(cacheKey))tri(list,...face,baseColor);
   return;
@@ -762,7 +796,7 @@ function render(){
  ctx.setTransform(dpr,0,0,dpr,0,0);
  const cw=rect.width,ch=rect.height;ctx.clearRect(0,0,cw,ch);
  const p=params(),strands=tentacles(p);
- out.gravity.textContent=(p.gravity?"Abgelegt · Mindestbiegeradius: "+fmt(p.diam)+" mm":"Ablegen aus")+(p.gravity?(strands.gravity.unresolved?" · "+strands.gravity.unresolved+" Prüfstellen: Biegeradius noch unterschritten":" · Biegeradiusprüfung bestanden"):"")+(p.gravity&&strands.gravity.gaps?" · "+"längste Restbrücke: "+fmt(strands.gravity.maxBridge)+" mm":"");out.turnsScatter.textContent="±"+p.turnsScatter+" %";out.startScatter.textContent="±"+p.startScatter+"°";out.pitchScatter.textContent="±"+p.pitchScatter+" %";out.variant.textContent="Variante "+variantSeed;document.getElementById("reroll").disabled=!(p.turnsScatter||p.startScatter||p.pitchScatter);out.weaveInfo.textContent=p.gravity?"Ablegereihenfolge: mitläufige, dann gegenläufige Tentakel":strands.crossings+" Kreuzungen · "+strands.clusters+(strands.clusters===1?" gemeinsamer Bereich":" gemeinsame Bereiche")+(strands.conflicts?" · "+strands.conflicts+" mit Vorrang für Uhrzeigersinn":"");out.forward.textContent=p.forward;out.reverse.textContent=p.reverse;out.offset.textContent=p.offset+"°";out.turns.textContent=fmt(p.turns);out.startZ.textContent="−"+fmt(p.diam)+" mm";out.pitch.textContent=fmt(p.pitch)+" mm";out.diam.textContent=fmt(p.diam)+" mm";out.taper.textContent=Math.round(p.taper*100)+" %";
+ out.gravity.textContent=(p.gravity?"Abgelegt · Mindestbiegeradius: "+fmt(p.diam)+" mm":"Ablegen aus")+(p.gravity?(strands.gravity.unresolved?" · "+strands.gravity.unresolved+" Prüfstellen: Biegeradius noch unterschritten":" · Biegeradiusprüfung bestanden"):"")+(p.gravity&&strands.gravity.gaps?" · "+strands.gravity.gaps+" freie Prüfstellen":"");out.turnsScatter.textContent="±"+p.turnsScatter+" %";out.startScatter.textContent="±"+p.startScatter+"°";out.pitchScatter.textContent="±"+p.pitchScatter+" %";out.variant.textContent="Variante "+variantSeed;document.getElementById("reroll").disabled=!(p.turnsScatter||p.startScatter||p.pitchScatter);out.weaveInfo.textContent=p.gravity?"Kreuzungen zuerst berechnet · danach nur nach unten ablegen":strands.crossings+" Kreuzungen · "+strands.clusters+(strands.clusters===1?" gemeinsamer Bereich":" gemeinsame Bereiche")+(strands.conflicts?" · "+strands.conflicts+" mit Vorrang für Uhrzeigersinn":"");out.forward.textContent=p.forward;out.reverse.textContent=p.reverse;out.offset.textContent=p.offset+"°";out.turns.textContent=fmt(p.turns);out.startZ.textContent="−"+fmt(p.diam)+" mm";out.pitch.textContent=fmt(p.pitch)+" mm";out.diam.textContent=fmt(p.diam)+" mm";out.taper.textContent=Math.round(p.taper*100)+" %";
  const height=Math.max(base.totalH,...strands.map(s=>s.maxZ)),extent=Math.max(base.outerD/2,...strands.map(s=>s.maxR));
  viewCenterZ=height/2;
  const scale=Math.min(cw/(2*extent+4),ch/(2*extent*Math.abs(Math.sin(elev))+height*Math.abs(Math.cos(elev))+8))*zoom;

@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tentakelring 3D – Parameter-Vorschau</title>
+<style>
+:root{color-scheme:dark;--bg:#10181d;--panel:#18242b;--line:#30434c;--text:#e8f0f2;--muted:#9fb0b7;--accent:#5ad3cd;--coral:#f08570}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.45 system-ui,Segoe UI,Arial,sans-serif}
+main{min-height:100vh;display:grid;grid-template-columns:330px minmax(0,1fr);gap:14px;padding:14px}
+aside,.stage{background:var(--panel);border:1px solid var(--line);border-radius:14px}
+aside{padding:22px;overflow:auto}h1{font-size:22px;line-height:1.15;margin:0 0 8px}h2{font-size:15px;margin:24px 0 12px;color:#d8e7eb}
+.sub{color:var(--muted);font-size:13px;margin:0 0 22px}.control{margin:15px 0 18px}.label{display:flex;justify-content:space-between;gap:12px;margin-bottom:6px}.label strong{font-variant-numeric:tabular-nums;color:#fff}.label span{color:var(--muted)}
+input[type=range]{width:100%;accent-color:var(--accent)}.scale{display:flex;justify-content:space-between;color:#82969e;font-size:11px;margin-top:1px}
+button{border:1px solid #49616b;background:#263942;color:var(--text);border-radius:8px;padding:9px 12px;font:inherit;cursor:pointer}button:hover{background:#314b55}.buttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+.note{margin-top:22px;padding:12px;border:1px solid var(--line);border-radius:9px;color:var(--muted);font-size:12px}.note b{color:#dce9ec}.stage{position:relative;min-height:620px;overflow:hidden;background:radial-gradient(ellipse at 50% 42%,#263941,#121c21 72%)}
+canvas{display:block;width:100%;height:100%;min-height:620px;touch-action:none}.badge{position:absolute;left:18px;top:16px;color:#c2d2d7;font-size:12px;letter-spacing:.02em}.hint{position:absolute;right:18px;top:16px;color:#91a6ae;font-size:12px;text-align:right}
+.check{display:flex;align-items:center;gap:9px;margin-top:16px;color:#c8d7db}.check input{accent-color:var(--accent)}
+@media(max-width:850px){main{grid-template-columns:1fr}.stage{min-height:500px}canvas{min-height:500px}}
+</style>
+</head>
+<body>
+<main>
+<aside>
+<h1>Tentakelring 3D</h1>
+<p class="sub">Parametrische Vorschau · Stand v0.1</p>
+<h2>Tentakel</h2>
+<div class="control">
+<div class="label"><span>Steigung pro Umdrehung</span><strong id="pitchOut">3,00 mm</strong></div>
+<input id="pitch" type="range" min="1" max="6" step="0.05" value="3">
+<div class="scale"><span>1 mm</span><span>6 mm</span></div>
+</div>
+<div class="control">
+<div class="label"><span>Durchmesser</span><strong id="diamOut">2,50 mm</strong></div>
+<input id="diam" type="range" min="1.5" max="4" step="0.05" value="2.5">
+<div class="scale"><span>1,5 mm</span><span>4 mm</span></div>
+</div>
+<div class="control">
+<div class="label"><span>Verjüngung beginnt</span><strong id="taperOut">75 %</strong></div>
+<input id="taper" type="range" min="0.5" max="0.95" step="0.01" value="0.75">
+<div class="scale"><span>ab halber Runde</span><span>letzte 5 %</span></div>
+</div>
+<label class="check"><input id="showRing" type="checkbox" checked> Referenzring anzeigen</label>
+<h2>Referenzring</h2>
+<div class="note">
+<b>Fixe Ausgangsmaße</b><br>
+Außen Ø 27,85 mm · Rand innen Ø 25,30 mm<br>
+Innenöffnung Ø 14,90 mm · Gesamthöhe 4,25 mm<br>
+Randhöhe 2,90 mm · Grundplatte 1,35 mm
+</div>
+<div class="note">
+<b>Geometrie</b><br>
+Zwei gleichläufige Helixbahnen, 180° versetzt. Start auf halber Randhöhe. Eine Umdrehung; die Spitzen laufen im letzten Abschnitt aus. Der Körper wird als runder Querschnitt dargestellt.
+</div>
+<div class="buttons"><button id="reset">Parameter zurücksetzen</button><button id="viewReset">Ansicht zurücksetzen</button></div>
+</aside>
+<section class="stage">
+<div class="badge">Vorschau aus parametrischer Geometrie</div>
+<div class="hint">Ziehen: drehen<br>Mausrad: zoomen</div>
+<canvas id="view" aria-label="Interaktive 3D-Vorschau des Tentakelrings"></canvas>
+</section>
+</main>
+<script>
+(function(){
+"use strict";
+const canvas=document.getElementById("view"),ctx=canvas.getContext("2d");
+const input={pitch:document.getElementById("pitch"),diam:document.getElementById("diam"),taper:document.getElementById("taper"),showRing:document.getElementById("showRing")};
+const out={pitch:document.getElementById("pitchOut"),diam:document.getElementById("diamOut"),taper:document.getElementById("taperOut")};
+const base={outerD:27.85,wallID:25.30,holeD:14.90,totalH:4.25,baseH:1.35,rimH:2.90,turns:1,startPhase:0,phaseGap:Math.PI};
+let yaw=-0.55,elev=0.42,zoom=1,drag=null,raf=0;
+const add=(a,b)=>[a[0]+b[0],a[1]+b[1],a[2]+b[2]];
+const sub=(a,b)=>[a[0]-b[0],a[1]-b[1],a[2]-b[2]];
+const mul=(a,s)=>[a[0]*s,a[1]*s,a[2]*s];
+const dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
+const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+const unit=a=>{const n=Math.hypot(a[0],a[1],a[2])||1;return [a[0]/n,a[1]/n,a[2]/n]};
+const fmt=x=>Number(x).toFixed(2).replace(".",",");
+function params(){return {pitch:+input.pitch.value,diam:+input.diam.value,taper:+input.taper.value,showRing:input.showRing.checked};}
+function project(p,w,h,scale){
+ const cy=Math.cos(yaw),sy=Math.sin(yaw),x=p[0]*cy-p[1]*sy,y=p[0]*sy+p[1]*cy;
+ const ce=Math.cos(elev),se=Math.sin(elev);
+ return {x:w/2+scale*x,y:h/2+scale*(y*se-p[2]*ce),d:y*ce+p[2]*se};
+}
+function tri(list,a,b,c,color){
+ const n=unit(cross(sub(b,a),sub(c,a)));
+ const light=unit([-0.45,-0.35,0.82]),shade=.53+.42*Math.abs(dot(n,light));
+ const rgb=color.map(v=>Math.max(0,Math.min(255,Math.round(v*shade))));
+ list.push({p:[a,b,c],d:(a[1]+b[1]+c[1])/3,color:"rgb("+rgb.join(",")+")"});
+}
+function cylinderMesh(list,r,z0,z1,color,segments,inner){
+ for(let i=0;i<segments;i++){
+  const a=i*2*Math.PI/segments,b=(i+1)*2*Math.PI/segments;
+  const p=(r,t,z)=>[r*Math.cos(t),r*Math.sin(t),z];
+  const a0=p(r,a,z0),b0=p(r,b,z0),b1=p(r,b,z1),a1=p(r,a,z1);
+  tri(list,a0,b0,b1,color);tri(list,a0,b1,a1,color);
+  if(inner){
+   const ia0=p(inner,a,z0),ib0=p(inner,b,z0),ib1=p(inner,b,z1),ia1=p(inner,a,z1);
+   tri(list,ia0,ib1,ib0,color);tri(list,ia0,ia1,ib1,color);
+  }
+ }
+}
+function annulusMesh(list,ro,ri,z,color,segments){
+ for(let i=0;i<segments;i++){
+  const a=i*2*Math.PI/segments,b=(i+1)*2*Math.PI/segments;
+  const p=(r,t)=>[r*Math.cos(t),r*Math.sin(t),z];
+  const oa=p(ro,a),ob=p(ro,b),ib=p(ri,b),ia=p(ri,a);
+  tri(list,oa,ob,ib,color);tri(list,oa,ib,ia,color);
+ }
+}
+function tubeMesh(list,phase,p,baseColor){
+ const nt=144,nf=14,R=(base.wallID/2+base.outerD/2)/2,startZ=base.baseH+base.rimH/2,rows=[];
+ for(let i=0;i<=nt;i++){
+  const t=i/nt,ang=2*Math.PI*p.turns*t+phase,z=startZ+p.pitch*t;
+  const C=[R*Math.cos(ang),R*Math.sin(ang),z];
+  const T=unit([-R*2*Math.PI*Math.sin(ang),R*2*Math.PI*Math.cos(ang),p.pitch]);
+  const N=[Math.cos(ang),Math.sin(ang),0],B=unit(cross(T,N));
+  const taper=t<=p.taper?1:Math.max(0.008,(1-t)/(1-p.taper)),rad=p.diam*.5*taper;
+  rows.push(Array.from({length:nf},(_,j)=>{const ph=2*Math.PI*j/nf;return add(C,mul(add(mul(N,Math.cos(ph)),mul(B,Math.sin(ph))),rad));}));
+ }
+ for(let i=0;i<nt;i++)for(let j=0;j<nf;j++){
+  const k=(j+1)%nf,a=rows[i][j],b=rows[i][k],c=rows[i+1][k],d=rows[i+1][j];
+  tri(list,a,b,c,baseColor);tri(list,a,c,d,baseColor);
+ }
+ const c0=[R*Math.cos(phase),R*Math.sin(phase),startZ];
+ for(let j=0;j<nf;j++)tri(list,c0,rows[0][(j+1)%nf],rows[0][j],baseColor);
+}
+function drawCups(p,w,h,scale){
+ const R=(base.wallID/2+base.outerD/2)/2,startZ=base.baseH+base.rimH/2;
+ const camera=[Math.sin(yaw)*Math.cos(elev),-Math.cos(yaw)*Math.cos(elev),Math.sin(elev)];
+ for(const [phase,fill] of [[base.startPhase,"#b8f1e7"],[base.startPhase+base.phaseGap,"#ffd0b4"]]){
+  for(let i=3;i<33;i++){
+   const t=i/36,ang=2*Math.PI*t+phase,center=[R*Math.cos(ang),R*Math.sin(ang),startZ+p.pitch*t];
+   const tangent=unit([-R*2*Math.PI*Math.sin(ang),R*2*Math.PI*Math.cos(ang),p.pitch]);
+   const facing=unit(sub(camera,mul(tangent,dot(camera,tangent))));
+   const surf=add(center,mul(facing,p.diam*.39)),q=project(surf,w,h,scale);
+   if(q.d<0)continue;
+   const ahead=project(add(surf,mul(tangent,.1)),w,h,scale),angle=Math.atan2(ahead.y-q.y,ahead.x-q.x);
+   const size=Math.max(2.4,p.diam*scale*.11);
+   ctx.save();ctx.translate(q.x,q.y);ctx.rotate(angle);
+   ctx.fillStyle="rgba(4,32,39,.82)";ctx.beginPath();ctx.ellipse(0,0,size*1.25,size*.72,0,0,Math.PI*2);ctx.fill();
+   ctx.fillStyle=fill;ctx.beginPath();ctx.ellipse(0,0,size*.75,size*.38,0,0,Math.PI*2);ctx.fill();
+   ctx.restore();
+  }
+ }
+}
+function render(){
+ const rect=canvas.getBoundingClientRect(),dpr=window.devicePixelRatio||1;
+ const w=Math.max(1,Math.round(rect.width*dpr)),h=Math.max(1,Math.round(rect.height*dpr));
+ if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}
+ ctx.setTransform(dpr,0,0,dpr,0,0);
+ const cw=rect.width,ch=rect.height;ctx.clearRect(0,0,cw,ch);
+ const p=params();out.pitch.textContent=fmt(p.pitch)+" mm";out.diam.textContent=fmt(p.diam)+" mm";out.taper.textContent=Math.round(p.taper*100)+" %";
+ const scale=Math.min(cw/43,ch/38)*zoom;
+ const triangles=[];
+ if(p.showRing){
+  cylinderMesh(triangles,base.outerD/2,0,base.totalH,[112,132,141],96,base.holeD/2);
+  cylinderMesh(triangles,base.outerD/2,base.baseH,base.totalH,[132,150,157],96,base.wallID/2);
+  annulusMesh(triangles,base.outerD/2,base.holeD/2,base.baseH,[151,168,175],96);
+  annulusMesh(triangles,base.outerD/2,base.wallID/2,base.totalH,[178,192,197],96);
+ }
+ tubeMesh(triangles,base.startPhase,p,[11,177,183]);
+ tubeMesh(triangles,base.startPhase+base.phaseGap,p,[230,110,91]);
+ triangles.sort((a,b)=>a.d-b.d);
+ for(const t of triangles){const q=t.p.map(v=>project(v,cw,ch,scale));ctx.beginPath();ctx.moveTo(q[0].x,q[0].y);ctx.lineTo(q[1].x,q[1].y);ctx.lineTo(q[2].x,q[2].y);ctx.closePath();ctx.fillStyle=t.color;ctx.fill();}
+ drawCups(p,cw,ch,scale);
+ ctx.fillStyle="rgba(220,235,239,.72)";ctx.font="12px system-ui";ctx.fillText("Rundung: 180° Versatz · gleichläufig · 1 Umdrehung",18,ch-18);
+}
+function schedule(){if(!raf)raf=requestAnimationFrame(()=>{raf=0;render();});}
+for(const el of [input.pitch,input.diam,input.taper,input.showRing])el.addEventListener("input",schedule);
+document.getElementById("reset").addEventListener("click",()=>{input.pitch.value=3;input.diam.value=2.5;input.taper.value=.75;input.showRing.checked=true;schedule();});
+document.getElementById("viewReset").addEventListener("click",()=>{yaw=-.55;elev=.42;zoom=1;schedule();});
+canvas.addEventListener("pointerdown",e=>{drag={x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId);});
+canvas.addEventListener("pointermove",e=>{if(!drag)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;drag={x:e.clientX,y:e.clientY};yaw+=dx*.008;elev=Math.max(-.15,Math.min(1.2,elev+dy*.006));schedule();});
+canvas.addEventListener("pointerup",()=>{drag=null;});
+canvas.addEventListener("wheel",e=>{e.preventDefault();zoom=Math.max(.55,Math.min(1.8,zoom*(e.deltaY>0?.92:1.087)));schedule();},{passive:false});
+window.addEventListener("resize",schedule);render();
+})();
+</script>
+</body>
+</html>

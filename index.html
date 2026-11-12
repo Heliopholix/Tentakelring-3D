@@ -7,23 +7,23 @@
 <style>
 :root{color-scheme:dark;--bg:#10181d;--panel:#18242b;--line:#30434c;--text:#e8f0f2;--muted:#9fb0b7;--accent:#5ad3cd;--coral:#f08570}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.45 system-ui,Segoe UI,Arial,sans-serif}
-main{min-height:100vh;display:grid;grid-template-columns:330px minmax(0,1fr);gap:14px;padding:14px}
+main{min-height:100vh;display:grid;grid-template-columns:330px minmax(0,1fr);gap:14px;padding:14px;align-items:start}
 aside,.stage{background:var(--panel);border:1px solid var(--line);border-radius:14px}
 aside{padding:22px;overflow:auto}h1{font-size:22px;line-height:1.15;margin:0 0 8px}h2{font-size:15px;margin:24px 0 12px;color:#d8e7eb}
 .sub{color:var(--muted);font-size:13px;margin:0 0 22px}.control{margin:15px 0 18px}.label{display:flex;justify-content:space-between;gap:12px;margin-bottom:6px}.label strong{font-variant-numeric:tabular-nums;color:#fff}.label span{color:var(--muted)}
 input[type=range]{width:100%;accent-color:var(--accent)}.scale{display:flex;justify-content:space-between;color:#82969e;font-size:11px;margin-top:1px}
 button{border:1px solid #49616b;background:#263942;color:var(--text);border-radius:8px;padding:9px 12px;font:inherit;cursor:pointer}button:hover{background:#314b55}.buttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
-.note{margin-top:22px;padding:12px;border:1px solid var(--line);border-radius:9px;color:var(--muted);font-size:12px}.note b{color:#dce9ec}.stage{position:relative;min-height:620px;overflow:hidden;background:radial-gradient(ellipse at 50% 42%,#263941,#121c21 72%)}
+.note{margin-top:22px;padding:12px;border:1px solid var(--line);border-radius:9px;color:var(--muted);font-size:12px}.note b{color:#dce9ec}.stage{position:sticky;top:14px;height:calc(100vh - 28px);min-height:620px;overflow:hidden;background:radial-gradient(ellipse at 50% 42%,#263941,#121c21 72%)}
 canvas{display:block;width:100%;height:100%;min-height:620px;touch-action:none}.badge{position:absolute;left:18px;top:16px;color:#c2d2d7;font-size:12px;letter-spacing:.02em}.hint{position:absolute;right:18px;top:16px;color:#91a6ae;font-size:12px;text-align:right}
 .check{display:flex;align-items:center;gap:9px;margin-top:16px;color:#c8d7db}.check input{accent-color:var(--accent)}
-@media(max-width:850px){main{grid-template-columns:1fr}.stage{min-height:500px}canvas{min-height:500px}}
+@media(max-width:850px){main{grid-template-columns:1fr}.stage{position:relative;top:0;height:600px;min-height:500px}canvas{min-height:500px}}
 </style>
 </head>
 <body>
 <main>
 <aside>
 <h1>Tentakelring 3D</h1>
-<p class="sub">Parametrische Vorschau · Stand v0.7</p>
+<p class="sub">Parametrische Vorschau · Stand v0.8</p>
 <h2>Tentakel</h2>
 <div class="control">
 <div class="label"><label for="forward">Mitläufige Tentakel</label><strong id="forwardOut">2</strong></div>
@@ -51,6 +51,7 @@ canvas{display:block;width:100%;height:100%;min-height:620px;touch-action:none}.
 <div class="scale"><span>0,5 mm</span><span>20 mm</span></div>
 </div>
 <p class="sub" id="weaveInfo" aria-live="polite"></p>
+<p class="sub">Für runde 3D-Bögen beträgt die Rückführung mindestens das Doppelte des Durchmessers. Nahe Kreuzungspunkte werden gemeinsam räumlich entzerrt.</p>
 <div class="label"><span>Starthöhe</span><strong id="startZOut">−2,50 mm</strong></div>
 <div class="control">
 <div class="label"><span>Steigung pro Umdrehung</span><strong id="pitchOut">3,00 mm</strong></div>
@@ -97,7 +98,7 @@ Randhöhe 2,90 mm · Grundplatte 1,35 mm
 </div>
 <div class="note">
 <b>Geometrie</b><br>
-Je 0–5 mitläufige (türkise) und gegenläufige (korallfarbene) Tentakel. Ohne Streuung liegen die Startpunkte jeder Gruppe gleichmäßig auf dem Kreis. Die Zufallswerte bleiben bis zum nächsten Würfeln stabil. Der Versatz verdreht die gegenläufige Startgruppe gegenüber der mitläufigen. Die Starthöhe entspricht dem negativen Durchmesser. Die Anzahl der Umdrehungen ist einstellbar; die Spitzen laufen im letzten Abschnitt aus. An Kreuzungen weichen beide Bahnen um ihren lokalen Radius radial aus. Von oben gesehen beginnt Uhrzeigersinn innen, die Gegenrichtung außen; nach jeder Kreuzung wechseln die Präferenzen. Bei gleichen Präferenzen hat Uhrzeigersinn Vorrang. Die Rückführung wird bei dicht benachbarten Kreuzungen bis zur Mitte dazwischen begrenzt. Die Körper werden am Innenzylinder Ø 25,30 mm beschnitten und mit einer Fläche auf dessen Wand geschlossen. Unterhalb der Bodenplatten-Unterkante (z = 0 mm) werden sie entfernt und mit einer ebenen Fläche geschlossen.
+Je 0–5 mitläufige (türkise) und gegenläufige (korallfarbene) Tentakel. Ohne Streuung liegen die Startpunkte jeder Gruppe gleichmäßig auf dem Kreis. Die Zufallswerte bleiben bis zum nächsten Würfeln stabil. Der Versatz verdreht die gegenläufige Startgruppe gegenüber der mitläufigen. Die Starthöhe entspricht dem negativen Durchmesser. Die Anzahl der Umdrehungen ist einstellbar; die Spitzen laufen im letzten Abschnitt aus. Benachbarte Kreuzungen werden in einem gemeinsamen 3D-Kurvenabschnitt berechnet und ihre Positionen bei Bedarf gemeinsam entzerrt. An den Kreuzungspunkten sind die Tangenten rechtwinklig; der Abstand der Mittellinien entspricht der Summe ihrer lokalen Radien. Runde Querschnitte stehen senkrecht auf der tatsächlichen Bahn. Von oben gesehen beginnt Uhrzeigersinn innen, die Gegenrichtung außen; nach jeder Kreuzung wechseln die Präferenzen. Bei gleichen Präferenzen hat Uhrzeigersinn Vorrang. Die Rückführung gilt an den äußeren Enden eines gemeinsamen Bereichs; zwischen nahen Kreuzungen erfolgt keine erzwungene Rückkehr zur Grundbahn. Die Körper werden am Innenzylinder Ø 25,30 mm beschnitten und mit einer Fläche auf dessen Wand geschlossen. Unterhalb der Bodenplatten-Unterkante (z = 0 mm) werden sie entfernt und mit einer ebenen Fläche geschlossen.
 </div>
 <div class="buttons"><button id="reset">Parameter zurücksetzen</button><button id="viewReset">Ansicht zurücksetzen</button></div>
 </aside>
@@ -110,7 +111,38 @@ Je 0–5 mitläufige (türkise) und gegenläufige (korallfarbene) Tentakel. Ohne
 <script>
 (function(){
 "use strict";
-const canvas=document.getElementById("view"),ctx=canvas.getContext("2d");
+const canvas=document.getElementById("view");
+const overlay=document.createElement("canvas");overlay.setAttribute("aria-hidden","true");
+Object.assign(overlay.style,{position:"absolute",left:"0",top:"0",pointerEvents:"none"});
+canvas.after(overlay);const ctx=overlay.getContext("2d");
+let gpu=null;
+try{
+ const gl=canvas.getContext("webgl",{alpha:true,antialias:true});
+ if(gl){
+  const shader=(type,source)=>{const s=gl.createShader(type);gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(s));return s;};
+  const program=gl.createProgram();
+  gl.attachShader(program,shader(gl.VERTEX_SHADER,"attribute vec3 position;attribute vec3 color;varying vec3 shade;void main(){gl_Position=vec4(position,1.0);shade=color;}"));
+  gl.attachShader(program,shader(gl.FRAGMENT_SHADER,"precision mediump float;varying vec3 shade;void main(){gl_FragColor=vec4(shade,1.0);}"));
+  gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(program));
+  gpu={gl,program,buffer:gl.createBuffer(),position:gl.getAttribLocation(program,"position"),color:gl.getAttribLocation(program,"color")};
+ }
+}catch(error){console.warn("3D-Vorschau verwendet die 2D-Ersatzdarstellung.",error);}
+function paintTriangles(triangles,cw,ch,scale,w,h){
+ if(!gpu){
+  triangles.sort((a,b)=>a.d-b.d);
+  for(const t of triangles){const q=t.p.map(v=>project(v,cw,ch,scale));ctx.beginPath();ctx.moveTo(q[0].x,q[0].y);ctx.lineTo(q[1].x,q[1].y);ctx.lineTo(q[2].x,q[2].y);ctx.closePath();ctx.fillStyle=t.color;ctx.fill();}
+  return;
+ }
+ const {gl,program,buffer,position,color}=gpu,data=new Float32Array(triangles.length*18);
+ let i=0;
+ for(const face of triangles)for(const v of face.p){const q=project(v,cw,ch,scale);data[i++]=q.x/cw*2-1;data[i++]=1-q.y/ch*2;data[i++]=-q.d/1000;for(const c of face.rgb)data[i++]=c/255;}
+ gl.viewport(0,0,w,h);gl.clearColor(0,0,0,0);gl.clearDepth(1);
+ gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+ gl.useProgram(program);gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,data,gl.DYNAMIC_DRAW);
+ gl.enableVertexAttribArray(position);gl.vertexAttribPointer(position,3,gl.FLOAT,false,24,0);
+ gl.enableVertexAttribArray(color);gl.vertexAttribPointer(color,3,gl.FLOAT,false,24,12);
+ gl.drawArrays(gl.TRIANGLES,0,triangles.length*3);
+}
 const input={startScatter:document.getElementById("startScatter"),pitchScatter:document.getElementById("pitchScatter"),returnScatter:document.getElementById("returnScatter"),returnLength:document.getElementById("returnLength"),forward:document.getElementById("forward"),reverse:document.getElementById("reverse"),offset:document.getElementById("offset"),turns:document.getElementById("turns"),pitch:document.getElementById("pitch"),diam:document.getElementById("diam"),taper:document.getElementById("taper"),showBase:document.getElementById("showBase"),showRing:document.getElementById("showRing"),showCups:document.getElementById("showCups")};
 const out={startScatter:document.getElementById("startScatterOut"),pitchScatter:document.getElementById("pitchScatterOut"),returnScatter:document.getElementById("returnScatterOut"),variant:document.getElementById("variantOut"),returnLength:document.getElementById("returnLengthOut"),weaveInfo:document.getElementById("weaveInfo"),forward:document.getElementById("forwardOut"),reverse:document.getElementById("reverseOut"),offset:document.getElementById("offsetOut"),turns:document.getElementById("turnsOut"),startZ:document.getElementById("startZOut"),pitch:document.getElementById("pitchOut"),diam:document.getElementById("diamOut"),taper:document.getElementById("taperOut")};
 const base={outerD:27.85,wallID:25.30,holeD:14.90,totalH:4.25,baseH:1.35,rimH:2.90};
@@ -133,7 +165,7 @@ function tri(list,a,b,c,color){
  const n=unit(cross(sub(b,a),sub(c,a)));
  const light=unit([-0.45,-0.35,0.82]),ndl=Math.max(0,dot(n,light)),shade=.38+.52*ndl+.12*Math.pow(ndl,10);
  const rgb=color.map(v=>Math.max(0,Math.min(255,Math.round(v*shade))));
- const depth=v=>{const yy=v[0]*Math.sin(yaw)+v[1]*Math.cos(yaw);return yy*Math.cos(elev)+v[2]*Math.sin(elev);};list.push({p:[a,b,c],d:(depth(a)+depth(b)+depth(c))/3,color:"rgb("+rgb.join(",")+")"});
+ const depth=v=>{const yy=v[0]*Math.sin(yaw)+v[1]*Math.cos(yaw);return yy*Math.cos(elev)+v[2]*Math.sin(elev);};list.push({p:[a,b,c],d:(depth(a)+depth(b)+depth(c))/3,rgb,color:"rgb("+rgb.join(",")+")"});
 }
 function cylinderMesh(list,r,z0,z1,color,segments,inner){
  for(let i=0;i<segments;i++){
@@ -194,29 +226,154 @@ function tentacles(p){
   a.events.push({t:ta,side:-cwSide,id});b.events.push({t:tb,side:cwSide,id});
   a.preference*=-1;b.preference*=-1;
  });
+ const parents=crossings.map((_,i)=>i);
+ const root=i=>{while(parents[i]!==i){parents[i]=parents[parents[i]];i=parents[i];}return i;};
+ const join=(a,b)=>{a=root(a);b=root(b);if(a!==b)parents[b]=a;};
  for(const strand of result){
   const pathLength=Math.hypot((base.wallID+base.outerD)/4*2*Math.PI,strand.pitch)*p.turns;
+  const length=Math.max(strand.returnLength,2*p.diam)/pathLength;
+  strand.effectiveReturnLength=Math.max(strand.returnLength,2*p.diam);
   strand.events.forEach((event,i,all)=>{
-   event.left=Math.min(strand.returnLength/pathLength,i?(event.t-all[i-1].t)/2:Infinity);
-   event.right=Math.min(strand.returnLength/pathLength,i+1<all.length?(all[i+1].t-event.t)/2:Infinity);
+   event.left=length;event.right=length;
+   if(i&&event.t-all[i-1].t<=2*length+1e-10)join(event.id,all[i-1].id);
   });
  }
- result.conflicts=conflicts;result.crossings=crossings.length;
- crossingPlanCache={key:cacheKey,result};return result;
-}
-function radialOffset(p,t,events){
- for(const event of events){
-  const distance=t-event.t,length=distance<0?event.left:event.right;
-  if(length>0&&Math.abs(distance)<=length+1e-12){
-   const x=Math.min(1,Math.abs(distance)/length),smooth=x*x*x*(10+x*(-15+6*x));
-   return event.side*localRadius(p,t)*(1-smooth);
+ let merged=true;
+ while(merged){
+  merged=false;
+  for(const strand of result){
+   const ranges=new Map();
+   strand.events.forEach((event,i)=>{const r=root(event.id);if(!ranges.has(r))ranges.set(r,[i,i]);else ranges.get(r)[1]=i;});
+   for(const [r,[first,last]] of ranges)for(let i=first;i<=last;i++)if(root(strand.events[i].id)!==root(r)){join(r,strand.events[i].id);merged=true;}
   }
  }
- return 0;
+ const constraints=[];
+ for(const strand of result)for(let i=1;i<strand.events.length;i++){
+  const a=strand.events[i-1],b=strand.events[i];
+  if(root(a.id)===root(b.id))constraints.push({a:a.id,b:b.id,min:1.25*(localRadius(p,a.t)+localRadius(p,b.t))});
+ }
+ for(const cross of crossings){cross.angle=cross.a.phase+2*Math.PI*p.turns*cross.ta;cross.shiftAngle=0;cross.shiftHeight=0;}
+ const R0=(base.wallID+base.outerD)/4,wrap=a=>Math.atan2(Math.sin(a),Math.cos(a));
+ for(let iteration=0;iteration<100;iteration++){
+  let error=0;
+  for(const constraint of constraints){
+   const a=crossings[constraint.a],b=crossings[constraint.b];
+   let dx=R0*wrap(b.angle+b.shiftAngle-a.angle-a.shiftAngle),dz=b.height+b.shiftHeight-a.height-a.shiftHeight,distance=Math.hypot(dx,dz);
+   if(distance>=constraint.min)continue;
+   error=Math.max(error,constraint.min-distance);
+   if(distance<1e-10){dx=0;dz=1;distance=1;}
+   const correction=(constraint.min-Math.hypot(R0*wrap(b.angle+b.shiftAngle-a.angle-a.shiftAngle),b.height+b.shiftHeight-a.height-a.shiftHeight))*.51;
+   a.shiftAngle-=dx/distance*correction/R0;b.shiftAngle+=dx/distance*correction/R0;
+   a.shiftHeight-=dz/distance*correction;b.shiftHeight+=dz/distance*correction;
+  }
+  if(error<1e-6)break;
+ }
+ for(const strand of result)for(const event of strand.events){
+  event.angleDelta=crossings[event.id].shiftAngle;event.heightDelta=crossings[event.id].shiftHeight;
+ }
+ const clusterIds=new Map();
+ for(const crossing of crossings){const r=root(crossings.indexOf(crossing));if(!clusterIds.has(r))clusterIds.set(r,clusterIds.size);}
+ for(const strand of result){
+  for(const event of strand.events)event.cluster=clusterIds.get(root(event.id));
+  const sp={...p,pitch:strand.pitch,returnLength:strand.returnLength};
+  strand.path=buildJointPath(strand.phase,strand.direction,sp,strand.events);
+  strand.maxZ=base.totalH;strand.maxR=(base.wallID+base.outerD)/4+p.diam/2;
+  const samples=pathTimes(p,strand.path,60);
+  for(const t of samples){const v=evaluatePath(t,strand.phase,strand.direction,sp,strand.path);strand.maxZ=Math.max(strand.maxZ,v.value[2]+localRadius(p,t));strand.maxR=Math.max(strand.maxR,v.value[0]+localRadius(p,t));}
+ }
+ result.conflicts=conflicts;result.crossings=crossings.length;result.clusters=clusterIds.size;
+ crossingPlanCache={key:cacheKey,result};return result;
+}
+function basePath(t,phase,direction,p){
+ const R=(base.wallID+base.outerD)/4;
+ return {value:[R,phase+direction*2*Math.PI*p.turns*t,-p.diam+p.pitch*p.turns*t],derivative:[0,direction*2*Math.PI*p.turns,p.pitch*p.turns]};
+}
+function buildJointPath(phase,direction,p,events){
+ const groups=new Map(),segments=[];
+ for(const event of events){if(!groups.has(event.cluster))groups.set(event.cluster,[]);groups.get(event.cluster).push(event);}
+ for(const all of groups.values()){
+  all.sort((a,b)=>a.t-b.t);
+  const start=Math.max(0,all[0].t-all[0].left),end=Math.min(1,all[all.length-1].t+all[all.length-1].right);
+  const knots=[];
+  if(start<all[0].t-1e-10)knots.push({t:start,...basePath(start,phase,direction,p)});
+  for(const event of all){
+   const original=basePath(event.t,phase,direction,p),R=original.value[0]+event.side*localRadius(p,event.t);
+   const speed=Math.hypot((base.wallID+base.outerD)/4*2*Math.PI,p.pitch)*p.turns;
+   knots.push({t:event.t,value:[R,original.value[1]+(event.angleDelta||0),original.value[2]+(event.heightDelta||0)],derivative:[0,direction*speed/Math.SQRT2/R,speed/Math.SQRT2],crossing:event.id});
+  }
+  if(end>all[all.length-1].t+1e-10)knots.push({t:end,...basePath(end,phase,direction,p)});
+  if(knots.length>1)segments.push({start:knots[0].t,end:knots[knots.length-1].t,knots});
+ }
+ return segments.sort((a,b)=>a.start-b.start);
+}
+function evaluatePath(t,phase,direction,p,path){
+ const segment=path.find(s=>t>=s.start-1e-12&&t<=s.end+1e-12);
+ if(!segment)return basePath(t,phase,direction,p);
+ const knots=segment.knots;
+ let i=0;while(i<knots.length-2&&t>knots[i+1].t)i++;
+ const a=knots[i],b=knots[i+1],dt=b.t-a.t,x=Math.max(0,Math.min(1,(t-a.t)/dt)),value=[],derivative=[];
+ for(let j=0;j<3;j++){
+  const m0=a.derivative[j]*dt,m1=b.derivative[j]*dt,A=b.value[j]-a.value[j]-m0,B=m1-m0;
+  const c3=10*A-4*B,c4=-15*A+7*B,c5=6*A-3*B;
+  value.push(a.value[j]+m0*x+c3*x*x*x+c4*x*x*x*x+c5*x*x*x*x*x);
+  derivative.push((m0+3*c3*x*x+4*c4*x*x*x+5*c5*x*x*x*x)/dt);
+ }
+ return {value,derivative};
+}
+function pathPose(t,phase,direction,p,path){
+ const q=evaluatePath(t,phase,direction,p,path),[R,a,z]=q.value,[dr,da,dz]=q.derivative;
+ const C=[R*Math.cos(a),R*Math.sin(a),z],T=unit([dr*Math.cos(a)-R*da*Math.sin(a),dr*Math.sin(a)+R*da*Math.cos(a),dz]);
+ return {C,T,radial:[Math.cos(a),Math.sin(a),0]};
+}
+function pathTimes(p,path,resolution=180){
+ const nt=Math.ceil(resolution*p.turns),times=Array.from({length:nt+1},(_,i)=>i/nt);times.push(p.taper);
+ for(const segment of path)for(let i=0;i<segment.knots.length-1;i++){
+  const a=segment.knots[i].t,b=segment.knots[i+1].t;
+  for(let j=0;j<=20;j++)times.push(a+(b-a)*j/20);
+ }
+ times.sort((a,b)=>a-b);
+ return times.filter((t,i)=>!i||t-times[i-1]>1e-10);
+}
+function refineCutCaps(faces,coordinates,angleIndex,mapPoint){
+ const key=v=>v.map(n=>Math.round(n*1e8)).join(",");
+ const edgeKey=(a,b)=>{a=key(a);b=key(b);return a<b?a+"|"+b:b+"|"+a;};
+ for(let iteration=0;iteration<12;iteration++){
+  const edges=new Map();
+  for(const face of faces)for(let j=0;j<3;j++){
+   const a=face[j],b=face[(j+1)%3],k=edgeKey(a,b);
+   if(!edges.has(k))edges.set(k,{a,b,count:0});edges.get(k).count++;
+  }
+  const mids=new Map();
+  for(const [k,{a,b,count}] of edges){
+   const ua=coordinates.get(a),ub=coordinates.get(b);
+   if(count===2&&Math.abs(ua[angleIndex]-ub[angleIndex])>.08){
+    const uv=ua.map((v,i)=>(v+ub[i])/2),point=mapPoint(uv);
+    coordinates.set(point,uv);mids.set(k,point);
+   }
+  }
+  if(!mids.size)return faces;
+  const next=[];
+  for(const face of faces){
+   const points=face.map((a,j)=>mids.get(edgeKey(a,face[(j+1)%3]))),n=points.filter(Boolean).length;
+   if(!n){next.push(face);continue;}
+   if(n===1){
+    const j=points.findIndex(Boolean),a=face[j],b=face[(j+1)%3],d=face[(j+2)%3],m=points[j];
+    next.push([a,m,d],[m,b,d]);
+   }else{
+    const uv=[0,1].map(i=>face.reduce((s,v)=>s+coordinates.get(v)[i],0)/3),center=mapPoint(uv),ring=[];
+    coordinates.set(center,uv);
+    face.forEach((v,j)=>{ring.push(v);if(points[j])ring.push(points[j]);});
+    for(let j=0;j<ring.length;j++)next.push([center,ring[j],ring[(j+1)%ring.length]]);
+   }
+  }
+  faces=next;
+ }
+ return faces;
 }
 function clipAtFloor(list,surface,color){
  const eps=1e-9,vertices=new Map(),clipped=[],onPlane=new Map();
  const key=v=>v.map(n=>Math.round(n*1e8)).join(",");
+ const intersections=new Map();
  const snap=v=>{
   if(Math.abs(v[2])>eps)return v;
   const q=[v[0],v[1],0],k=key(q);
@@ -224,16 +381,19 @@ function clipAtFloor(list,surface,color){
   return vertices.get(k);
  };
  const intersection=(a,b)=>{
+  const ka=key(a),kb=key(b),edge=ka<kb?ka+"|"+kb:kb+"|"+ka;
+  if(intersections.has(edge))return intersections.get(edge);
   const t=a[2]/(a[2]-b[2]),v=[a[0]+t*(b[0]-a[0]),a[1]+t*(b[1]-a[1]),0];
   const r=Math.hypot(v[0],v[1]),ri=base.wallID/2;
   if(r<ri&&r>0){v[0]*=ri/r;v[1]*=ri/r;}
-  return snap(v);
+  const point=snap(v);intersections.set(edge,point);return point;
  };
  const addTriangle=(a,b,c)=>{
-  if(Math.hypot(...cross(sub(b,a),sub(c,a)))<=1e-12)return;
+  if(Math.hypot(...cross(sub(b,a),sub(c,a)))<=1e-20)return;
   clipped.push([a,b,c]);
  };
  for(const face of surface){
+  if(face.every(v=>v[2]>eps)){clipped.push(face);continue;}
   const poly=[];
   for(let j=0;j<3;j++){
    const a=snap(face[j]),b=snap(face[(j+1)%3]),insideA=a[2]>=0,insideB=b[2]>=0;
@@ -243,6 +403,7 @@ function clipAtFloor(list,surface,color){
   const clean=poly.filter((v,i)=>key(v)!==key(poly[(i+poly.length-1)%poly.length]));
   for(let j=1;j<clean.length-1;j++)addTriangle(clean[0],clean[j],clean[j+1]);
  }
+ const capStart=clipped.length;
  for(const face of clipped)for(let j=0;j<3;j++){
   const a=face[j],b=face[(j+1)%3];
   if(a[2]!==0||b[2]!==0)continue;
@@ -255,7 +416,98 @@ function clipAtFloor(list,surface,color){
   for(const [v,w] of [[a,b],[b,a]]){const k=key(v);if(!adjacency.has(k))adjacency.set(k,[]);adjacency.get(k).push(w);}
  }
  const edgeKey=(a,b)=>{const ka=key(a),kb=key(b);return ka<kb?ka+"|"+kb:kb+"|"+ka;};
- const unused=new Map(onPlane);
+ const unused=new Map(onPlane),allCapCoordinates=new Map();
+ let capCoordinates;
+ const cross2=(a,b,c)=>{a=capCoordinates.get(a);b=capCoordinates.get(b);c=capCoordinates.get(c);return (b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0]);};
+ for(const [edge,ends] of onPlane){
+  if(!unused.has(edge))continue;
+  const loop=[ends[0]];let previous=ends[0],current=ends[1];unused.delete(edge);
+  while(key(current)!==key(loop[0])){
+   loop.push(current);
+   const next=(adjacency.get(key(current))||[]).find(v=>key(v)!==key(previous)&&unused.has(edgeKey(current,v)));
+   if(!next)throw new Error("Schnittkontur ist nicht geschlossen.");
+   unused.delete(edgeKey(current,next));previous=current;current=next;
+  }
+  capCoordinates=new Map(loop.map(v=>[v,[v[0],v[1]]]));
+  let area=0;for(let i=0;i<loop.length;i++){const a=capCoordinates.get(loop[i]),b=capCoordinates.get(loop[(i+1)%loop.length]);area+=a[0]*b[1]-b[0]*a[1];}
+  if(area>0)loop.reverse();
+  const remaining=loop.slice();
+  while(remaining.length>3){
+   let ear=-1;
+   for(let pass=0;pass<2&&ear<0;pass++)for(let i=0;i<remaining.length;i++){
+    const a=remaining[(i+remaining.length-1)%remaining.length],b=remaining[i],d=remaining[(i+1)%remaining.length];
+    if(cross2(a,b,d)>=-1e-20)continue;
+    const contains=remaining.some(v=>v!==a&&v!==b&&v!==d&&cross2(a,b,v)<=1e-20&&cross2(b,d,v)<=1e-20&&cross2(d,a,v)<=1e-20);
+    if(contains)continue;
+    ear=i;break;
+   }
+   if(ear<0){
+    const uv=[0,1].map(j=>remaining.reduce((s,v)=>s+capCoordinates.get(v)[j],0)/remaining.length);
+    uv[0]+=1e-7;uv[1]+=1e-7;
+    const center=[uv[0],uv[1],0],r=Math.hypot(...uv),ri=base.wallID/2;if(r<ri){center[0]*=ri/r;center[1]*=ri/r;}
+    capCoordinates.set(center,uv);
+    for(let j=0;j<remaining.length;j++)addTriangle(center,remaining[j],remaining[(j+1)%remaining.length]);
+    remaining.length=0;break;
+   }
+   addTriangle(remaining[(ear+remaining.length-1)%remaining.length],remaining[ear],remaining[(ear+1)%remaining.length]);
+   remaining.splice(ear,1);
+  }
+  if(remaining.length===3)addTriangle(...remaining);
+  for(const [v,uv] of capCoordinates)allCapCoordinates.set(v,uv);
+ }
+ for(const face of clipped)tri(list,...face,color);
+}
+function clipAtInnerCylinder(surface){
+ const ri=base.wallID/2;
+ const eps=1e-9,vertices=new Map(),clipped=[],onPlane=new Map();
+ const key=v=>v.map(n=>Math.round(n*1e8)).join(",");
+ const intersections=new Map();
+ const snap=v=>{
+  const r=Math.hypot(v[0],v[1]);if(Math.abs(r-ri)>eps)return v;
+  const q=[v[0]*ri/r,v[1]*ri/r,v[2]],k=key(q);
+  if(!vertices.has(k))vertices.set(k,q);
+  return vertices.get(k);
+ };
+ const intersection=(a,b)=>{
+  const ka=key(a),kb=key(b),edge=ka<kb?ka+"|"+kb:kb+"|"+ka;
+  if(intersections.has(edge))return intersections.get(edge);
+  const dx=b[0]-a[0],dy=b[1]-a[1],qa=dx*dx+dy*dy,qb=2*(a[0]*dx+a[1]*dy),qc=a[0]*a[0]+a[1]*a[1]-ri*ri;
+  const discriminant=Math.sqrt(Math.max(0,qb*qb-4*qa*qc));
+  const roots=qa>0?[(-qb-discriminant)/(2*qa),(-qb+discriminant)/(2*qa)]:[];
+  let t=roots.find(v=>v>=-1e-9&&v<=1+1e-9);
+  if(t===undefined)t=(ri-Math.hypot(a[0],a[1]))/(Math.hypot(b[0],b[1])-Math.hypot(a[0],a[1]));
+  t=Math.max(0,Math.min(1,t));
+  const v=[a[0]+t*dx,a[1]+t*dy,a[2]+t*(b[2]-a[2])],r=Math.hypot(v[0],v[1]);
+  v[0]*=ri/r;v[1]*=ri/r;const point=snap(v);intersections.set(edge,point);return point;
+ };
+ const addTriangle=(a,b,c)=>{
+  if(Math.hypot(...cross(sub(b,a),sub(c,a)))<=1e-20)return;
+  clipped.push([a,b,c]);
+ };
+ for(const face of surface){
+  const poly=[];
+  for(let j=0;j<3;j++){
+   const a=snap(face[j]),b=snap(face[(j+1)%3]),insideA=Math.hypot(a[0],a[1])>=ri-eps,insideB=Math.hypot(b[0],b[1])>=ri-eps;
+   if(insideA)poly.push(a);
+   if(insideA!==insideB)poly.push(intersection(a,b));
+  }
+  const clean=poly.filter((v,i)=>key(v)!==key(poly[(i+poly.length-1)%poly.length]));
+  for(let j=1;j<clean.length-1;j++)addTriangle(clean[0],clean[j],clean[j+1]);
+ }
+ const capStart=clipped.length;
+ for(const face of clipped)for(let j=0;j<3;j++){
+  const a=face[j],b=face[(j+1)%3];
+  if(Math.abs(Math.hypot(a[0],a[1])-ri)>1e-7||Math.abs(Math.hypot(b[0],b[1])-ri)>1e-7)continue;
+  const ka=key(a),kb=key(b);if(ka===kb)continue;
+  const k=ka<kb?ka+"|"+kb:kb+"|"+ka;
+  if(onPlane.has(k))onPlane.delete(k);else onPlane.set(k,[a,b]);
+ }
+ const adjacency=new Map();
+ for(const [a,b] of onPlane.values()){
+  for(const [v,w] of [[a,b],[b,a]]){const k=key(v);if(!adjacency.has(k))adjacency.set(k,[]);adjacency.get(k).push(w);}
+ }
+ const edgeKey=(a,b)=>{const ka=key(a),kb=key(b);return ka<kb?ka+"|"+kb:kb+"|"+ka;};
+ const unused=new Map(onPlane),allCapCoordinates=new Map();
  let capCoordinates;
  const cross2=(a,b,c)=>{a=capCoordinates.get(a);b=capCoordinates.get(b);c=capCoordinates.get(c);return (b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0]);};
  for(const [edge,ends] of onPlane){
@@ -268,113 +520,77 @@ function clipAtFloor(list,surface,color){
    unused.delete(edgeKey(current,next));previous=current;current=next;
   }
   capCoordinates=new Map();let angle=Math.atan2(loop[0][1],loop[0][0]);
-  for(const v of loop){let next=Math.atan2(v[1],v[0]);while(next-angle>Math.PI)next-=2*Math.PI;while(next-angle<-Math.PI)next+=2*Math.PI;angle=next;capCoordinates.set(v,[Math.hypot(v[0],v[1]),angle]);}
+  for(const v of loop){let next=Math.atan2(v[1],v[0]);while(next-angle>Math.PI)next-=2*Math.PI;while(next-angle<-Math.PI)next+=2*Math.PI;angle=next;capCoordinates.set(v,[angle,v[2]]);}
   let area=0;for(let i=0;i<loop.length;i++){const a=capCoordinates.get(loop[i]),b=capCoordinates.get(loop[(i+1)%loop.length]);area+=a[0]*b[1]-b[0]*a[1];}
   if(area>0)loop.reverse();
   const remaining=loop.slice();
   while(remaining.length>3){
-   let ear=-1,bestSpan=Infinity;
-   for(let i=0;i<remaining.length;i++){
+   let ear=-1;
+   for(let pass=0;pass<2&&ear<0;pass++)for(let i=0;i<remaining.length;i++){
     const a=remaining[(i+remaining.length-1)%remaining.length],b=remaining[i],d=remaining[(i+1)%remaining.length];
-    const angles=[a,b,d].map(v=>capCoordinates.get(v)[1]),span=Math.max(...angles)-Math.min(...angles);
-    if(span>=bestSpan||cross2(a,b,d)>=-1e-12)continue;
+    const angles=[a,b,d].map(v=>capCoordinates.get(v)[0]),span=Math.max(...angles)-Math.min(...angles);
+    if((pass===0&&span>.08)||cross2(a,b,d)>=-1e-12)continue;
     const contains=remaining.some(v=>v!==a&&v!==b&&v!==d&&cross2(a,b,v)<=1e-12&&cross2(b,d,v)<=1e-12&&cross2(d,a,v)<=1e-12);
     if(contains)continue;
-    ear=i;bestSpan=span;
+    ear=i;break;
    }
-   if(ear<0)throw new Error("Schnittfläche konnte nicht geschlossen werden.");
+   if(ear<0){
+    const uv=[0,1].map(j=>remaining.reduce((s,v)=>s+capCoordinates.get(v)[j],0)/remaining.length);
+    uv[0]+=1e-7;uv[1]+=1e-7;
+    const center=[ri*Math.cos(uv[0]),ri*Math.sin(uv[0]),uv[1]];
+    capCoordinates.set(center,uv);
+    for(let j=0;j<remaining.length;j++)addTriangle(center,remaining[j],remaining[(j+1)%remaining.length]);
+    remaining.length=0;break;
+   }
    addTriangle(remaining[(ear+remaining.length-1)%remaining.length],remaining[ear],remaining[(ear+1)%remaining.length]);
    remaining.splice(ear,1);
   }
   if(remaining.length===3)addTriangle(...remaining);
+  for(const [v,uv] of capCoordinates)allCapCoordinates.set(v,uv);
  }
- for(const face of clipped)tri(list,...face,color);
+ const caps=clipped.splice(capStart);
+ for(const face of refineCutCaps(caps,allCapCoordinates,0,uv=>[ri*Math.cos(uv[0]),ri*Math.sin(uv[0]),uv[1]]))clipped.push(face);
+ return clipped;
 }
 const tentacleMeshCache=new Map();
-function tubeMesh(list,phase,direction,p,baseColor,events=[]){
- const cacheKey=JSON.stringify([phase,direction,p.diam,p.pitch,p.turns,p.taper,p.returnLength,events]);
+function tubeMesh(list,phase,direction,p,baseColor,path=[]){
+ const cacheKey=JSON.stringify([phase,direction,p.diam,p.pitch,p.turns,p.taper,path]);
  if(tentacleMeshCache.has(cacheKey)){
   for(const face of tentacleMeshCache.get(cacheKey))tri(list,...face,baseColor);
   return;
  }
- const firstTriangle=list.length,nt=Math.ceil(180*p.turns),nf=32,nc=6,R0=(base.wallID+base.outerD)/4,ri=base.wallID/2,startZ=-p.diam,surface=[];
- const centerRadius=t=>R0+radialOffset(p,t,events);
- const lowerRadius=t=>centerRadius(t)-localRadius(p,t)-ri;
- let times=Array.from({length:nt+1},(_,i)=>i/nt);
- times.push(p.taper);
- for(const event of events){
-  for(let j=0;j<=12;j++){
-   const left=event.t-event.left*j/12,right=event.t+event.right*j/12;
-   if(left>=0&&left<=1)times.push(left);
-   if(right>=0&&right<=1)times.push(right);
-  }
+ const firstTriangle=list.length,nf=32,surface=[],times=pathTimes(p,path),rows=[];
+ let previousNormal=null;
+ for(const t of times){
+  const pose=pathPose(t,phase,direction,p,path),{C,T,radial}=pose;
+  let normal=sub(radial,mul(T,dot(radial,T)));
+  if(Math.hypot(...normal)<1e-6)normal=previousNormal?sub(previousNormal,mul(T,dot(previousNormal,T))):cross(T,[0,0,1]);
+  const N=unit(normal),B=unit(cross(T,N)),rad=localRadius(p,t);previousNormal=N;
+  rows.push({C,ring:Array.from({length:nf},(_,j)=>{
+   const angle=2*Math.PI*j/nf;
+   return add(C,mul(add(mul(N,Math.cos(angle)),mul(B,Math.sin(angle))),rad));
+  })});
  }
- times.sort((a,b)=>a-b);times=times.filter((t,i)=>!i||t-times[i-1]>1e-10);
- const transitions=[];
- for(let i=0;i<times.length-1;i++){
-  let lo=times[i],hi=times[i+1],flo=lowerRadius(lo),fhi=lowerRadius(hi);
-  if(flo*fhi<0){
-   for(let j=0;j<40;j++){const mid=(lo+hi)/2,fmid=lowerRadius(mid);if(flo*fmid<=0){hi=mid;fhi=fmid;}else{lo=mid;flo=fmid;}}
-   transitions.push((lo+hi)/2);
-  }
+ const emit=(a,b,c)=>{if(Math.hypot(...cross(sub(b,a),sub(c,a)))>1e-12)surface.push([a,b,c]);};
+ for(let i=0;i<rows.length-1;i++)for(let j=0;j<nf;j++){
+  const k=(j+1)%nf,a=rows[i].ring[j],b=rows[i].ring[k],d=rows[i+1].ring[j],e=rows[i+1].ring[k];
+  emit(a,b,e);emit(a,e,d);
  }
- times.push(...transitions);times.sort((a,b)=>a-b);times=times.filter((t,i)=>!i||t-times[i-1]>1e-10);
- const rows=times.map(t=>{
-  const R=centerRadius(t),h=R*2*Math.PI,b=p.pitch/Math.hypot(h,p.pitch);
-  const ang=direction*2*Math.PI*p.turns*t+phase,z=startZ+p.pitch*p.turns*t,C=[R*Math.cos(ang),R*Math.sin(ang),z];
-  const T=unit([-direction*h*Math.sin(ang),direction*h*Math.cos(ang),p.pitch]);
-  const N=[Math.cos(ang),Math.sin(ang),0],B=unit(cross(T,N));
-  const rad=localRadius(p,t),clipped=rad>R-ri+1e-10;
-  let limit=Math.PI;
-  if(clipped){
-   const qa=rad*rad*(1-b*b),qb=2*R*rad,qc=R*R+rad*rad*b*b-ri*ri;
-   const cosine=-2*qc/(qb+Math.sqrt(Math.max(0,qb*qb-4*qa*qc)));
-   limit=Math.acos(Math.max(-1,Math.min(1,cosine)));
-  }
-  const arc=Array.from({length:nf+1},(_,j)=>{
-   const ph=-limit+2*limit*j/nf;
-   return add(C,mul(add(mul(N,Math.cos(ph)),mul(B,Math.sin(ph))),rad));
-  });
-  let cut;
-  if(clipped){
-   const delta=Math.atan2(rad*Math.sin(limit)*b,R+rad*Math.cos(limit));
-   cut=Array.from({length:nc+1},(_,j)=>{
-    if(j===0)return arc[nf];
-    if(j===nc)return arc[0];
-    const theta=delta*(1-2*j/nc);
-    return [ri*Math.cos(ang+theta),ri*Math.sin(ang+theta),z-direction*h*ri/p.pitch*Math.sin(theta)];
-   });
-  }else{
-   arc[nf]=arc[0];cut=Array.from({length:nc+1},()=>arc[0]);
-  }
-  return {C,arc,cut};
- });
- const emit=(a,b,c)=>{
-  if(Math.hypot(...cross(sub(b,a),sub(c,a)))>1e-12)surface.push([a,b,c]);
- };
- const strip=(a,b)=>{
-  for(let j=0;j<a.length-1;j++){emit(a[j],a[j+1],b[j+1]);emit(a[j],b[j+1],b[j]);}
- };
- for(let i=0;i<rows.length-1;i++){
-  strip(rows[i].arc,rows[i+1].arc);strip(rows[i].cut,rows[i+1].cut);
- }
- const first=rows[0],boundary=first.arc.concat(first.cut.slice(1,-1));
- for(let j=0;j<boundary.length;j++)emit(first.C,boundary[(j+1)%boundary.length],boundary[j]);
- clipAtFloor(list,surface,baseColor);
+ for(let j=0;j<nf;j++)emit(rows[0].C,rows[0].ring[(j+1)%nf],rows[0].ring[j]);
+ clipAtFloor(list,clipAtInnerCylinder(surface),baseColor);
  if(tentacleMeshCache.size>=12)tentacleMeshCache.clear();
  tentacleMeshCache.set(cacheKey,list.slice(firstTriangle).map(t=>t.p));
 }
 function drawCups(p,w,h,scale){
  const R=(base.wallID/2+base.outerD/2)/2,startZ=-p.diam;
  const camera=[Math.sin(yaw)*Math.cos(elev),-Math.cos(yaw)*Math.cos(elev),Math.sin(elev)];
- for(const {phase,direction,fill,events,pitch} of tentacles(p)){
+ for(const {phase,direction,fill,path,pitch} of tentacles(p)){
   const sp={...p,pitch};
   const cupSteps=Math.ceil(36*p.turns);
   for(let i=3;i<cupSteps-3;i++){
-   const t=i/cupSteps,r=R+radialOffset(sp,t,events),ang=direction*2*Math.PI*p.turns*t+phase,center=[r*Math.cos(ang),r*Math.sin(ang),startZ+sp.pitch*p.turns*t];
-   const tangent=unit([-direction*R*2*Math.PI*Math.sin(ang),direction*R*2*Math.PI*Math.cos(ang),sp.pitch]);
+   const t=i/cupSteps,pose=pathPose(t,phase,direction,sp,path),center=pose.C,tangent=pose.T;
    const facing=unit(sub(camera,mul(tangent,dot(camera,tangent))));
-   const surf=add(center,mul(facing,p.diam*.39)),q=project(surf,w,h,scale);
+   const surf=add(center,mul(facing,localRadius(p,t)*.78)),q=project(surf,w,h,scale);
    if(q.d<0||surf[2]<0||Math.hypot(surf[0],surf[1])<base.wallID/2)continue;
    const ahead=project(add(surf,mul(tangent,.1)),w,h,scale),angle=Math.atan2(ahead.y-q.y,ahead.x-q.x);
    const size=Math.max(2.4,p.diam*scale*.11);
@@ -388,11 +604,11 @@ function drawCups(p,w,h,scale){
 function render(){
  const rect=canvas.getBoundingClientRect(),dpr=window.devicePixelRatio||1;
  const w=Math.max(1,Math.round(rect.width*dpr)),h=Math.max(1,Math.round(rect.height*dpr));
- if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}
+ if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;overlay.width=w;overlay.height=h;}
  ctx.setTransform(dpr,0,0,dpr,0,0);
  const cw=rect.width,ch=rect.height;ctx.clearRect(0,0,cw,ch);
- const p=params(),strands=tentacles(p);out.startScatter.textContent="±"+p.startScatter+"°";out.pitchScatter.textContent="±"+p.pitchScatter+" %";out.returnScatter.textContent="±"+p.returnScatter+" %";out.variant.textContent="Variante "+variantSeed;document.getElementById("reroll").disabled=!(p.startScatter||p.pitchScatter||p.returnScatter);out.returnLength.textContent=fmt(p.returnLength)+" mm";out.weaveInfo.textContent=strands.crossings+" Kreuzungen"+(strands.conflicts?" · "+strands.conflicts+" mit Vorrang für Uhrzeigersinn":"");out.forward.textContent=p.forward;out.reverse.textContent=p.reverse;out.offset.textContent=p.offset+"°";out.turns.textContent=fmt(p.turns);out.startZ.textContent="−"+fmt(p.diam)+" mm";out.pitch.textContent=fmt(p.pitch)+" mm";out.diam.textContent=fmt(p.diam)+" mm";out.taper.textContent=Math.round(p.taper*100)+" %";
- const height=Math.max(base.totalH,...strands.map(s=>-p.diam+s.pitch*p.turns+p.diam/2)),extent=(base.wallID+base.outerD)/4+p.diam;
+ const p=params(),strands=tentacles(p);out.startScatter.textContent="±"+p.startScatter+"°";out.pitchScatter.textContent="±"+p.pitchScatter+" %";out.returnScatter.textContent="±"+p.returnScatter+" %";out.variant.textContent="Variante "+variantSeed;document.getElementById("reroll").disabled=!(p.startScatter||p.pitchScatter||p.returnScatter);out.returnLength.textContent=fmt(p.returnLength)+" mm";out.weaveInfo.textContent=strands.crossings+" Kreuzungen · "+strands.clusters+" gemeinsame Bereiche"+(strands.conflicts?" · "+strands.conflicts+" mit Vorrang für Uhrzeigersinn":"");out.forward.textContent=p.forward;out.reverse.textContent=p.reverse;out.offset.textContent=p.offset+"°";out.turns.textContent=fmt(p.turns);out.startZ.textContent="−"+fmt(p.diam)+" mm";out.pitch.textContent=fmt(p.pitch)+" mm";out.diam.textContent=fmt(p.diam)+" mm";out.taper.textContent=Math.round(p.taper*100)+" %";
+ const height=Math.max(base.totalH,...strands.map(s=>s.maxZ)),extent=Math.max(base.outerD/2,...strands.map(s=>s.maxR));
  viewCenterZ=height/2;
  const scale=Math.min(cw/(2*extent+4),ch/(2*extent*Math.abs(Math.sin(elev))+height*Math.abs(Math.cos(elev))+8))*zoom;
  const triangles=[];
@@ -406,9 +622,8 @@ function render(){
   annulusMesh(triangles,base.outerD/2,base.wallID/2,base.totalH,[178,192,197],96);
   annulusMesh(triangles,base.outerD/2,base.wallID/2,base.baseH,[112,132,141],96,true);
  }
- for(const t of strands)tubeMesh(triangles,t.phase,t.direction,{...p,pitch:t.pitch,returnLength:t.returnLength},t.color,t.events);
- triangles.sort((a,b)=>a.d-b.d);
- for(const t of triangles){const q=t.p.map(v=>project(v,cw,ch,scale));ctx.beginPath();ctx.moveTo(q[0].x,q[0].y);ctx.lineTo(q[1].x,q[1].y);ctx.lineTo(q[2].x,q[2].y);ctx.closePath();ctx.fillStyle=t.color;ctx.fill();}
+ for(const t of strands)tubeMesh(triangles,t.phase,t.direction,{...p,pitch:t.pitch,returnLength:t.returnLength},t.color,t.path);
+ paintTriangles(triangles,cw,ch,scale,w,h);
  if(input.showCups.checked)drawCups(p,cw,ch,scale);
  ctx.fillStyle="rgba(220,235,239,.72)";ctx.font="12px system-ui";ctx.fillText(p.forward+" mitläufig · "+p.reverse+" gegenläufig · "+p.offset+"° Versatz · "+fmt(p.turns)+" Umdrehungen",18,ch-18);
 }

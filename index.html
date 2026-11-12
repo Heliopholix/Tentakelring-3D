@@ -23,7 +23,7 @@ canvas{display:block;width:100%;height:100%;min-height:620px;touch-action:none}.
 <main>
 <aside>
 <h1>Tentakelring 3D</h1>
-<p class="sub">Parametrische Vorschau · Stand v0.15</p>
+<p class="sub">Parametrische Vorschau · Stand v0.16</p>
 <h2>Tentakel</h2>
 <div class="control">
 <div class="label"><label for="forward">Mitläufige Tentakel</label><strong id="forwardOut">2</strong></div>
@@ -46,8 +46,8 @@ canvas{display:block;width:100%;height:100%;min-height:620px;touch-action:none}.
 <div class="scale"><span>0,1</span><span>3</span></div>
 </div>
 
-<p class="sub" id="weaveInfo" aria-live="polite"></p><p class="sub" id="crossBendInfo" aria-live="polite"></p>
-<p class="sub">Der lokale Mindestbiegeradius und das Überlappungsziel gelten für Kreuzungen und Ablegen. Die Übergänge werden automatisch erweitert und geprüft; nicht erfüllbare Radiusvorgaben werden angezeigt. Die Kreuzungsbahnen bleiben seitlich erhalten; die Ablage verändert nur ihre Höhe.</p>
+<p class="sub" id="weaveInfo" aria-live="polite"></p>
+<p class="sub">Der gewählte Mindestbiegeradius gilt für Kreuzungen und Ablegen. Die Übergänge werden automatisch berechnet. Die Kreuzungsbahnen bleiben seitlich erhalten; die Ablage verändert nur ihre Höhe.</p>
 <div class="label"><span>Starthöhe</span><strong id="startZOut">−2,50 mm</strong></div>
 <div class="control">
 <div class="label"><span>Steigung pro Umdrehung</span><strong id="pitchOut">3,00 mm</strong></div>
@@ -75,7 +75,7 @@ canvas{display:block;width:100%;height:100%;min-height:620px;touch-action:none}.
 <input id="overlap" type="range" min="0" max="40" step="1" value="10">
 <div class="scale"><span>0 %</span><span>40 %</span></div>
 </div>
-<p class="sub">Der Biegeradius bezieht sich auf die Mittellinie und folgt dem lokalen Durchmesser einschließlich Verjüngung. Die Spitze endet ab Ø 0,3 mm mit einer halbkugelförmigen Kuppel. Zielabstand an Kreuzungen und beim Ablegen: Summe beider lokalen Radien × (1 − Überlappung). Die Überlappung ist keine harte Obergrenze. Der Eingriff in die Bodenplatte bleibt bei 10 % des lokalen Radius.</p>
+<p class="sub">Der Biegeradius bezieht sich auf die Mittellinie und folgt dem lokalen Durchmesser einschließlich Verjüngung. Die Spitze endet ab Ø 0,3 mm mit einer halbkugelförmigen Kuppel. Der Überlappungsregler bestimmt auch den anfänglichen Kreuzungsabstand: Summe beider lokalen Radien × (1 − Überlappung). Die weitere Berechnung entspricht Version 0.14. Der Eingriff in die Bodenplatte bleibt bei 10 % des lokalen Radius.</p>
 <label class="check"><input id="gravity" type="checkbox" checked> Von unten nach oben ablegen</label>
 <p class="sub" id="gravityInfo" aria-live="polite"></p>
 <p class="sub">Zuerst werden alle Kreuzungsbahnen vollständig berechnet. Danach darf die Ablage ausschließlich Z absenken, und nur für Mittellinien über Z = 0. Kreuzungspartner werden gemeinsam verschoben; ihre seitliche Führung und Kreuzungswinkel bleiben erhalten. Auflage zählt nur auf ursprünglich tieferen Bahnabschnitten oder der Platte.</p>
@@ -155,7 +155,7 @@ function paintTriangles(triangles,cw,ch,scale,w,h){
  gl.drawArrays(gl.TRIANGLES,0,triangles.length*3);
 }
 const input={bendFactor:document.getElementById("bendFactor"),overlap:document.getElementById("overlap"),turnsScatter:document.getElementById("turnsScatter"),gravity:document.getElementById("gravity"),startScatter:document.getElementById("startScatter"),pitchScatter:document.getElementById("pitchScatter"),forward:document.getElementById("forward"),reverse:document.getElementById("reverse"),offset:document.getElementById("offset"),turns:document.getElementById("turns"),pitch:document.getElementById("pitch"),diam:document.getElementById("diam"),taper:document.getElementById("taper"),showBase:document.getElementById("showBase"),showRing:document.getElementById("showRing"),showCups:document.getElementById("showCups")};
-const out={crossBends:document.getElementById("crossBendInfo"),bendFactor:document.getElementById("bendFactorOut"),overlap:document.getElementById("overlapOut"),turnsScatter:document.getElementById("turnsScatterOut"),gravity:document.getElementById("gravityInfo"),startScatter:document.getElementById("startScatterOut"),pitchScatter:document.getElementById("pitchScatterOut"),variant:document.getElementById("variantOut"),weaveInfo:document.getElementById("weaveInfo"),forward:document.getElementById("forwardOut"),reverse:document.getElementById("reverseOut"),offset:document.getElementById("offsetOut"),turns:document.getElementById("turnsOut"),startZ:document.getElementById("startZOut"),pitch:document.getElementById("pitchOut"),diam:document.getElementById("diamOut"),taper:document.getElementById("taperOut")};
+const out={bendFactor:document.getElementById("bendFactorOut"),overlap:document.getElementById("overlapOut"),turnsScatter:document.getElementById("turnsScatterOut"),gravity:document.getElementById("gravityInfo"),startScatter:document.getElementById("startScatterOut"),pitchScatter:document.getElementById("pitchScatterOut"),variant:document.getElementById("variantOut"),weaveInfo:document.getElementById("weaveInfo"),forward:document.getElementById("forwardOut"),reverse:document.getElementById("reverseOut"),offset:document.getElementById("offsetOut"),turns:document.getElementById("turnsOut"),startZ:document.getElementById("startZOut"),pitch:document.getElementById("pitchOut"),diam:document.getElementById("diamOut"),taper:document.getElementById("taperOut")};
 const base={outerD:27.85,wallID:25.30,holeD:14.90,totalH:4.25,baseH:1.35,rimH:2.90};
 let variantSeed=1,viewCenterZ=0;
 let yaw=-0.55,elev=0.42,zoom=1,drag=null,raf=0;
@@ -168,7 +168,6 @@ const unit=a=>{const n=Math.hypot(a[0],a[1],a[2])||1;return [a[0]/n,a[1]/n,a[2]/
 const fmt=x=>Number(x).toFixed(2).replace(".",",");
 function bendRadius(p,t=0){return Math.max(.3,2*localRadius(p,t))*(p.bendFactor??1);}
 function contactRatio(p){return 1-(p.overlap??10)/100;}
-function contactDistance(p,r1,r2){return (r1+r2)*contactRatio(p);}
 function params(){return {bendFactor:+input.bendFactor.value,overlap:+input.overlap.value,turnsScatter:+input.turnsScatter.value,gravity:input.gravity.checked,seed:variantSeed,startScatter:+input.startScatter.value,pitchScatter:+input.pitchScatter.value,forward:+input.forward.value,reverse:+input.reverse.value,offset:+input.offset.value,turns:+input.turns.value,pitch:+input.pitch.value,diam:+input.diam.value,taper:+input.taper.value,showBase:input.showBase.checked,showRing:input.showRing.checked};}
 function project(p,w,h,scale){
  const cy=Math.cos(yaw),sy=Math.sin(yaw),x=p[0]*cy-p[1]*sy,y=p[0]*sy+p[1]*cy;
@@ -219,7 +218,7 @@ function randomSigned(seed,index,direction,channel){
  return x/4294967296*2-1;
 }
 function tentacles(p){
- const cacheKey=JSON.stringify([p.crossPass||0,p.bendFactor,p.overlap,p.turnsScatter,p.gravity,p.forward,p.reverse,p.offset,p.turns,p.pitch,p.diam,p.taper,p.startScatter,p.pitchScatter,p.seed]);
+ const cacheKey=JSON.stringify([p.bendFactor,p.overlap,p.turnsScatter,p.gravity,p.forward,p.reverse,p.offset,p.turns,p.pitch,p.diam,p.taper,p.startScatter,p.pitchScatter,p.seed]);
  if(crossingPlanCache&&crossingPlanCache.key===cacheKey)return crossingPlanCache.result;
  const result=[];
  for(const [count,direction,offset,color,fill] of [[p.forward,1,0,[11,177,183],"#b8f1e7"],[p.reverse,-1,p.offset*Math.PI/180,[230,110,91],"#ffd0b4"]]){
@@ -254,13 +253,11 @@ function tentacles(p){
  const join=(a,b)=>{a=root(a);b=root(b);if(a!==b)parents[b]=a;};
  for(const strand of result){
   const pathLength=Math.hypot((base.wallID+base.outerD)/4*2*Math.PI,strand.pitch)*strand.turns;
-  const transitionScale=1+(p.crossPass||0)*.5;
-  strand.effectiveReturnLength=0;
+  const length=Math.max(strand.returnLength,4*bendRadius(p))/pathLength;
+  strand.effectiveReturnLength=Math.max(strand.returnLength,4*bendRadius(p));
   strand.events.forEach((event,i,all)=>{
-   const length=4*bendRadius(p,event.t)*transitionScale/pathLength;
    event.left=length;event.right=length;
-   strand.effectiveReturnLength=Math.max(strand.effectiveReturnLength,length*pathLength);
-   if(i&&event.t-all[i-1].t<=event.left+all[i-1].right+1e-10)join(event.id,all[i-1].id);
+   if(i&&event.t-all[i-1].t<=2*length+1e-10)join(event.id,all[i-1].id);
   });
  }
  let merged=true;
@@ -275,7 +272,7 @@ function tentacles(p){
  const constraints=[];
  for(const strand of result)for(let i=1;i<strand.events.length;i++){
   const a=strand.events[i-1],b=strand.events[i];
-  if(root(a.id)===root(b.id))constraints.push({a:a.id,b:b.id,min:Math.max(1.25*(localRadius(p,a.t)+localRadius(p,b.t)),(1+(p.crossPass||0)*.5)*(bendRadius(p,a.t)+bendRadius(p,b.t)))});
+  if(root(a.id)===root(b.id))constraints.push({a:a.id,b:b.id,min:1.25*(localRadius(p,a.t)+localRadius(p,b.t))});
  }
  for(const cross of crossings){cross.angle=cross.a.phase+2*Math.PI*cross.a.turns*cross.ta;cross.shiftAngle=0;cross.shiftHeight=0;}
  const R0=(base.wallID+base.outerD)/4,wrap=a=>Math.atan2(Math.sin(a),Math.cos(a));
@@ -306,34 +303,10 @@ function tentacles(p){
   const samples=pathTimes(sp,strand.path,60);
   for(const t of samples){const v=evaluatePath(t,strand.phase,strand.direction,sp,strand.path);strand.maxZ=Math.max(strand.maxZ,v.value[2]+localRadius(p,t));strand.maxR=Math.max(strand.maxR,v.value[0]+localRadius(p,t));}
  }
- result.crossBends=checkCrossBends(result,p);
- if(result.crossBends.violations&&(p.crossPass||0)<3){
-  const refined=tentacles({...p,crossPass:(p.crossPass||0)+1});
-  crossingPlanCache={key:cacheKey,result:refined};return refined;
- }
  result.gravity=gravityRelax(result,p);
  result.conflicts=conflicts;result.crossings=crossings.length;result.clusters=clusterIds.size;
  crossingPlanCache={key:cacheKey,result};return result;
 }
-
-function checkCrossBends(strands,p){
- let violations=0,worstRatio=1;
- for(const strand of strands){
-  const sp={...p,pitch:strand.pitch,turns:strand.turns},times=pathTimes(sp,strand.path,240);
-  for(const section of strand.path)for(let i=1;i<section.knots.length;i++){
-   const a=section.knots[i-1].t,b=section.knots[i].t;
-   for(let j=0;j<=64;j++){const t=a+(b-a)*j/64;if(t<=tentacleEnd(p))times.push(t);}
-  }
-  for(const t of times){
-   const q=curveState(t,strand,p,false);
-   if(q.C[2]+localRadius(p,t)<=0)continue;
-   const ratio=q.curvature*bendRadius(p,t);
-   if(ratio>1.0001){violations++;worstRatio=Math.max(worstRatio,ratio);}
-  }
- }
- return {violations,worstRatio};
-}
-
 function basePath(t,phase,direction,p){
  const R=(base.wallID+base.outerD)/4;
  return {value:[R,phase+direction*2*Math.PI*p.turns*t,-p.diam+p.pitch*p.turns*t],derivative:[0,direction*2*Math.PI*p.turns,p.pitch*p.turns],secondDerivative:[0,0,0]};
@@ -479,7 +452,7 @@ function gravityRelax(strands,p){
   }
   const nearestLine=centerlineIndex(segments);
   return node=>{
-   const C=curveState(node.t,node.strand,p).C,diam=2*node.r,reach=Math.max(diam,contactDistance(p,node.r,p.diam*.5)),ids=new Set();
+   const C=curveState(node.t,node.strand,p).C,diam=2*node.r,reach=Math.max(diam,p.diam*.5),ids=new Set();
    for(let x=Math.floor((C[0]-reach)/cell);x<=Math.floor((C[0]+reach)/cell);x++)
    for(let y=Math.floor((C[1]-reach)/cell);y<=Math.floor((C[1]+reach)/cell);y++)for(const id of columns.get(x+","+y)||[])ids.add(id);
    const nearest=nearestLine(C,{strand:node.strand,t:node.t,diameter:p.diam}).distance;
@@ -490,7 +463,7 @@ function gravityRelax(strands,p){
     if(q.strand===node.strand&&Math.abs(q.t-node.t)*node.strand.gravityLength<2*p.diam)continue;
     const v=sub(q.b,q.a),w=sub(C,q.a),len2=dot(v,v),u=Math.max(0,Math.min(1,dot(w,v)/Math.max(1e-18,len2)));
     // Full 3D nearest distance comes from the global segment index above.
-    const target=contactDistance(p,node.r,q.r),xy=v[0]*v[0]+v[1]*v[1];
+    const target=contactRatio(p)*Math.min(diam,node.r+q.r),xy=v[0]*v[0]+v[1]*v[1];
     if(target<1e-8)continue;
     let t;
     if(xy<1e-15){if(w[0]*w[0]+w[1]*w[1]>target*target)continue;t=v[2]>0?1:0;}
@@ -514,7 +487,7 @@ function gravityRelax(strands,p){
    const nodes=node.strand.path.sag;
    for(let i=Math.max(0,node.index-1);i<=Math.min(nodes.length-2,node.index);i++)for(let j=0;j<=64;j++){
     const t=nodes[i].t+(nodes[i+1].t-nodes[i].t)*j/64,original=curveState(t,node.strand,p,false),r=localRadius(p,t);
-    variable.checks.push({t,strand:node.strand,allowed:.97/bendRadius(p,t),floor:Math.min(original.C[2],floorSupport(original.C,r))});
+    variable.checks.push({t,strand:node.strand,allowed:Math.max(original.curvature,.97/bendRadius(p,t)),floor:Math.min(original.C[2],floorSupport(original.C,r))});
    }
   }
  }
@@ -856,7 +829,6 @@ function render(){
  ctx.setTransform(dpr,0,0,dpr,0,0);
  const cw=rect.width,ch=rect.height;ctx.clearRect(0,0,cw,ch);
  const p=params(),strands=tentacles(p);
- out.crossBends.textContent=strands.crossBends.violations?"Kreuzungsbögen: "+strands.crossBends.violations+" Radius-Prüfstellen nicht erfüllt · Entwurf nicht freigegeben":"Kreuzungsbögen: lokale Biegeradiusprüfung bestanden";
  out.bendFactor.textContent=fmt(p.bendFactor)+" × Ø · "+fmt(bendRadius(p))+" mm am Ansatz";out.overlap.textContent=p.overlap+" %";
  out.gravity.textContent=(p.gravity?"Abgelegt · Biegeradius: "+fmt(p.bendFactor)+" × lokaler Ø":"Ablegen aus")+(p.gravity?(strands.gravity.unresolved?" · "+strands.gravity.unresolved+" Prüfstellen: Biegeradius noch unterschritten":" · Biegeradiusprüfung bestanden"):"")+(p.gravity&&strands.gravity.gaps?" · "+strands.gravity.gaps+" freie Prüfstellen":"");out.turnsScatter.textContent="±"+p.turnsScatter+" %";out.startScatter.textContent="±"+p.startScatter+"°";out.pitchScatter.textContent="±"+p.pitchScatter+" %";out.variant.textContent="Variante "+variantSeed;document.getElementById("reroll").disabled=!(p.turnsScatter||p.startScatter||p.pitchScatter);out.weaveInfo.textContent=p.gravity?"Kreuzungen zuerst berechnet · danach nur nach unten ablegen":strands.crossings+" Kreuzungen · "+strands.clusters+(strands.clusters===1?" gemeinsamer Bereich":" gemeinsame Bereiche")+(strands.conflicts?" · "+strands.conflicts+" mit Vorrang für Uhrzeigersinn":"");out.forward.textContent=p.forward;out.reverse.textContent=p.reverse;out.offset.textContent=p.offset+"°";out.turns.textContent=fmt(p.turns);out.startZ.textContent="−"+fmt(p.diam)+" mm";out.pitch.textContent=fmt(p.pitch)+" mm";out.diam.textContent=fmt(p.diam)+" mm";out.taper.textContent=Math.round(p.taper*100)+" %";
  const height=Math.max(base.totalH,...strands.map(s=>s.maxZ)),extent=Math.max(base.outerD/2,...strands.map(s=>s.maxR));

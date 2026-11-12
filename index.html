@@ -23,7 +23,7 @@ canvas{display:block;width:100%;height:100%;min-height:620px;touch-action:none}.
 <main>
 <aside>
 <h1>Tentakelring 3D</h1>
-<p class="sub">Parametrische Vorschau · Stand v0.17</p>
+<p class="sub">Parametrische Vorschau · Stand v0.18</p>
 <h2>Tentakel</h2>
 <div class="control">
 <div class="label"><label for="forward">Mitläufige Tentakel</label><strong id="forwardOut">2</strong></div>
@@ -75,7 +75,7 @@ canvas{display:block;width:100%;height:100%;min-height:620px;touch-action:none}.
 <input id="overlap" type="range" min="0" max="40" step="1" value="10">
 <div class="scale"><span>0 %</span><span>40 %</span></div>
 </div>
-<p class="sub">Der Biegeradius bezieht sich auf die Mittellinie und folgt dem lokalen Durchmesser einschließlich Verjüngung. Die Spitze endet ab Ø 0,3 mm mit einer halbkugelförmigen Kuppel. Der Überlappungsregler bestimmt auch den anfänglichen Kreuzungsabstand: Summe beider lokalen Radien × (1 − Überlappung). Die Ablage erfolgt in zwei Schritten: zuerst Kontakt gemäß Überlappungsziel, danach Glättung und Biegekorrektur der Mittellinie. Der Eingriff in die Bodenplatte bleibt bei 10 % des lokalen Radius.</p>
+<p class="sub">Der Biegeradius bezieht sich auf die Mittellinie und folgt dem lokalen Durchmesser einschließlich Verjüngung. Die Spitze endet ab Ø 0,3 mm mit einer halbkugelförmigen Kuppel. Der Überlappungsregler bestimmt auch den anfänglichen Kreuzungsabstand: Summe beider lokalen Radien × (1 − Überlappung). Die Ablage erfolgt in zwei Schritten: zuerst Kontakt gemäß Überlappungsziel, danach Glättung und Biegekorrektur der Mittellinie. Für die Z=0-Ebene gilt der eigene lokale Radius × (1 − Überlappung). Tiefer liegende Tentakel zählen auch mit Mittellinie unter Z=0 als Auflage; ihr Zielabstand verwendet beide lokalen Radien. Die jeweils höhere Auflage bestimmt die Ablage.</p>
 <label class="check"><input id="gravity" type="checkbox" checked> Von unten nach oben ablegen</label>
 <p class="sub" id="gravityInfo" aria-live="polite"></p>
 <p class="sub">Zuerst werden alle Kreuzungsbahnen vollständig berechnet. Danach darf die Ablage ausschließlich Z absenken, und nur für Mittellinien über Z = 0. Kreuzungspartner werden gemeinsam verschoben; ihre seitliche Führung und Kreuzungswinkel bleiben erhalten. Auflage zählt nur auf ursprünglich tieferen Bahnabschnitten oder der Platte.</p>
@@ -379,9 +379,9 @@ function curveState(t,strand,p,settled=true){
  const C=[r*c,r*s,z],V=[dr*c-r*da*s,dr*s+r*da*c,dz],A=[(ddr-r*da*da)*c-(2*dr*da+r*dda)*s,(ddr-r*da*da)*s+(2*dr*da+r*dda)*c,ddz];
  return {C,curvature:Math.hypot(...cross(V,A))/Math.max(1e-18,Math.hypot(...V)**3)};
 }
-function floorSupport(C,radius){
- const radial=Math.hypot(C[0],C[1]),gap=Math.max(base.holeD/2-radial,radial-base.outerD/2,0);
- return gap<radius?base.baseH+Math.sqrt(Math.max(0,(.9*radius)**2-gap*gap)):.9*radius;
+function floorSupport(C,radius,p){
+ // Z=0 is the reference support plane; it has no radius of its own.
+ return contactRatio(p)*radius;
 }
 
 function centerlineIndex(segments){
@@ -445,7 +445,7 @@ function gravityRelax(strands,p){
    let variable=crossing===undefined?null:crossingVariables.get(crossing);
    if(!variable){variable={value:0,members:[],maxDrop:Infinity,active:false};variables.push(variable);if(crossing!==undefined)crossingVariables.set(crossing,variable);}
    const C=curveState(t,strand,p,false).C,r=localRadius(p,t),node={t,variable,strand,C,r};
-   variable.maxDrop=Math.min(variable.maxDrop,Math.max(0,C[2]-floorSupport(C,r)));
+   variable.maxDrop=Math.min(variable.maxDrop,Math.max(0,C[2]-floorSupport(C,r,p)));
    variable.members.push(node);return node;
   });
   nodes.forEach((node,i)=>node.index=i);strand.path.sag=nodes;
@@ -468,9 +468,10 @@ function gravityRelax(strands,p){
    for(let x=Math.floor((C[0]-reach)/cell);x<=Math.floor((C[0]+reach)/cell);x++)
    for(let y=Math.floor((C[1]-reach)/cell);y<=Math.floor((C[1]+reach)/cell);y++)for(const id of columns.get(x+","+y)||[])ids.add(id);
    const nearest=nearestLine(C,{strand:node.strand,t:node.t,diameter:p.diam}).distance;
-   let support=floorSupport(C,node.r);
+   let support=floorSupport(C,node.r,p);
    for(const id of ids){
     const q=segments[id];
+    // Lower strands remain supports even when their centerline is below Z=0.
     if(q.originalZ>=node.C[2]-1e-7)continue;
     if(q.strand===node.strand&&Math.abs(q.t-node.t)*node.strand.gravityLength<2*p.diam)continue;
     const v=sub(q.b,q.a),w=sub(C,q.a),len2=dot(v,v),u=Math.max(0,Math.min(1,dot(w,v)/Math.max(1e-18,len2)));
@@ -499,7 +500,7 @@ function gravityRelax(strands,p){
    const nodes=node.strand.path.sag;
    for(let i=Math.max(0,node.index-2);i<=Math.min(nodes.length-2,node.index+1);i++)for(let j=0;j<=64;j++){
     const t=nodes[i].t+(nodes[i+1].t-nodes[i].t)*j/64,original=curveState(t,node.strand,p,false),r=localRadius(p,t);
-    variable.checks.push({t,strand:node.strand,allowed:.97/bendRadius(p,t),floor:Math.min(original.C[2],floorSupport(original.C,r))});
+    variable.checks.push({t,strand:node.strand,allowed:.97/bendRadius(p,t),floor:Math.min(original.C[2],floorSupport(original.C,r,p))});
    }
   }
  }

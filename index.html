@@ -110,7 +110,7 @@ function annulusMesh(list,ro,ri,z,color,segments){
 function tubeMesh(list,phase,p,baseColor){
  const nt=180,nf=24,R=(base.wallID/2+base.outerD/2)/2,startZ=base.baseH+base.rimH/2,rows=[];
  for(let i=0;i<=nt;i++){
-  const t=i/nt,ang=2*Math.PI*p.turns*t+phase,z=startZ+p.pitch*t;
+  const t=i/nt,ang=2*Math.PI*base.turns*t+phase,z=startZ+p.pitch*t;
   const C=[R*Math.cos(ang),R*Math.sin(ang),z];
   const T=unit([-R*2*Math.PI*Math.sin(ang),R*2*Math.PI*Math.cos(ang),p.pitch]);
   const N=[Math.cos(ang),Math.sin(ang),0],B=unit(cross(T,N));

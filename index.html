@@ -23,17 +23,17 @@ canvas{display:block;width:100%;height:100%;min-height:620px;touch-action:none}.
 <main>
 <aside>
 <h1>Tentakelring 3D</h1>
-<p class="sub">Parametrische Vorschau · Stand v0.6</p>
+<p class="sub">Parametrische Vorschau · Stand v0.7</p>
 <h2>Tentakel</h2>
 <div class="control">
 <div class="label"><label for="forward">Mitläufige Tentakel</label><strong id="forwardOut">2</strong></div>
-<input id="forward" type="range" min="0" max="3" step="1" value="2">
-<div class="scale"><span>0</span><span>3</span></div>
+<input id="forward" type="range" min="0" max="5" step="1" value="2">
+<div class="scale"><span>0</span><span>5</span></div>
 </div>
 <div class="control">
 <div class="label"><label for="reverse">Gegenläufige Tentakel</label><strong id="reverseOut">0</strong></div>
-<input id="reverse" type="range" min="0" max="3" step="1" value="0">
-<div class="scale"><span>0</span><span>3</span></div>
+<input id="reverse" type="range" min="0" max="5" step="1" value="0">
+<div class="scale"><span>0</span><span>5</span></div>
 </div>
 <div class="control">
 <div class="label"><label for="offset">Versatz der Startgruppen</label><strong id="offsetOut">0°</strong></div>
@@ -54,8 +54,8 @@ canvas{display:block;width:100%;height:100%;min-height:620px;touch-action:none}.
 <div class="label"><span>Starthöhe</span><strong id="startZOut">−2,50 mm</strong></div>
 <div class="control">
 <div class="label"><span>Steigung pro Umdrehung</span><strong id="pitchOut">3,00 mm</strong></div>
-<input id="pitch" type="range" min="1" max="6" step="0.05" value="3">
-<div class="scale"><span>1 mm</span><span>6 mm</span></div>
+<input id="pitch" aria-label="Steigung pro Umdrehung" type="range" min="1" max="18" step="0.05" value="3">
+<div class="scale"><span>1 mm</span><span>18 mm</span></div>
 </div>
 <div class="control">
 <div class="label"><span>Durchmesser</span><strong id="diamOut">2,50 mm</strong></div>
@@ -67,6 +67,24 @@ canvas{display:block;width:100%;height:100%;min-height:620px;touch-action:none}.
 <input id="taper" type="range" min="0.5" max="0.95" step="0.01" value="0.75">
 <div class="scale"><span>ab halber Runde</span><span>letzte 5 %</span></div>
 </div>
+<h2>Streuung</h2>
+<div class="control">
+<div class="label"><label for="startScatter">Startwinkel</label><strong id="startScatterOut">±0°</strong></div>
+<input id="startScatter" type="range" min="0" max="180" step="1" value="0">
+<div class="scale"><span>±0°</span><span>±180°</span></div>
+</div>
+<div class="control">
+<div class="label"><label for="pitchScatter">Steigung streuen</label><strong id="pitchScatterOut">±0 %</strong></div>
+<input id="pitchScatter" type="range" min="0" max="100" step="1" value="0">
+<div class="scale"><span>±0 %</span><span>±100 %</span></div>
+</div>
+<div class="control">
+<div class="label"><label for="returnScatter">Rückführung streuen</label><strong id="returnScatterOut">±0 %</strong></div>
+<input id="returnScatter" type="range" min="0" max="100" step="1" value="0">
+<div class="scale"><span>±0 %</span><span>±100 %</span></div>
+</div>
+<div class="buttons"><button id="reroll" type="button">Neu würfeln</button><span id="variantOut">Variante 1</span></div>
+<p class="sub">Streuung je Tentakel um den Reglerwert. Tatsächliche Steigung: 0,1–18 mm/Umdrehung.</p>
 <label class="check"><input id="showBase" type="checkbox" checked> Bodenplatte anzeigen</label>
 <label class="check"><input id="showRing" type="checkbox" checked> Referenzring anzeigen</label>
 <label class="check"><input id="showCups" type="checkbox"> Saugnäpfe anzeigen</label>
@@ -79,7 +97,7 @@ Randhöhe 2,90 mm · Grundplatte 1,35 mm
 </div>
 <div class="note">
 <b>Geometrie</b><br>
-Je 0–3 mitläufige (türkise) und gegenläufige (korallfarbene) Tentakel. Die Startpunkte jeder Gruppe liegen gleichmäßig auf dem Kreis. Der Versatz verdreht die gegenläufige Startgruppe gegenüber der mitläufigen. Die Starthöhe entspricht dem negativen Durchmesser. Die Anzahl der Umdrehungen ist einstellbar; die Spitzen laufen im letzten Abschnitt aus. An Kreuzungen weichen beide Bahnen um ihren lokalen Radius radial aus. Von oben gesehen beginnt Uhrzeigersinn innen, die Gegenrichtung außen; nach jeder Kreuzung wechseln die Präferenzen. Bei gleichen Präferenzen hat Uhrzeigersinn Vorrang. Die Rückführung wird bei dicht benachbarten Kreuzungen bis zur Mitte dazwischen begrenzt. Die Körper werden am Innenzylinder Ø 25,30 mm beschnitten und mit einer Fläche auf dessen Wand geschlossen. Unterhalb der Bodenplatten-Unterkante (z = 0 mm) werden sie entfernt und mit einer ebenen Fläche geschlossen.
+Je 0–5 mitläufige (türkise) und gegenläufige (korallfarbene) Tentakel. Ohne Streuung liegen die Startpunkte jeder Gruppe gleichmäßig auf dem Kreis. Die Zufallswerte bleiben bis zum nächsten Würfeln stabil. Der Versatz verdreht die gegenläufige Startgruppe gegenüber der mitläufigen. Die Starthöhe entspricht dem negativen Durchmesser. Die Anzahl der Umdrehungen ist einstellbar; die Spitzen laufen im letzten Abschnitt aus. An Kreuzungen weichen beide Bahnen um ihren lokalen Radius radial aus. Von oben gesehen beginnt Uhrzeigersinn innen, die Gegenrichtung außen; nach jeder Kreuzung wechseln die Präferenzen. Bei gleichen Präferenzen hat Uhrzeigersinn Vorrang. Die Rückführung wird bei dicht benachbarten Kreuzungen bis zur Mitte dazwischen begrenzt. Die Körper werden am Innenzylinder Ø 25,30 mm beschnitten und mit einer Fläche auf dessen Wand geschlossen. Unterhalb der Bodenplatten-Unterkante (z = 0 mm) werden sie entfernt und mit einer ebenen Fläche geschlossen.
 </div>
 <div class="buttons"><button id="reset">Parameter zurücksetzen</button><button id="viewReset">Ansicht zurücksetzen</button></div>
 </aside>
@@ -93,9 +111,10 @@ Je 0–3 mitläufige (türkise) und gegenläufige (korallfarbene) Tentakel. Die 
 (function(){
 "use strict";
 const canvas=document.getElementById("view"),ctx=canvas.getContext("2d");
-const input={returnLength:document.getElementById("returnLength"),forward:document.getElementById("forward"),reverse:document.getElementById("reverse"),offset:document.getElementById("offset"),turns:document.getElementById("turns"),pitch:document.getElementById("pitch"),diam:document.getElementById("diam"),taper:document.getElementById("taper"),showBase:document.getElementById("showBase"),showRing:document.getElementById("showRing"),showCups:document.getElementById("showCups")};
-const out={returnLength:document.getElementById("returnLengthOut"),weaveInfo:document.getElementById("weaveInfo"),forward:document.getElementById("forwardOut"),reverse:document.getElementById("reverseOut"),offset:document.getElementById("offsetOut"),turns:document.getElementById("turnsOut"),startZ:document.getElementById("startZOut"),pitch:document.getElementById("pitchOut"),diam:document.getElementById("diamOut"),taper:document.getElementById("taperOut")};
+const input={startScatter:document.getElementById("startScatter"),pitchScatter:document.getElementById("pitchScatter"),returnScatter:document.getElementById("returnScatter"),returnLength:document.getElementById("returnLength"),forward:document.getElementById("forward"),reverse:document.getElementById("reverse"),offset:document.getElementById("offset"),turns:document.getElementById("turns"),pitch:document.getElementById("pitch"),diam:document.getElementById("diam"),taper:document.getElementById("taper"),showBase:document.getElementById("showBase"),showRing:document.getElementById("showRing"),showCups:document.getElementById("showCups")};
+const out={startScatter:document.getElementById("startScatterOut"),pitchScatter:document.getElementById("pitchScatterOut"),returnScatter:document.getElementById("returnScatterOut"),variant:document.getElementById("variantOut"),returnLength:document.getElementById("returnLengthOut"),weaveInfo:document.getElementById("weaveInfo"),forward:document.getElementById("forwardOut"),reverse:document.getElementById("reverseOut"),offset:document.getElementById("offsetOut"),turns:document.getElementById("turnsOut"),startZ:document.getElementById("startZOut"),pitch:document.getElementById("pitchOut"),diam:document.getElementById("diamOut"),taper:document.getElementById("taperOut")};
 const base={outerD:27.85,wallID:25.30,holeD:14.90,totalH:4.25,baseH:1.35,rimH:2.90};
+let variantSeed=1,viewCenterZ=0;
 let yaw=-0.55,elev=0.42,zoom=1,drag=null,raf=0;
 const add=(a,b)=>[a[0]+b[0],a[1]+b[1],a[2]+b[2]];
 const sub=(a,b)=>[a[0]-b[0],a[1]-b[1],a[2]-b[2]];
@@ -104,11 +123,11 @@ const dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
 const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
 const unit=a=>{const n=Math.hypot(a[0],a[1],a[2])||1;return [a[0]/n,a[1]/n,a[2]/n]};
 const fmt=x=>Number(x).toFixed(2).replace(".",",");
-function params(){return {returnLength:+input.returnLength.value,forward:+input.forward.value,reverse:+input.reverse.value,offset:+input.offset.value,turns:+input.turns.value,pitch:+input.pitch.value,diam:+input.diam.value,taper:+input.taper.value,showBase:input.showBase.checked,showRing:input.showRing.checked};}
+function params(){return {seed:variantSeed,startScatter:+input.startScatter.value,pitchScatter:+input.pitchScatter.value,returnScatter:+input.returnScatter.value,returnLength:+input.returnLength.value,forward:+input.forward.value,reverse:+input.reverse.value,offset:+input.offset.value,turns:+input.turns.value,pitch:+input.pitch.value,diam:+input.diam.value,taper:+input.taper.value,showBase:input.showBase.checked,showRing:input.showRing.checked};}
 function project(p,w,h,scale){
  const cy=Math.cos(yaw),sy=Math.sin(yaw),x=p[0]*cy-p[1]*sy,y=p[0]*sy+p[1]*cy;
  const ce=Math.cos(elev),se=Math.sin(elev);
- return {x:w/2+scale*x,y:h/2+scale*(y*se-p[2]*ce),d:y*ce+p[2]*se};
+ return {x:w/2+scale*x,y:h/2+scale*(y*se-(p[2]-viewCenterZ)*ce),d:y*ce+p[2]*se};
 }
 function tri(list,a,b,c,color){
  const n=unit(cross(sub(b,a),sub(c,a)));
@@ -140,34 +159,48 @@ let crossingPlanCache=null;
 function localRadius(p,t){
  return p.diam*.5*(t<=p.taper?1:Math.max(0,(1-t)/(1-p.taper)));
 }
+function randomSigned(seed,index,direction,channel){
+ let x=(seed>>>0)^Math.imul(index+1,0x9e3779b1)^Math.imul(direction+2,0x85ebca6b)^Math.imul(channel+1,0xc2b2ae35);
+ x=Math.imul(x^(x>>>16),0x7feb352d);x=Math.imul(x^(x>>>15),0x846ca68b);x=(x^(x>>>16))>>>0;
+ return x/4294967296*2-1;
+}
 function tentacles(p){
- const cacheKey=JSON.stringify([p.forward,p.reverse,p.offset,p.turns,p.pitch,p.diam,p.taper,p.returnLength]);
+ const cacheKey=JSON.stringify([p.forward,p.reverse,p.offset,p.turns,p.pitch,p.diam,p.taper,p.returnLength,p.startScatter,p.pitchScatter,p.returnScatter,p.seed]);
  if(crossingPlanCache&&crossingPlanCache.key===cacheKey)return crossingPlanCache.result;
  const result=[];
  for(const [count,direction,offset,color,fill] of [[p.forward,1,0,[11,177,183],"#b8f1e7"],[p.reverse,-1,p.offset*Math.PI/180,[230,110,91],"#ffd0b4"]]){
-  for(let i=0;i<count;i++)result.push({phase:offset+2*Math.PI*i/count,direction,color,fill,events:[],preference:direction===-1?-1:1});
+  for(let i=0;i<count;i++){
+   const angle=offset+2*Math.PI*i/count+randomSigned(p.seed,i,direction,0)*(p.startScatter||0)*Math.PI/180;
+   const pitch=Math.max(.1,Math.min(18,p.pitch*(1+randomSigned(p.seed,i,direction,1)*(p.pitchScatter||0)/100)));
+   const returnLength=Math.max(.1,p.returnLength*(1+randomSigned(p.seed,i,direction,2)*(p.returnScatter||0)/100));
+   result.push({index:i,phase:((angle%(2*Math.PI))+2*Math.PI)%(2*Math.PI),direction,pitch,returnLength,color,fill,events:[],preference:direction===-1?-1:1});
+  }
  }
  const crossings=[];
  for(const a of result.filter(t=>t.direction===1))for(const b of result.filter(t=>t.direction===-1)){
-  const first=Math.ceil((a.phase-b.phase)/(2*Math.PI)-1e-10),last=Math.floor(2*p.turns+(a.phase-b.phase)/(2*Math.PI)+1e-10);
+  const maxHeight=Math.min(a.pitch,b.pitch)*p.turns,speed=1/a.pitch+1/b.pitch;
+  const phaseDifference=(a.phase-b.phase)/(2*Math.PI);
+  const first=Math.ceil(phaseDifference-1e-10),last=Math.floor(speed*maxHeight+phaseDifference+1e-10);
   for(let k=first;k<=last;k++){
-   const t=(b.phase-a.phase+2*Math.PI*k)/(4*Math.PI*p.turns);
-   if(t>=-1e-10&&t<1-1e-10)crossings.push({t:Math.max(0,t),a,b});
+   const height=(k-phaseDifference)/speed,ta=height/(a.pitch*p.turns),tb=height/(b.pitch*p.turns);
+   if(ta>=-1e-10&&tb>=-1e-10&&ta<1-1e-10&&tb<1-1e-10)crossings.push({height:Math.max(0,height),ta:Math.max(0,ta),tb:Math.max(0,tb),a,b});
   }
  }
- crossings.sort((a,b)=>a.t-b.t||a.a.phase-b.a.phase||a.b.phase-b.b.phase);
+ crossings.sort((a,b)=>a.height-b.height||a.a.phase-b.a.phase||a.b.phase-b.b.phase);
  let conflicts=0;
  crossings.forEach((crossing,id)=>{
-  const {a,b,t}=crossing,cwSide=b.preference,ccwSide=-cwSide;
+  const {a,b,ta,tb}=crossing,cwSide=b.preference;
   if(a.preference===b.preference)conflicts++;
-  a.events.push({t,side:ccwSide,id});b.events.push({t,side:cwSide,id});
+  a.events.push({t:ta,side:-cwSide,id});b.events.push({t:tb,side:cwSide,id});
   a.preference*=-1;b.preference*=-1;
  });
- const pathLength=Math.hypot((base.wallID+base.outerD)/4*2*Math.PI,p.pitch)*p.turns;
- for(const strand of result)strand.events.forEach((event,i,all)=>{
-  event.left=Math.min(p.returnLength/pathLength,i?(event.t-all[i-1].t)/2:Infinity);
-  event.right=Math.min(p.returnLength/pathLength,i+1<all.length?(all[i+1].t-event.t)/2:Infinity);
- });
+ for(const strand of result){
+  const pathLength=Math.hypot((base.wallID+base.outerD)/4*2*Math.PI,strand.pitch)*p.turns;
+  strand.events.forEach((event,i,all)=>{
+   event.left=Math.min(strand.returnLength/pathLength,i?(event.t-all[i-1].t)/2:Infinity);
+   event.right=Math.min(strand.returnLength/pathLength,i+1<all.length?(all[i+1].t-event.t)/2:Infinity);
+  });
+ }
  result.conflicts=conflicts;result.crossings=crossings.length;
  crossingPlanCache={key:cacheKey,result};return result;
 }
@@ -334,11 +367,12 @@ function tubeMesh(list,phase,direction,p,baseColor,events=[]){
 function drawCups(p,w,h,scale){
  const R=(base.wallID/2+base.outerD/2)/2,startZ=-p.diam;
  const camera=[Math.sin(yaw)*Math.cos(elev),-Math.cos(yaw)*Math.cos(elev),Math.sin(elev)];
- for(const {phase,direction,fill,events} of tentacles(p)){
+ for(const {phase,direction,fill,events,pitch} of tentacles(p)){
+  const sp={...p,pitch};
   const cupSteps=Math.ceil(36*p.turns);
   for(let i=3;i<cupSteps-3;i++){
-   const t=i/cupSteps,r=R+radialOffset(p,t,events),ang=direction*2*Math.PI*p.turns*t+phase,center=[r*Math.cos(ang),r*Math.sin(ang),startZ+p.pitch*p.turns*t];
-   const tangent=unit([-direction*R*2*Math.PI*Math.sin(ang),direction*R*2*Math.PI*Math.cos(ang),p.pitch]);
+   const t=i/cupSteps,r=R+radialOffset(sp,t,events),ang=direction*2*Math.PI*p.turns*t+phase,center=[r*Math.cos(ang),r*Math.sin(ang),startZ+sp.pitch*p.turns*t];
+   const tangent=unit([-direction*R*2*Math.PI*Math.sin(ang),direction*R*2*Math.PI*Math.cos(ang),sp.pitch]);
    const facing=unit(sub(camera,mul(tangent,dot(camera,tangent))));
    const surf=add(center,mul(facing,p.diam*.39)),q=project(surf,w,h,scale);
    if(q.d<0||surf[2]<0||Math.hypot(surf[0],surf[1])<base.wallID/2)continue;
@@ -357,8 +391,10 @@ function render(){
  if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}
  ctx.setTransform(dpr,0,0,dpr,0,0);
  const cw=rect.width,ch=rect.height;ctx.clearRect(0,0,cw,ch);
- const p=params(),strands=tentacles(p);out.returnLength.textContent=fmt(p.returnLength)+" mm";out.weaveInfo.textContent=strands.crossings+" Kreuzungen"+(strands.conflicts?" · "+strands.conflicts+" mit Vorrang für Uhrzeigersinn":"");out.forward.textContent=p.forward;out.reverse.textContent=p.reverse;out.offset.textContent=p.offset+"°";out.turns.textContent=fmt(p.turns);out.startZ.textContent="−"+fmt(p.diam)+" mm";out.pitch.textContent=fmt(p.pitch)+" mm";out.diam.textContent=fmt(p.diam)+" mm";out.taper.textContent=Math.round(p.taper*100)+" %";
- const scale=Math.min(cw/43,ch/38)*zoom;
+ const p=params(),strands=tentacles(p);out.startScatter.textContent="±"+p.startScatter+"°";out.pitchScatter.textContent="±"+p.pitchScatter+" %";out.returnScatter.textContent="±"+p.returnScatter+" %";out.variant.textContent="Variante "+variantSeed;document.getElementById("reroll").disabled=!(p.startScatter||p.pitchScatter||p.returnScatter);out.returnLength.textContent=fmt(p.returnLength)+" mm";out.weaveInfo.textContent=strands.crossings+" Kreuzungen"+(strands.conflicts?" · "+strands.conflicts+" mit Vorrang für Uhrzeigersinn":"");out.forward.textContent=p.forward;out.reverse.textContent=p.reverse;out.offset.textContent=p.offset+"°";out.turns.textContent=fmt(p.turns);out.startZ.textContent="−"+fmt(p.diam)+" mm";out.pitch.textContent=fmt(p.pitch)+" mm";out.diam.textContent=fmt(p.diam)+" mm";out.taper.textContent=Math.round(p.taper*100)+" %";
+ const height=Math.max(base.totalH,...strands.map(s=>-p.diam+s.pitch*p.turns+p.diam/2)),extent=(base.wallID+base.outerD)/4+p.diam;
+ viewCenterZ=height/2;
+ const scale=Math.min(cw/(2*extent+4),ch/(2*extent*Math.abs(Math.sin(elev))+height*Math.abs(Math.cos(elev))+8))*zoom;
  const triangles=[];
  if(p.showBase){
   cylinderMesh(triangles,base.outerD/2,0,base.baseH,[112,132,141],96,base.holeD/2);
@@ -370,15 +406,16 @@ function render(){
   annulusMesh(triangles,base.outerD/2,base.wallID/2,base.totalH,[178,192,197],96);
   annulusMesh(triangles,base.outerD/2,base.wallID/2,base.baseH,[112,132,141],96,true);
  }
- for(const t of strands)tubeMesh(triangles,t.phase,t.direction,p,t.color,t.events);
+ for(const t of strands)tubeMesh(triangles,t.phase,t.direction,{...p,pitch:t.pitch,returnLength:t.returnLength},t.color,t.events);
  triangles.sort((a,b)=>a.d-b.d);
  for(const t of triangles){const q=t.p.map(v=>project(v,cw,ch,scale));ctx.beginPath();ctx.moveTo(q[0].x,q[0].y);ctx.lineTo(q[1].x,q[1].y);ctx.lineTo(q[2].x,q[2].y);ctx.closePath();ctx.fillStyle=t.color;ctx.fill();}
  if(input.showCups.checked)drawCups(p,cw,ch,scale);
  ctx.fillStyle="rgba(220,235,239,.72)";ctx.font="12px system-ui";ctx.fillText(p.forward+" mitläufig · "+p.reverse+" gegenläufig · "+p.offset+"° Versatz · "+fmt(p.turns)+" Umdrehungen",18,ch-18);
 }
 function schedule(){if(!raf)raf=requestAnimationFrame(()=>{raf=0;render();});}
-for(const el of [input.returnLength,input.forward,input.reverse,input.offset,input.turns,input.pitch,input.diam,input.taper,input.showBase,input.showRing,input.showCups])el.addEventListener("input",schedule);
-document.getElementById("reset").addEventListener("click",()=>{input.returnLength.value=5;input.forward.value=2;input.reverse.value=0;input.offset.value=0;input.turns.value=1;input.pitch.value=3;input.diam.value=2.5;input.taper.value=.75;input.showBase.checked=true;input.showRing.checked=true;input.showCups.checked=false;schedule();});
+for(const el of [input.startScatter,input.pitchScatter,input.returnScatter,input.returnLength,input.forward,input.reverse,input.offset,input.turns,input.pitch,input.diam,input.taper,input.showBase,input.showRing,input.showCups])el.addEventListener("input",schedule);
+document.getElementById("reset").addEventListener("click",()=>{variantSeed=1;input.startScatter.value=0;input.pitchScatter.value=0;input.returnScatter.value=0;input.returnLength.value=5;input.forward.value=2;input.reverse.value=0;input.offset.value=0;input.turns.value=1;input.pitch.value=3;input.diam.value=2.5;input.taper.value=.75;input.showBase.checked=true;input.showRing.checked=true;input.showCups.checked=false;schedule();});
+document.getElementById("reroll").addEventListener("click",()=>{variantSeed++;schedule();});
 document.getElementById("viewReset").addEventListener("click",()=>{yaw=-.55;elev=.42;zoom=1;schedule();});
 canvas.addEventListener("pointerdown",e=>{drag={x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId);});
 canvas.addEventListener("pointermove",e=>{if(!drag)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;drag={x:e.clientX,y:e.clientY};yaw+=dx*.008;elev=Math.max(-.15,Math.min(1.2,elev+dy*.006));schedule();});

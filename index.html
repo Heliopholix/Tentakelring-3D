@@ -23,7 +23,7 @@ canvas{display:block;width:100%;height:100%;min-height:620px;touch-action:none}.
 <main>
 <aside>
 <h1>Tentakelring 3D</h1>
-<p class="sub">Parametrische Vorschau · Stand v0.22</p>
+<p class="sub">Parametrische Vorschau · Stand v0.23</p>
 <h2>Tentakel</h2>
 <div class="control">
 <div class="label"><label for="forward">Mitläufige Tentakel</label><strong id="forwardOut">2</strong></div>
@@ -117,6 +117,7 @@ Randhöhe 2,90 mm · Grundplatte 1,35 mm
 <div class="note">
 <b>Geometrie</b><br>
 Je 0–10 Tentakel pro Richtung, mit einstellbarer Steigung, Umdrehungszahl und Streuung. Die Ablage verändert die fertigen Kreuzungsbahnen nur nach unten. Mittellinien bei Z ≤ 0 bleiben unverändert. Kreuzungspartner teilen sich einen vertikalen Versatz; die seitliche Bahn bleibt unverändert. Der Mindestbiegeradius ist als Faktor des lokalen Durchmessers einstellbar; die Überlappung steuert den Zielabstand beim Ablegen. Verbleibende Abstände und zu enge Ausgangsbögen werden angezeigt. Die Körper werden am Innenzylinder Ø 25,30 mm und an z = 0 beschnitten und geschlossen.</div>
+<div class="buttons"><button id="saveSnapshot" type="button">Snapshot als 3MF speichern</button></div><p class="sub" id="snapshotInfo" aria-live="polite">Speichert die eingeblendeten Teile mit Parametern und Variante. Ein sichtbarer Referenzring wird mit exportiert.</p>
 <div class="buttons"><button id="reset">Parameter zurücksetzen</button><button id="viewReset">Ansicht zurücksetzen</button></div>
 </aside>
 <section class="stage">
@@ -174,7 +175,7 @@ const unit=a=>{const n=Math.hypot(a[0],a[1],a[2])||1;return [a[0]/n,a[1]/n,a[2]/
 const fmt=x=>Number(x).toFixed(2).replace(".",",");
 function bendRadius(p,t=0){return Math.max(.3,2*localRadius(p,t))*(p.bendFactor??1);}
 function contactRatio(p){return 1-(p.overlap??10)/100;}
-function params(){return {bandWidth:+input.bandWidth.value,bandRotation:+input.bandRotation.value,bandWidthVariation:+input.bandWidthVariation.value,bandRotationVariation:+input.bandRotationVariation.value,bendFactor:+input.bendFactor.value,overlap:+input.overlap.value,turnsScatter:+input.turnsScatter.value,gravity:input.gravity.checked,seed:variantSeed,startScatter:+input.startScatter.value,pitchScatter:+input.pitchScatter.value,forward:+input.forward.value,reverse:+input.reverse.value,offset:+input.offset.value,turns:+input.turns.value,pitch:+input.pitch.value,diam:+input.diam.value,taper:+input.taper.value,showBase:input.showBase.checked,showRing:input.showRing.checked};}
+function params(){return {bandWidth:+input.bandWidth.value,bandRotation:+input.bandRotation.value,bandWidthVariation:+input.bandWidthVariation.value,bandRotationVariation:+input.bandRotationVariation.value,bendFactor:+input.bendFactor.value,overlap:+input.overlap.value,turnsScatter:+input.turnsScatter.value,gravity:input.gravity.checked,seed:variantSeed,startScatter:+input.startScatter.value,pitchScatter:+input.pitchScatter.value,forward:+input.forward.value,reverse:+input.reverse.value,offset:+input.offset.value,turns:+input.turns.value,pitch:+input.pitch.value,diam:+input.diam.value,taper:+input.taper.value,showCups:input.showCups.checked,showBase:input.showBase.checked,showRing:input.showRing.checked};}
 function project(p,w,h,scale){
  const cy=Math.cos(yaw),sy=Math.sin(yaw),x=p[0]*cy-p[1]*sy,y=p[0]*sy+p[1]*cy;
  const ce=Math.cos(elev),se=Math.sin(elev);
@@ -186,7 +187,7 @@ function tri(list,a,b,c,color,band=false){
  const light=unit([-0.45,-0.35,0.82]),ndl=Math.max(0,dot(n,light)),shade=.38+.52*ndl+.12*Math.pow(ndl,10);
  const cylinderCut=[a,b,c].every(v=>Math.abs(Math.hypot(v[0],v[1])-base.wallID/2)<1e-7);
  const rgb=cylinderCut?[55,75,84]:color.map(v=>Math.max(0,Math.min(255,Math.round(v*shade))));
- const depth=v=>{const yy=v[0]*Math.sin(yaw)+v[1]*Math.cos(yaw);return yy*Math.cos(elev)+v[2]*Math.sin(elev);};list.push({p:[a,b,c],band,d:(depth(a)+depth(b)+depth(c))/3,rgb,color:"rgb("+rgb.join(",")+")"});
+ const depth=v=>{const yy=v[0]*Math.sin(yaw)+v[1]*Math.cos(yaw);return yy*Math.cos(elev)+v[2]*Math.sin(elev);};list.push({p:[a,b,c],band,sourceColor:color,d:(depth(a)+depth(b)+depth(c))/3,rgb,color:"rgb("+rgb.join(",")+")"});
 }
 function cylinderMesh(list,r,z0,z1,color,segments,inner){
  for(let i=0;i<segments;i++){
@@ -1643,6 +1644,71 @@ function suckerMesh(list,phase,direction,p,path,color){
  if(suckerMeshCache.size>=10)suckerMeshCache.clear();suckerMeshCache.set(key,faces);
  for(const face of faces)tri(list,...face,color,true);
 }
+
+function snapshotGeometry(p){
+ const strands=tentacles(p);
+ const triangles=[];
+ if(p.showBase){
+  cylinderMesh(triangles,base.outerD/2,0,base.baseH,[112,132,141],96,base.holeD/2);
+  annulusMesh(triangles,base.outerD/2,base.holeD/2,0,[88,105,113],96,true);
+  annulusMesh(triangles,base.outerD/2,base.holeD/2,base.baseH,[151,168,175],96);
+ }
+ if(p.showRing){
+  cylinderMesh(triangles,base.outerD/2,base.baseH,base.totalH,[132,150,157],96,base.wallID/2);
+  annulusMesh(triangles,base.outerD/2,base.wallID/2,base.totalH,[178,192,197],96);
+  annulusMesh(triangles,base.outerD/2,base.wallID/2,base.baseH,[112,132,141],96,true);
+ }
+ for(const t of strands)tubeMesh(triangles,t.phase,t.direction,{...p,pitch:t.pitch,turns:t.turns,returnLength:t.returnLength},t.color,t.path);
+ if(p.showCups)for(const t of strands)suckerMesh(triangles,t.phase,t.direction,{...p,pitch:t.pitch,turns:t.turns},t.path,t.color);
+
+ return triangles;
+}
+function snapshotModel(p,created){
+ const faces=snapshotGeometry(p),vertices=[],indices=new Map(),materials=[],colors=new Map(),triangles=[];
+ const vertex=v=>{const point=v.map(n=>Number(n.toFixed(8))),key=point.join(",");if(!indices.has(key)){indices.set(key,vertices.length);vertices.push(point);}return indices.get(key);};
+ for(const face of faces){
+  const ids=face.p.map(vertex);if(new Set(ids).size!==3)continue;
+  const color=(face.sourceColor||[180,180,180]).map(v=>Math.round(v).toString(16).padStart(2,"0")).join("").toUpperCase();
+  if(!colors.has(color)){colors.set(color,materials.length);materials.push(color);}
+  triangles.push('<triangle v1="'+ids[0]+'" v2="'+ids[1]+'" v3="'+ids[2]+'" pid="1" p1="'+colors.get(color)+'"/>');
+ }
+ if(!triangles.length)throw Error("Keine sichtbare Geometrie zum Speichern.");
+ const xml='<?xml version="1.0" encoding="UTF-8"?>\n<model unit="millimeter" xml:lang="de-DE" xmlns="http://schemas.microsoft.com/3dmanufacturing/core/2015/02"><metadata name="Application">Tentakelring 3D v0.23</metadata><metadata name="CreationDate">'+created+'</metadata><resources><basematerials id="1">'+materials.map((c,i)=>'<base name="Farbe '+(i+1)+'" displaycolor="#'+c+'FF"/>').join("")+'</basematerials><object id="2" type="model" name="Tentakelring Snapshot"><mesh><vertices>'+vertices.map(v=>'<vertex x="'+v[0]+'" y="'+v[1]+'" z="'+v[2]+'"/>').join("")+'</vertices><triangles>'+triangles.join("")+'</triangles></mesh></object></resources><build><item objectid="2"/></build></model>';
+ return {xml,vertices:vertices.length,triangles:triangles.length};
+}
+function snapshotZip(files){
+ const encoder=new TextEncoder(),parts=[],directory=[];let offset=0;
+ const crc=data=>{let c=0xffffffff;for(const byte of data){c^=byte;for(let i=0;i<8;i++)c=(c>>>1)^((c&1)?0xedb88320:0);}return (c^0xffffffff)>>>0;};
+ for(const [path,content] of files){
+  const name=encoder.encode(path),data=encoder.encode(content),sum=crc(data),head=new Uint8Array(30+name.length),v=new DataView(head.buffer);
+  v.setUint32(0,0x04034b50,true);v.setUint16(4,20,true);v.setUint16(6,0x800,true);v.setUint16(12,33,true);v.setUint32(14,sum,true);v.setUint32(18,data.length,true);v.setUint32(22,data.length,true);v.setUint16(26,name.length,true);head.set(name,30);parts.push(head,data);
+  const c=new Uint8Array(46+name.length),cv=new DataView(c.buffer);
+  cv.setUint32(0,0x02014b50,true);cv.setUint16(4,20,true);cv.setUint16(6,20,true);cv.setUint16(8,0x800,true);cv.setUint16(14,33,true);cv.setUint32(16,sum,true);cv.setUint32(20,data.length,true);cv.setUint32(24,data.length,true);cv.setUint16(28,name.length,true);cv.setUint32(42,offset,true);c.set(name,46);directory.push(c);offset+=head.length+data.length;
+ }
+ const size=directory.reduce((n,a)=>n+a.length,0),end=new Uint8Array(22),v=new DataView(end.buffer);
+ v.setUint32(0,0x06054b50,true);v.setUint16(8,files.length,true);v.setUint16(10,files.length,true);v.setUint32(12,size,true);v.setUint32(16,offset,true);
+ return new Blob([...parts,...directory,end],{type:"model/3mf"});
+}
+function snapshotPackage(p,created=new Date().toISOString()){
+ const model=snapshotModel(p,created);
+ const types='<?xml version="1.0" encoding="UTF-8"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="model" ContentType="application/vnd.ms-package.3dmanufacturing-3dmodel+xml"/><Default Extension="json" ContentType="application/json"/></Types>';
+ const rels='<?xml version="1.0" encoding="UTF-8"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Target="/3D/3dmodel.model" Id="rel0" Type="http://schemas.microsoft.com/3dmanufacturing/2013/01/3dmodel"/></Relationships>';
+ return {blob:snapshotZip([["[Content_Types].xml",types],["_rels/.rels",rels],["3D/3dmodel.model",model.xml],["Metadata/parameters.json",JSON.stringify({application:"Tentakelring 3D",version:"0.23",created,parameters:p,reference:base,view:{yaw,elev,zoom},note:"Visible geometry snapshot; overlapping shells are not boolean-unioned. No printer profile."},null,2)]]),triangles:model.triangles};
+}
+document.getElementById("saveSnapshot").addEventListener("click",async()=>{
+ const button=document.getElementById("saveSnapshot"),info=document.getElementById("snapshotInfo");
+ button.disabled=true;info.textContent="Snapshot wird erstellt …";
+ try{
+  // Capture slider values immediately, including a pending debounced preview update.
+  const p=params();await new Promise(resolve=>setTimeout(resolve,0));
+  const result=snapshotPackage(p),url=URL.createObjectURL(result.blob),link=document.createElement("a");
+  link.href=url;link.download="Tentakelring_"+new Date().toISOString().replace(/[:.]/g,"-")+"_Variante-"+p.seed+".3mf";
+  document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);
+  info.textContent="Snapshot heruntergeladen · "+result.triangles.toLocaleString("de-DE")+" Dreiecke · Parameter enthalten.";
+ }catch(error){info.textContent="Speichern fehlgeschlagen: "+error.message;}
+ finally{button.disabled=false;}
+});
+
 function render(){
  const rect=canvas.getBoundingClientRect(),dpr=window.devicePixelRatio||1;
  const w=Math.max(1,Math.round(rect.width*dpr)),h=Math.max(1,Math.round(rect.height*dpr));
@@ -1656,19 +1722,7 @@ function render(){
  const height=Math.max(base.totalH,...strands.map(s=>s.maxZ)),extent=Math.max(base.outerD/2,...strands.map(s=>s.maxR));
  viewCenterZ=height/2;
  const scale=Math.min(cw/(2*extent+4),ch/(2*extent*Math.abs(Math.sin(elev))+height*Math.abs(Math.cos(elev))+8))*zoom;
- const triangles=[];
- if(p.showBase){
-  cylinderMesh(triangles,base.outerD/2,0,base.baseH,[112,132,141],96,base.holeD/2);
-  annulusMesh(triangles,base.outerD/2,base.holeD/2,0,[88,105,113],96,true);
-  annulusMesh(triangles,base.outerD/2,base.holeD/2,base.baseH,[151,168,175],96);
- }
- if(p.showRing){
-  cylinderMesh(triangles,base.outerD/2,base.baseH,base.totalH,[132,150,157],96,base.wallID/2);
-  annulusMesh(triangles,base.outerD/2,base.wallID/2,base.totalH,[178,192,197],96);
-  annulusMesh(triangles,base.outerD/2,base.wallID/2,base.baseH,[112,132,141],96,true);
- }
- for(const t of strands)tubeMesh(triangles,t.phase,t.direction,{...p,pitch:t.pitch,turns:t.turns,returnLength:t.returnLength},t.color,t.path);
- if(input.showCups.checked)for(const t of strands)suckerMesh(triangles,t.phase,t.direction,{...p,pitch:t.pitch,turns:t.turns},t.path,t.color);
+ const triangles=snapshotGeometry(p);
  paintTriangles(triangles,cw,ch,scale,w,h);
 
  ctx.fillStyle="rgba(220,235,239,.72)";ctx.font="12px system-ui";ctx.fillText(p.forward+" mitläufig · "+p.reverse+" gegenläufig · "+p.offset+"° Versatz · "+fmt(p.turns)+" Umdrehungen",18,ch-18);

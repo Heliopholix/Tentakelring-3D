@@ -23,17 +23,17 @@ canvas{display:block;width:100%;height:100%;min-height:620px;touch-action:none}.
 <main>
 <aside>
 <h1>Tentakelring 3D</h1>
-<p class="sub">Parametrische Vorschau · Stand v0.21</p>
+<p class="sub">Parametrische Vorschau · Stand v0.22</p>
 <h2>Tentakel</h2>
 <div class="control">
 <div class="label"><label for="forward">Mitläufige Tentakel</label><strong id="forwardOut">2</strong></div>
-<input id="forward" type="range" min="0" max="5" step="1" value="2">
-<div class="scale"><span>0</span><span>5</span></div>
+<input id="forward" type="range" min="0" max="10" step="1" value="2">
+<div class="scale"><span>0</span><span>10</span></div>
 </div>
 <div class="control">
 <div class="label"><label for="reverse">Gegenläufige Tentakel</label><strong id="reverseOut">0</strong></div>
-<input id="reverse" type="range" min="0" max="5" step="1" value="0">
-<div class="scale"><span>0</span><span>5</span></div>
+<input id="reverse" type="range" min="0" max="10" step="1" value="0">
+<div class="scale"><span>0</span><span>10</span></div>
 </div>
 <div class="control">
 <div class="label"><label for="offset">Versatz der Startgruppen</label><strong id="offsetOut">0°</strong></div>
@@ -84,7 +84,7 @@ canvas{display:block;width:100%;height:100%;min-height:620px;touch-action:none}.
 <div class="control"><div class="label"><label for="bandRotation">Drehung entlang des Tentakels</label><strong id="bandRotationOut"></strong></div><input id="bandRotation" type="range" min="-720" max="720" step="5" value="180"><div class="scale"><span>−720°</span><span>+720°</span></div></div>
 <div class="control"><div class="label"><label for="bandWidthVariation">Variation der Breite</label><strong id="bandWidthVariationOut"></strong></div><input id="bandWidthVariation" type="range" min="0" max="100" step="1" value="0"><div class="scale"><span>0 %</span><span>100 %</span></div></div>
 <div class="control"><div class="label"><label for="bandRotationVariation">Variation der Drehung</label><strong id="bandRotationVariationOut"></strong></div><input id="bandRotationVariation" type="range" min="0" max="180" step="1" value="0"><div class="scale"><span>0°</span><span>180°</span></div></div>
-<p class="sub">Das helle Band markiert die spätere Noppenzone. Seine Breite ist die gerade Breite quer über den lokalen Tentakelquerschnitt: 100 % entspricht dem Durchmesser und bedeckt eine halbe Umfangsseite. Die Drehung gilt vom Ansatz bis zur Spitze. Variationen ändern Breite und Winkel weich entlang der Bahn; „Neu würfeln“ erzeugt eine neue Variante. Die Saugnäpfe bilden zwei versetzte Reihen geschlossener Ringe: Außendurchmesser 42 % der lokalen Bandbreite, Abstand innerhalb einer Reihe 1,15 × Ringdurchmesser. Ringe folgen der Drehung und Verjüngung des Bands.</p>
+<p class="sub">Das helle Band markiert die spätere Noppenzone. Seine Breite ist die gerade Breite quer über den lokalen Tentakelquerschnitt: 100 % entspricht dem Durchmesser und bedeckt eine halbe Umfangsseite. Die Drehung gilt vom Ansatz bis zur Spitze. Variationen ändern Breite und Winkel weich entlang der Bahn; „Neu würfeln“ erzeugt eine neue Variante. Die weißen Saugnäpfe bilden zwei versetzte Reihen flacher, geschlossener Zylinder: Außendurchmesser 42 % der lokalen Bandbreite, Abstand innerhalb einer Reihe 1,15 × Zylinderdurchmesser. Zylinder folgen der Drehung und Verjüngung des Bands.</p>
 <h2>Streuung</h2>
 <div class="control">
 <div class="label"><label for="turnsScatter">Umdrehungen streuen</label><strong id="turnsScatterOut">±0 %</strong></div>
@@ -116,7 +116,7 @@ Randhöhe 2,90 mm · Grundplatte 1,35 mm
 </div>
 <div class="note">
 <b>Geometrie</b><br>
-Je 0–5 Tentakel pro Richtung, mit einstellbarer Steigung, Umdrehungszahl und Streuung. Die Ablage verändert die fertigen Kreuzungsbahnen nur nach unten. Mittellinien bei Z ≤ 0 bleiben unverändert. Kreuzungspartner teilen sich einen vertikalen Versatz; die seitliche Bahn bleibt unverändert. Der Mindestbiegeradius ist als Faktor des lokalen Durchmessers einstellbar; die Überlappung steuert den Zielabstand beim Ablegen. Verbleibende Abstände und zu enge Ausgangsbögen werden angezeigt. Die Körper werden am Innenzylinder Ø 25,30 mm und an z = 0 beschnitten und geschlossen.</div>
+Je 0–10 Tentakel pro Richtung, mit einstellbarer Steigung, Umdrehungszahl und Streuung. Die Ablage verändert die fertigen Kreuzungsbahnen nur nach unten. Mittellinien bei Z ≤ 0 bleiben unverändert. Kreuzungspartner teilen sich einen vertikalen Versatz; die seitliche Bahn bleibt unverändert. Der Mindestbiegeradius ist als Faktor des lokalen Durchmessers einstellbar; die Überlappung steuert den Zielabstand beim Ablegen. Verbleibende Abstände und zu enge Ausgangsbögen werden angezeigt. Die Körper werden am Innenzylinder Ø 25,30 mm und an z = 0 beschnitten und geschlossen.</div>
 <div class="buttons"><button id="reset">Parameter zurücksetzen</button><button id="viewReset">Ansicht zurücksetzen</button></div>
 </aside>
 <section class="stage">
@@ -1623,17 +1623,20 @@ function suckerLayout(phase,direction,p,path){
  return cups;
 }
 function suckerMesh(list,phase,direction,p,path,color){
+ color=[255,255,255];
  if(!(p.bandWidth>0))return;
  const key=JSON.stringify([phase,direction,p.pitch,p.turns,p.diam,p.taper,p.seed,p.bandWidth,p.bandRotation,p.bandWidthVariation,p.bandRotationVariation,path,path.sag?.map(n=>[n.t,n.variable.value])]);
  if(suckerMeshCache.has(key)){for(const face of suckerMeshCache.get(key))tri(list,...face,color,true);return;}
  const faces=[],cups=suckerLayout(phase,direction,p,path);
  for(const cup of cups){
-  const surface=[],nu=16,nv=8,major=.32*cup.diam,minor=.18*cup.diam;
-  const rows=Array.from({length:nu},(_,i)=>Array.from({length:nv},(_,j)=>{
-   const u=2*Math.PI*i/nu,v=2*Math.PI*j/nv,inPlane=add(mul(cup.T,Math.cos(u)),mul(cup.lateral,Math.sin(u)));
-   return add(cup.C,add(mul(inPlane,major+minor*Math.cos(v)),mul(cup.normal,minor*Math.sin(v))));
-  }));
-  for(let i=0;i<nu;i++)for(let j=0;j<nv;j++){const a=rows[i][j],b=rows[(i+1)%nu][j],c=rows[(i+1)%nu][(j+1)%nv],d=rows[i][(j+1)%nv];surface.push([a,b,c],[a,c,d]);}
+  const surface=[],nu=16,radius=.5*cup.diam;
+  // Flat closed cylinder, embedded below the local skin to join the arm.
+  const bottom=add(cup.C,mul(cup.normal,-.16*cup.diam)),top=add(cup.C,mul(cup.normal,.20*cup.diam));
+  const ring=C=>Array.from({length:nu},(_,i)=>{const u=2*Math.PI*i/nu;return add(C,add(mul(cup.T,radius*Math.cos(u)),mul(cup.lateral,-radius*Math.sin(u))));});
+  const low=ring(bottom),high=ring(top);
+  for(let i=0;i<nu;i++){const j=(i+1)%nu;
+   surface.push([low[i],low[j],high[j]],[low[i],high[j],high[i]],[top,high[i],high[j]],[bottom,low[j],low[i]]);
+  }
   const clipped=[];clipAtFloor(clipped,clipAtInnerCylinder(surface),color);
   for(const f of clipped)faces.push(f.p);
  }

@@ -1,0 +1,41 @@
+{
+  "retrieved_at": "2026-11-13",
+  "repository": "bambulab/BambuStudio",
+  "commit": "930fe93851afbc76b1c64dd37d8728b6a9afc89c",
+  "files": [
+    {
+      "path": "resources/profiles/BBL/filament/filaments_color_codes.json",
+      "url": "https://github.com/bambulab/BambuStudio/blob/930fe93851afbc76b1c64dd37d8728b6a9afc89c/resources/profiles/BBL/filament/filaments_color_codes.json"
+    },
+    {
+      "path": "resources/filament_mixing/standard_color_recipes.json",
+      "url": "https://github.com/bambulab/BambuStudio/blob/930fe93851afbc76b1c64dd37d8728b6a9afc89c/resources/filament_mixing/standard_color_recipes.json"
+    },
+    {
+      "path": "src/libslic3r/FilamentMixerModel.hpp",
+      "url": "https://github.com/bambulab/BambuStudio/blob/930fe93851afbc76b1c64dd37d8728b6a9afc89c/src/libslic3r/FilamentMixerModel.hpp"
+    },
+    {
+      "path": "src/libslic3r/FilamentMixer.hpp",
+      "url": "https://github.com/bambulab/BambuStudio/blob/930fe93851afbc76b1c64dd37d8728b6a9afc89c/src/libslic3r/FilamentMixer.hpp"
+    },
+    {
+      "path": "src/libslic3r/FilamentMixer.cpp",
+      "url": "https://github.com/bambulab/BambuStudio/blob/930fe93851afbc76b1c64dd37d8728b6a9afc89c/src/libslic3r/FilamentMixer.cpp"
+    },
+    {
+      "path": "src/libslic3r/PrintConfig.cpp",
+      "url": "https://github.com/bambulab/BambuStudio/blob/930fe93851afbc76b1c64dd37d8728b6a9afc89c/src/libslic3r/PrintConfig.cpp"
+    },
+    {
+      "path": "LICENSE",
+      "url": "https://github.com/bambulab/BambuStudio/blob/930fe93851afbc76b1c64dd37d8728b6a9afc89c/LICENSE"
+    }
+  ],
+  "documentation": [
+    "https://github.com/bambulab/BambuStudio/releases/tag/v02.05.03.62",
+    "https://github.com/bambulab/BambuStudio/releases/tag/v02.09.01.70",
+    "https://wiki.bambulab.com/en/bambu-studio/color-mixing"
+  ],
+  "wiki_access": "Automated retrieval failed (402); settings corroborated with official release notes and source code."
+}

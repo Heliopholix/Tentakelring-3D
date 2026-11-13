@@ -1,0 +1,78 @@
+{
+  "retrieved_at": "2026-11-13",
+  "upstream_commit": "930fe93851afbc76b1c64dd37d8728b6a9afc89c",
+  "source": "https://github.com/bambulab/BambuStudio/blob/930fe93851afbc76b1c64dd37d8728b6a9afc89c/src/libslic3r/PrintConfig.cpp",
+  "parameters": [
+    {
+      "key": "filament_is_mixed",
+      "type": "bool array",
+      "default_value": false,
+      "description_de": "Kennzeichnet virtuelle Mischfilamente."
+    },
+    {
+      "key": "filament_mixed_components",
+      "type": "string array",
+      "default_value": "",
+      "description_de": "Kommagetrennte 1-basierte Filamentindizes, z. B. 1,3."
+    },
+    {
+      "key": "filament_mixed_sublayer_ratios",
+      "type": "string array",
+      "default_value": "",
+      "description_de": "Kommagetrennte normierte Anteile, z. B. 0.7,0.3. Rezeptdatei dagegen in Prozent; nicht unverändert übernehmen."
+    },
+    {
+      "key": "enable_mixed_color_sublayer",
+      "type": "bool",
+      "default_value": false,
+      "description_de": "Globale Standardvorgabe false; H3C-Profile können true setzen. Teilt gemischte Schichten in Unterschichten."
+    },
+    {
+      "key": "filament_mixed_gradient",
+      "type": "bool array",
+      "default_value": false,
+      "description_de": "Z-abhängigen Verlauf aktivieren."
+    },
+    {
+      "key": "filament_mixed_gradient_range",
+      "type": "string array",
+      "default_value": "",
+      "description_de": "Start-/Endanteil der ersten Komponente, z. B. 0.10,0.90."
+    },
+    {
+      "key": "filament_mixed_gradient_curve",
+      "type": "string array",
+      "default_value": "",
+      "description_de": "Kurvenpunkte mit | getrennt; x,y oder x,y,m_in,m_out. Leere Tangente oder nan verwendet PCHIP."
+    },
+    {
+      "key": "filament_mixed_gradient_per_part",
+      "type": "bool array",
+      "default_value": false,
+      "description_de": "Verlauf je Bauteil statt gemeinsamer Z-Spanne."
+    }
+  ],
+  "gradient_ratio_limits": {
+    "min": 0.1,
+    "max": 0.9,
+    "source": "https://github.com/bambulab/BambuStudio/blob/930fe93851afbc76b1c64dd37d8728b6a9afc89c/src/libslic3r/FilamentMixer.hpp",
+    "scope": "gradient anchors; not a general constraint for every stored recipe"
+  },
+  "recommendations": {
+    "historical_release": "v02.05.03.62",
+    "nozzle_mm": 0.4,
+    "base_layer_height_mm": 0.12,
+    "mixed_layer_height_mm": 0.2,
+    "current_release": "v02.09.01.70",
+    "h3c_default_sublayer_layer_heights_mm": [
+      0.2,
+      0.24
+    ],
+    "h3c_default_sublayer_nozzle_mm": 0.4
+  },
+  "prediction_model": {
+    "degree": 4,
+    "mean_delta_e_as_stated_upstream": 2.07,
+    "note": "Approximation of Mixbox behavior, not a guaranteed printed color error. Includes no Mixbox source/binaries/data."
+  }
+}

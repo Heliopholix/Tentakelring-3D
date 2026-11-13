@@ -1,0 +1,2794 @@
+{
+  "retrieved_at": "2026-11-13",
+  "source": "https://github.com/bambulab/BambuStudio/blob/930fe93851afbc76b1c64dd37d8728b6a9afc89c/resources/profiles/BBL/filament/filaments_color_codes.json",
+  "upstream_commit": "930fe93851afbc76b1c64dd37d8728b6a9afc89c",
+  "scope": "Published PLA entries in Bambu Studio, not a live stock catalog. RGB values are display colors, not spectral measurements.",
+  "count": 183,
+  "colors": [
+    {
+      "family": "PLA Basic",
+      "name_en": "Orange",
+      "name_de": "Orange",
+      "product_color_code": "10300",
+      "filament_id": "GFA00",
+      "short_color_code": "A0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#FF6A13FF"
+      ],
+      "swatches_rgb": [
+        "#FF6A13"
+      ]
+    },
+    {
+      "family": "PLA Basic",
+      "name_en": "Pumpkin Orange",
+      "name_de": "Kürbis-Orange",
+      "product_color_code": "10301",
+      "filament_id": "GFA00",
+      "short_color_code": "A1",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#FF9016FF"
+      ],
+      "swatches_rgb": [
+        "#FF9016"
+      ]
+    },
+    {
+      "family": "PLA Basic",
+      "name_en": "Blue Gray",
+      "name_de": "Blau-Grau",
+      "product_color_code": "10602",
+      "filament_id": "GFA00",
+      "short_color_code": "B1",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#5B6579FF"
+      ],
+      "swatches_rgb": [
+        "#5B6579"
+      ]
+    },
+    {
+      "family": "PLA Basic",
+      "name_en": "Cobalt Blue",
+      "name_de": "Kobaltblau",
+      "product_color_code": "10604",
+      "filament_id": "GFA00",
+      "short_color_code": "B3",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#0056B8FF"
+      ],
+      "swatches_rgb": [
+        "#0056B8"
+      ]
+    },
+    {
+      "family": "PLA Basic",
+      "name_en": "Turquoise",
+      "name_de": "Türkis",
+      "product_color_code": "10605",
+      "filament_id": "GFA00",
+      "short_color_code": "B5",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#00B1B7FF"
+      ],
+      "swatches_rgb": [
+        "#00B1B7"
+      ]
+    },
+    {
+      "family": "PLA Basic",
+      "name_en": "Cyan",
+      "name_de": "Cyan",
+      "product_color_code": "10603",
+      "filament_id": "GFA00",
+      "short_color_code": "B8",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#0086D6FF"
+      ],
+      "swatches_rgb": [
+        "#0086D6"
+      ]
+    },
+    {
+      "family": "PLA Basic",
+      "name_en": "Blue",
+      "name_de": "Blau",
+      "product_color_code": "10601",
+      "filament_id": "GFA00",
+      "short_color_code": "B9",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#0A2989FF"
+      ],
+      "swatches_rgb": [
+        "#0A2989"
+      ]
+    },
+    {
+      "family": "PLA Basic",
+      "name_en": "Gray",
+      "name_de": "Grau",
+      "product_color_code": "10103",
+      "filament_id": "GFA00",
+      "short_color_code": "D0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#8E9089FF"
+      ],
+      "swatches_rgb": [
+        "#8E9089"
+      ]
+    },
+    {
+      "family": "PLA Basic",
+      "name_en": "Silver",
+      "name_de": "Silber",
+      "product_color_code": "10102",
+      "filament_id": "GFA00",
+      "short_color_code": "D1",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#A6A9AAFF"
+      ],
+      "swatches_rgb": [
+        "#A6A9AA"
+      ]
+    },
+    {
+      "family": "PLA Basic",
+      "name_en": "Light Gray",
+      "name_de": "Hellgrau",
+      "product_color_code": "10104",
+      "filament_id": "GFA00",
+      "short_color_code": "D2",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#D1D3D5FF"
+      ],
+      "swatches_rgb": [
+        "#D1D3D5"
+      ]
+    },
+    {
+      "family": "PLA Basic",
+      "name_en": "Dark Gray",
+      "name_de": "Dunkelgrau",
+      "product_color_code": "10105",
+      "filament_id": "GFA00",
+      "short_color_code": "D3",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#545454FF"
+      ],
+      "swatches_rgb": [
+        "#545454"
+      ]
+    },
+    {
+      "family": "PLA Basic",
+      "name_en": "Mistletoe Green",
+      "name_de": "Mistelzweig-Grün",
+      "product_color_code": "10502",
+      "filament_id": "GFA00",
+      "short_color_code": "G2",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#3F8E43FF"
+      ],
+      "swatches_rgb": [
+        "#3F8E43"
+      ]
+    },
+    {
+      "family": "PLA Basic",
+      "name_en": "Bright Green",
+      "name_de": "Hellgrün",
+      "product_color_code": "10503",
+      "filament_id": "GFA00",
+      "short_color_code": "G3",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#BECF00FF"
+      ],
+      "swatches_rgb": [
+        "#BECF00"
+      ]
+    },
+    {
+      "family": "PLA Basic",
+      "name_en": "Bambu Green",
+      "name_de": "Bambusgrün",
+      "product_color_code": "10501",
+      "filament_id": "GFA00",
+      "short_color_code": "G6",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#00AE42FF"
+      ],
+      "swatches_rgb": [
+        "#00AE42"
+      ]
+    },
+    {
+      "family": "PLA Basic",
+      "name_en": "Black",
+      "name_de": "Schwarz",
+      "product_color_code": "10101",
+      "filament_id": "GFA00",
+      "short_color_code": "K0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#000000FF"
+      ],
+      "swatches_rgb": [
+        "#000000"
+      ]
+    },
+    {
+      "family": "PLA Basic",
+      "name_en": "Arctic Whisper",
+      "name_de": "Arktisches Flüstern",
+      "product_color_code": "10900",
+      "filament_id": "GFA00",
+      "short_color_code": "M0",
+      "color_type_original": "渐变色",
+      "swatches_rgba": [
+        "#9CDBD9FF",
+        "#FFFFFFFF"
+      ],
+      "swatches_rgb": [
+        "#9CDBD9",
+        "#FFFFFF"
+      ]
+    },
+    {
+      "family": "PLA Basic",
+      "name_en": "Solar Breeze",
+      "name_de": "Sonnenbrise",
+      "product_color_code": "10901",
+      "filament_id": "GFA00",
+      "short_color_code": "M1",
+      "color_type_original": "渐变色",
+      "swatches_rgba": [
+        "#E94B3CFF",
+        "#FFFFFFFF"
+      ],
+      "swatches_rgb": [
+        "#E94B3C",
+        "#FFFFFF"
+      ]
+    },
+    {
+      "family": "PLA Basic",
+      "name_en": "Ocean to Meadow",
+      "name_de": "Meer und Wiese",
+      "product_color_code": "10902",
+      "filament_id": "GFA00",
+      "short_color_code": "M2",
+      "color_type_original": "渐变色",
+      "swatches_rgba": [
+        "#307FE2FF",
+        "#54FF9BFF"
+      ],
+      "swatches_rgb": [
+        "#307FE2",
+        "#54FF9B"
+      ]
+    },
+    {
+      "family": "PLA Basic",
+      "name_en": "Pink Citrus",
+      "name_de": "Zitrus-Pink",
+      "product_color_code": "10903",
+      "filament_id": "GFA00",
+      "short_color_code": "M3",
+      "color_type_original": "渐变色",
+      "swatches_rgba": [
+        "#F78F77FF",
+        "#E4505AFF"
+      ],
+      "swatches_rgb": [
+        "#F78F77",
+        "#E4505A"
+      ]
+    },
+    {
+      "family": "PLA Basic",
+      "name_en": "Mint Lime",
+      "name_de": "Minze-Limette",
+      "product_color_code": "10904",
+      "filament_id": "GFA00",
+      "short_color_code": "M4",
+      "color_type_original": "渐变色",
+      "swatches_rgba": [
+        "#B6FF43FF",
+        "#4EC939FF"
+      ],
+      "swatches_rgb": [
+        "#B6FF43",
+        "#4EC939"
+      ]
+    },
+    {
+      "family": "PLA Basic",
+      "name_en": "Blueberry Bubblegum",
+      "name_de": "Blaubeere-Bubblegum",
+      "product_color_code": "10905",
+      "filament_id": "GFA00",
+      "short_color_code": "M5",
+      "color_type_original": "渐变色",
+      "swatches_rgba": [
+        "#6FCAEFFF",
+        "#8573DDFF"
+      ],
+      "swatches_rgb": [
+        "#6FCAEF",
+        "#8573DD"
+      ]
+    },
+    {
+      "family": "PLA Basic",
+      "name_en": "Dusk Glare",
+      "name_de": "Leuchtende Abenddämmerung",
+      "product_color_code": "10906",
+      "filament_id": "GFA00",
+      "short_color_code": "M6",
+      "color_type_original": "渐变色",
+      "swatches_rgba": [
+        "#CE4406FF",
+        "#ED9558FF"
+      ],
+      "swatches_rgb": [
+        "#CE4406",
+        "#ED9558"
+      ]
+    },
+    {
+      "family": "PLA Basic",
+      "name_en": "Cotton Candy Cloud",
+      "name_de": "Zuckerwatten-Wolke",
+      "product_color_code": "10907",
+      "filament_id": "GFA00",
+      "short_color_code": "M7",
+      "color_type_original": "渐变色",
+      "swatches_rgba": [
+        "#E7C1D5FF",
+        "#8EC9E9FF"
+      ],
+      "swatches_rgb": [
+        "#E7C1D5",
+        "#8EC9E9"
+      ]
+    },
+    {
+      "family": "PLA Basic",
+      "name_en": "Brown",
+      "name_de": "Braun",
+      "product_color_code": "10800",
+      "filament_id": "GFA00",
+      "short_color_code": "N0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#9D432CFF"
+      ],
+      "swatches_rgb": [
+        "#9D432C"
+      ]
+    },
+    {
+      "family": "PLA Basic",
+      "name_en": "Cocoa Brown",
+      "name_de": "Kakaobraun",
+      "product_color_code": "10802",
+      "filament_id": "GFA00",
+      "short_color_code": "N1",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#6F5034FF"
+      ],
+      "swatches_rgb": [
+        "#6F5034"
+      ]
+    },
+    {
+      "family": "PLA Basic",
+      "name_en": "Beige",
+      "name_de": "Beige",
+      "product_color_code": "10201",
+      "filament_id": "GFA00",
+      "short_color_code": "P0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#F7E6DEFF"
+      ],
+      "swatches_rgb": [
+        "#F7E6DE"
+      ]
+    },
+    {
+      "family": "PLA Basic",
+      "name_en": "Pink",
+      "name_de": "Pink",
+      "product_color_code": "10203",
+      "filament_id": "GFA00",
+      "short_color_code": "P1",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#F55A74FF"
+      ],
+      "swatches_rgb": [
+        "#F55A74"
+      ]
+    },
+    {
+      "family": "PLA Basic",
+      "name_en": "Indigo Purple",
+      "name_de": "Indigo-Violett",
+      "product_color_code": "10701",
+      "filament_id": "GFA00",
+      "short_color_code": "P2",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#482960FF"
+      ],
+      "swatches_rgb": [
+        "#482960"
+      ]
+    },
+    {
+      "family": "PLA Basic",
+      "name_en": "Purple",
+      "name_de": "Lila",
+      "product_color_code": "10700",
+      "filament_id": "GFA00",
+      "short_color_code": "P5",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#5E43B7FF"
+      ],
+      "swatches_rgb": [
+        "#5E43B7"
+      ]
+    },
+    {
+      "family": "PLA Basic",
+      "name_en": "Magenta",
+      "name_de": "Magenta",
+      "product_color_code": "10202",
+      "filament_id": "GFA00",
+      "short_color_code": "P6",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#EC008CFF"
+      ],
+      "swatches_rgb": [
+        "#EC008C"
+      ]
+    },
+    {
+      "family": "PLA Basic",
+      "name_en": "Red",
+      "name_de": "Rot",
+      "product_color_code": "10200",
+      "filament_id": "GFA00",
+      "short_color_code": "R0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#C12E1FFF"
+      ],
+      "swatches_rgb": [
+        "#C12E1F"
+      ]
+    },
+    {
+      "family": "PLA Basic",
+      "name_en": "Maroon Red",
+      "name_de": "Kastanienrot",
+      "product_color_code": "10205",
+      "filament_id": "GFA00",
+      "short_color_code": "R2",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#9D2235FF"
+      ],
+      "swatches_rgb": [
+        "#9D2235"
+      ]
+    },
+    {
+      "family": "PLA Basic",
+      "name_en": "Hot Pink",
+      "name_de": "Heißes Pink",
+      "product_color_code": "10204",
+      "filament_id": "GFA00",
+      "short_color_code": "R3",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#F5547CFF"
+      ],
+      "swatches_rgb": [
+        "#F5547C"
+      ]
+    },
+    {
+      "family": "PLA Basic",
+      "name_en": "Jade White",
+      "name_de": "Jade-Weiß",
+      "product_color_code": "10100",
+      "filament_id": "GFA00",
+      "short_color_code": "W1",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#FFFFFFFF"
+      ],
+      "swatches_rgb": [
+        "#FFFFFF"
+      ]
+    },
+    {
+      "family": "PLA Basic",
+      "name_en": "Yellow",
+      "name_de": "Gelb",
+      "product_color_code": "10400",
+      "filament_id": "GFA00",
+      "short_color_code": "Y0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#F4EE2AFF"
+      ],
+      "swatches_rgb": [
+        "#F4EE2A"
+      ]
+    },
+    {
+      "family": "PLA Basic",
+      "name_en": "Sunflower Yellow",
+      "name_de": "Sonnenblumen-Gelb",
+      "product_color_code": "10402",
+      "filament_id": "GFA00",
+      "short_color_code": "Y2",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#FEC600FF"
+      ],
+      "swatches_rgb": [
+        "#FEC600"
+      ]
+    },
+    {
+      "family": "PLA Basic",
+      "name_en": "Bronze",
+      "name_de": "Bronze",
+      "product_color_code": "10801",
+      "filament_id": "GFA00",
+      "short_color_code": "Y3",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#847D48FF"
+      ],
+      "swatches_rgb": [
+        "#847D48"
+      ]
+    },
+    {
+      "family": "PLA Basic",
+      "name_en": "Gold",
+      "name_de": "Gold",
+      "product_color_code": "10401",
+      "filament_id": "GFA00",
+      "short_color_code": "Y4",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#E4BD68FF"
+      ],
+      "swatches_rgb": [
+        "#E4BD68"
+      ]
+    },
+    {
+      "family": "PLA Matte",
+      "name_en": "Mandarin Orange",
+      "name_de": "Mandarine-Orange",
+      "product_color_code": "11300",
+      "filament_id": "GFA01",
+      "short_color_code": "A2",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#F99963FF"
+      ],
+      "swatches_rgb": [
+        "#F99963"
+      ]
+    },
+    {
+      "family": "PLA Matte",
+      "name_en": "Sky Blue",
+      "name_de": "Himmelblau",
+      "product_color_code": "11603",
+      "filament_id": "GFA01",
+      "short_color_code": "B0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#56B7E6FF"
+      ],
+      "swatches_rgb": [
+        "#56B7E6"
+      ]
+    },
+    {
+      "family": "PLA Matte",
+      "name_en": "Marine Blue",
+      "name_de": "Marineblau",
+      "product_color_code": "11600",
+      "filament_id": "GFA01",
+      "short_color_code": "B3",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#0078BFFF"
+      ],
+      "swatches_rgb": [
+        "#0078BF"
+      ]
+    },
+    {
+      "family": "PLA Matte",
+      "name_en": "Ice Blue",
+      "name_de": "Eisblau",
+      "product_color_code": "11601",
+      "filament_id": "GFA01",
+      "short_color_code": "B4",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#A3D8E1FF"
+      ],
+      "swatches_rgb": [
+        "#A3D8E1"
+      ]
+    },
+    {
+      "family": "PLA Matte",
+      "name_en": "Dark Blue",
+      "name_de": "Dunkelblau",
+      "product_color_code": "11602",
+      "filament_id": "GFA01",
+      "short_color_code": "B6",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#042F56FF"
+      ],
+      "swatches_rgb": [
+        "#042F56"
+      ]
+    },
+    {
+      "family": "PLA Matte",
+      "name_en": "Nardo Gray",
+      "name_de": "Nardo-Grau",
+      "product_color_code": "11104",
+      "filament_id": "GFA01",
+      "short_color_code": "D0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#757575FF"
+      ],
+      "swatches_rgb": [
+        "#757575"
+      ]
+    },
+    {
+      "family": "PLA Matte",
+      "name_en": "Ash Gray",
+      "name_de": "Aschgrau",
+      "product_color_code": "11102",
+      "filament_id": "GFA01",
+      "short_color_code": "D3",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#9B9EA0FF"
+      ],
+      "swatches_rgb": [
+        "#9B9EA0"
+      ]
+    },
+    {
+      "family": "PLA Matte",
+      "name_en": "Apple Green",
+      "name_de": "Apfelgrün",
+      "product_color_code": "11502",
+      "filament_id": "GFA01",
+      "short_color_code": "G0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#C2E189FF"
+      ],
+      "swatches_rgb": [
+        "#C2E189"
+      ]
+    },
+    {
+      "family": "PLA Matte",
+      "name_en": "Grass Green",
+      "name_de": "Grasgrün",
+      "product_color_code": "11500",
+      "filament_id": "GFA01",
+      "short_color_code": "G1",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#61C680FF"
+      ],
+      "swatches_rgb": [
+        "#61C680"
+      ]
+    },
+    {
+      "family": "PLA Matte",
+      "name_en": "Dark Green",
+      "name_de": "Dunkelgrün",
+      "product_color_code": "11501",
+      "filament_id": "GFA01",
+      "short_color_code": "G7",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#68724DFF"
+      ],
+      "swatches_rgb": [
+        "#68724D"
+      ]
+    },
+    {
+      "family": "PLA Matte",
+      "name_en": "Charcoal",
+      "name_de": "Kohlschwarz",
+      "product_color_code": "11101",
+      "filament_id": "GFA01",
+      "short_color_code": "K1",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#000000FF"
+      ],
+      "swatches_rgb": [
+        "#000000"
+      ]
+    },
+    {
+      "family": "PLA Matte",
+      "name_en": "Dark Chocolate",
+      "name_de": "Dunkel-Schokoladenbraun",
+      "product_color_code": "11802",
+      "filament_id": "GFA01",
+      "short_color_code": "N0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#4D3324FF"
+      ],
+      "swatches_rgb": [
+        "#4D3324"
+      ]
+    },
+    {
+      "family": "PLA Matte",
+      "name_en": "Latte Brown",
+      "name_de": "Milchkaffee-Braun",
+      "product_color_code": "11800",
+      "filament_id": "GFA01",
+      "short_color_code": "N1",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#D3B7A7FF"
+      ],
+      "swatches_rgb": [
+        "#D3B7A7"
+      ]
+    },
+    {
+      "family": "PLA Matte",
+      "name_en": "Dark Brown",
+      "name_de": "Dunkelbraun",
+      "product_color_code": "11801",
+      "filament_id": "GFA01",
+      "short_color_code": "N2",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#7D6556FF"
+      ],
+      "swatches_rgb": [
+        "#7D6556"
+      ]
+    },
+    {
+      "family": "PLA Matte",
+      "name_en": "Caramel",
+      "name_de": "Karamell",
+      "product_color_code": "11803",
+      "filament_id": "GFA01",
+      "short_color_code": "N3",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#AE835BFF"
+      ],
+      "swatches_rgb": [
+        "#AE835B"
+      ]
+    },
+    {
+      "family": "PLA Matte",
+      "name_en": "Sakura Pink",
+      "name_de": "Sakura-Pink",
+      "product_color_code": "11201",
+      "filament_id": "GFA01",
+      "short_color_code": "P3",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#E8AFCFFF"
+      ],
+      "swatches_rgb": [
+        "#E8AFCF"
+      ]
+    },
+    {
+      "family": "PLA Matte",
+      "name_en": "Lilac Purple",
+      "name_de": "Flieder-Violett",
+      "product_color_code": "11700",
+      "filament_id": "GFA01",
+      "short_color_code": "P4",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#AE96D4FF"
+      ],
+      "swatches_rgb": [
+        "#AE96D4"
+      ]
+    },
+    {
+      "family": "PLA Matte",
+      "name_en": "Scarlet Red",
+      "name_de": "Scharlachrot",
+      "product_color_code": "11200",
+      "filament_id": "GFA01",
+      "short_color_code": "R1",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#DE4343FF"
+      ],
+      "swatches_rgb": [
+        "#DE4343"
+      ]
+    },
+    {
+      "family": "PLA Matte",
+      "name_en": "Terracotta",
+      "name_de": "Terrakotta",
+      "product_color_code": "11203",
+      "filament_id": "GFA01",
+      "short_color_code": "R2",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#B15533FF"
+      ],
+      "swatches_rgb": [
+        "#B15533"
+      ]
+    },
+    {
+      "family": "PLA Matte",
+      "name_en": "Plum",
+      "name_de": "Pflaume",
+      "product_color_code": "11204",
+      "filament_id": "GFA01",
+      "short_color_code": "R3",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#950051FF"
+      ],
+      "swatches_rgb": [
+        "#950051"
+      ]
+    },
+    {
+      "family": "PLA Matte",
+      "name_en": "Dark Red",
+      "name_de": "Dunkelrot",
+      "product_color_code": "11202",
+      "filament_id": "GFA01",
+      "short_color_code": "R4",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#BB3D43FF"
+      ],
+      "swatches_rgb": [
+        "#BB3D43"
+      ]
+    },
+    {
+      "family": "PLA Matte",
+      "name_en": "Ivory White",
+      "name_de": "Elfenbeinweiß",
+      "product_color_code": "11100",
+      "filament_id": "GFA01",
+      "short_color_code": "W2",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#FFFFFFFF"
+      ],
+      "swatches_rgb": [
+        "#FFFFFF"
+      ]
+    },
+    {
+      "family": "PLA Matte",
+      "name_en": "Bone White",
+      "name_de": "Knochenweiß",
+      "product_color_code": "11103",
+      "filament_id": "GFA01",
+      "short_color_code": "W3",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#CBC6B8FF"
+      ],
+      "swatches_rgb": [
+        "#CBC6B8"
+      ]
+    },
+    {
+      "family": "PLA Matte",
+      "name_en": "Lemon Yellow",
+      "name_de": "Zitronengelb",
+      "product_color_code": "11400",
+      "filament_id": "GFA01",
+      "short_color_code": "Y2",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#F7D959FF"
+      ],
+      "swatches_rgb": [
+        "#F7D959"
+      ]
+    },
+    {
+      "family": "PLA Matte",
+      "name_en": "Desert Tan",
+      "name_de": "Wüstenbraun",
+      "product_color_code": "11401",
+      "filament_id": "GFA01",
+      "short_color_code": "Y3",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#E8DBB7FF"
+      ],
+      "swatches_rgb": [
+        "#E8DBB7"
+      ]
+    },
+    {
+      "family": "PLA Silk",
+      "name_en": "Blue",
+      "name_de": "Blau",
+      "product_color_code": "13601",
+      "filament_id": "GFA05",
+      "short_color_code": "B0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#147BD1FF"
+      ],
+      "swatches_rgb": [
+        "#147BD1"
+      ]
+    },
+    {
+      "family": "PLA Silk",
+      "name_en": "Silver",
+      "name_de": "Silber",
+      "product_color_code": "13104",
+      "filament_id": "GFA05",
+      "short_color_code": "D1",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#EAECEBFF"
+      ],
+      "swatches_rgb": [
+        "#EAECEB"
+      ]
+    },
+    {
+      "family": "PLA Silk",
+      "name_en": "Green",
+      "name_de": "Grün",
+      "product_color_code": "13502",
+      "filament_id": "GFA05",
+      "short_color_code": "G1",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#4CE4A0FF"
+      ],
+      "swatches_rgb": [
+        "#4CE4A0"
+      ]
+    },
+    {
+      "family": "PLA Silk",
+      "name_en": "Copper",
+      "name_de": "Kupfer",
+      "product_color_code": "13300",
+      "filament_id": "GFA05",
+      "short_color_code": "N4",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#5E4B3CFF"
+      ],
+      "swatches_rgb": [
+        "#5E4B3C"
+      ]
+    },
+    {
+      "family": "PLA Silk",
+      "name_en": "Pink",
+      "name_de": "Pink",
+      "product_color_code": "13202",
+      "filament_id": "GFA05",
+      "short_color_code": "P3",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#EEB1C1FF"
+      ],
+      "swatches_rgb": [
+        "#EEB1C1"
+      ]
+    },
+    {
+      "family": "PLA Silk",
+      "name_en": "Purple",
+      "name_de": "Lila",
+      "product_color_code": "13701",
+      "filament_id": "GFA05",
+      "short_color_code": "P5",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#854CE4FF"
+      ],
+      "swatches_rgb": [
+        "#854CE4"
+      ]
+    },
+    {
+      "family": "PLA Silk",
+      "name_en": "Gilded Rose",
+      "name_de": "Goldenes Rosa",
+      "product_color_code": "13901",
+      "filament_id": "GFA05",
+      "short_color_code": "T1",
+      "color_type_original": "多拼色",
+      "swatches_rgba": [
+        "#FF9425FF",
+        "#C16784FF"
+      ],
+      "swatches_rgb": [
+        "#FF9425",
+        "#C16784"
+      ]
+    },
+    {
+      "family": "PLA Silk",
+      "name_en": "Midnight Blaze",
+      "name_de": "Mitternachtsglanz",
+      "product_color_code": "13902",
+      "filament_id": "GFA05",
+      "short_color_code": "T2",
+      "color_type_original": "多拼色",
+      "swatches_rgba": [
+        "#0047BBFF",
+        "#7D1B49FF"
+      ],
+      "swatches_rgb": [
+        "#0047BB",
+        "#7D1B49"
+      ]
+    },
+    {
+      "family": "PLA Silk",
+      "name_en": "Neon City",
+      "name_de": "Neon City",
+      "product_color_code": "13903",
+      "filament_id": "GFA05",
+      "short_color_code": "T3",
+      "color_type_original": "多拼色",
+      "swatches_rgba": [
+        "#0047BBFF",
+        "#BB22A3FF"
+      ],
+      "swatches_rgb": [
+        "#0047BB",
+        "#BB22A3"
+      ]
+    },
+    {
+      "family": "PLA Silk",
+      "name_en": "Blue Hawaii",
+      "name_de": "Hawaii-Blau",
+      "product_color_code": "13904",
+      "filament_id": "GFA05",
+      "short_color_code": "T4",
+      "color_type_original": "多拼色",
+      "swatches_rgba": [
+        "#418FDEFF",
+        "#70C884FF"
+      ],
+      "swatches_rgb": [
+        "#418FDE",
+        "#70C884"
+      ]
+    },
+    {
+      "family": "PLA Silk",
+      "name_en": "Velvet Eclipse (Black-Red)",
+      "name_de": "Dunkler Samt (Schwarz-Rot)",
+      "product_color_code": "13905",
+      "filament_id": "GFA05",
+      "short_color_code": "T5",
+      "color_type_original": "多拼色",
+      "swatches_rgba": [
+        "#000000FF",
+        "#A34342FF"
+      ],
+      "swatches_rgb": [
+        "#000000",
+        "#A34342"
+      ]
+    },
+    {
+      "family": "PLA Silk",
+      "name_en": "White",
+      "name_de": "Weiß",
+      "product_color_code": "13105",
+      "filament_id": "GFA05",
+      "short_color_code": "W0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#FFFFFFFF"
+      ],
+      "swatches_rgb": [
+        "#FFFFFF"
+      ]
+    },
+    {
+      "family": "PLA Silk",
+      "name_en": "Gold",
+      "name_de": "Gold",
+      "product_color_code": "13401",
+      "filament_id": "GFA05",
+      "short_color_code": "Y4",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#E5B03DFF"
+      ],
+      "swatches_rgb": [
+        "#E5B03D"
+      ]
+    },
+    {
+      "family": "PLA Silk+",
+      "name_en": "Baby Blue",
+      "name_de": "Babyblau",
+      "product_color_code": "13603",
+      "filament_id": "GFA06",
+      "short_color_code": "B0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#A8C6EEFF"
+      ],
+      "swatches_rgb": [
+        "#A8C6EE"
+      ]
+    },
+    {
+      "family": "PLA Silk+",
+      "name_en": "Blue",
+      "name_de": "Blau",
+      "product_color_code": "13604",
+      "filament_id": "GFA06",
+      "short_color_code": "B1",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#008BDAFF"
+      ],
+      "swatches_rgb": [
+        "#008BDA"
+      ]
+    },
+    {
+      "family": "PLA Silk+",
+      "name_en": "Titan Gray",
+      "name_de": "Titangrau",
+      "product_color_code": "13108",
+      "filament_id": "GFA06",
+      "short_color_code": "D0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#5F6367FF"
+      ],
+      "swatches_rgb": [
+        "#5F6367"
+      ]
+    },
+    {
+      "family": "PLA Silk+",
+      "name_en": "Silver",
+      "name_de": "Silber",
+      "product_color_code": "13109",
+      "filament_id": "GFA06",
+      "short_color_code": "D1",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#C8C8C8FF"
+      ],
+      "swatches_rgb": [
+        "#C8C8C8"
+      ]
+    },
+    {
+      "family": "PLA Silk+",
+      "name_en": "Candy Green",
+      "name_de": "Candy-Grün",
+      "product_color_code": "13506",
+      "filament_id": "GFA06",
+      "short_color_code": "G0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#018814FF"
+      ],
+      "swatches_rgb": [
+        "#018814"
+      ]
+    },
+    {
+      "family": "PLA Silk+",
+      "name_en": "Mint",
+      "name_de": "Minze",
+      "product_color_code": "13507",
+      "filament_id": "GFA06",
+      "short_color_code": "G1",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#96DCB9FF"
+      ],
+      "swatches_rgb": [
+        "#96DCB9"
+      ]
+    },
+    {
+      "family": "PLA Silk+",
+      "name_en": "Purple",
+      "name_de": "Lila",
+      "product_color_code": "13702",
+      "filament_id": "GFA06",
+      "short_color_code": "P0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#8671CBFF"
+      ],
+      "swatches_rgb": [
+        "#8671CB"
+      ]
+    },
+    {
+      "family": "PLA Silk+",
+      "name_en": "Candy Red",
+      "name_de": "Candy-Rot",
+      "product_color_code": "13205",
+      "filament_id": "GFA06",
+      "short_color_code": "R0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#D02727FF"
+      ],
+      "swatches_rgb": [
+        "#D02727"
+      ]
+    },
+    {
+      "family": "PLA Silk+",
+      "name_en": "Rose Gold",
+      "name_de": "Gold-Rosa",
+      "product_color_code": "13206",
+      "filament_id": "GFA06",
+      "short_color_code": "R1",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#BA9594FF"
+      ],
+      "swatches_rgb": [
+        "#BA9594"
+      ]
+    },
+    {
+      "family": "PLA Silk+",
+      "name_en": "Pink",
+      "name_de": "Pink",
+      "product_color_code": "13207",
+      "filament_id": "GFA06",
+      "short_color_code": "R2",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#F7ADA6FF"
+      ],
+      "swatches_rgb": [
+        "#F7ADA6"
+      ]
+    },
+    {
+      "family": "PLA Silk+",
+      "name_en": "White",
+      "name_de": "Weiß",
+      "product_color_code": "13110",
+      "filament_id": "GFA06",
+      "short_color_code": "W0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#FFFFFFFF"
+      ],
+      "swatches_rgb": [
+        "#FFFFFF"
+      ]
+    },
+    {
+      "family": "PLA Silk+",
+      "name_en": "Champagne",
+      "name_de": "Champagner",
+      "product_color_code": "13404",
+      "filament_id": "GFA06",
+      "short_color_code": "Y0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#F3CFB2FF"
+      ],
+      "swatches_rgb": [
+        "#F3CFB2"
+      ]
+    },
+    {
+      "family": "PLA Silk+",
+      "name_en": "Gold",
+      "name_de": "Gold",
+      "product_color_code": "13405",
+      "filament_id": "GFA06",
+      "short_color_code": "Y1",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#F4A925FF"
+      ],
+      "swatches_rgb": [
+        "#F4A925"
+      ]
+    },
+    {
+      "family": "PLA Marble",
+      "name_en": "White Marble",
+      "name_de": "Weißer Marmor",
+      "product_color_code": "13103",
+      "filament_id": "GFA07",
+      "short_color_code": "D4",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#F7F3F0FF"
+      ],
+      "swatches_rgb": [
+        "#F7F3F0"
+      ]
+    },
+    {
+      "family": "PLA Marble",
+      "name_en": "Red Granite",
+      "name_de": "Granitrot",
+      "product_color_code": "13201",
+      "filament_id": "GFA07",
+      "short_color_code": "R5",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#AD4E38FF"
+      ],
+      "swatches_rgb": [
+        "#AD4E38"
+      ]
+    },
+    {
+      "family": "PLA Sparkle",
+      "name_en": "Royal Purple Sparkle",
+      "name_de": "Glitzerndes Königslila",
+      "product_color_code": "13700",
+      "filament_id": "GFA08",
+      "short_color_code": "B7",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#483D8BFF"
+      ],
+      "swatches_rgb": [
+        "#483D8B"
+      ]
+    },
+    {
+      "family": "PLA Sparkle",
+      "name_en": "Slate Gray Sparkle",
+      "name_de": "Glitzerndes Schiefergrau",
+      "product_color_code": "13102",
+      "filament_id": "GFA08",
+      "short_color_code": "D5",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#8E9089FF"
+      ],
+      "swatches_rgb": [
+        "#8E9089"
+      ]
+    },
+    {
+      "family": "PLA Sparkle",
+      "name_en": "Alpine Green Sparkle",
+      "name_de": "Glitzerndes Alpengrün",
+      "product_color_code": "13501",
+      "filament_id": "GFA08",
+      "short_color_code": "G3",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#3F5443FF"
+      ],
+      "swatches_rgb": [
+        "#3F5443"
+      ]
+    },
+    {
+      "family": "PLA Sparkle",
+      "name_en": "Onyx Black Sparkle",
+      "name_de": "Glitzerndes Onyx-Schwarz",
+      "product_color_code": "13101",
+      "filament_id": "GFA08",
+      "short_color_code": "K2",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#2D2B28FF"
+      ],
+      "swatches_rgb": [
+        "#2D2B28"
+      ]
+    },
+    {
+      "family": "PLA Sparkle",
+      "name_en": "Crimson Red Sparkle",
+      "name_de": "Glitzerndes Karminrot",
+      "product_color_code": "13200",
+      "filament_id": "GFA08",
+      "short_color_code": "R2",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#792B36FF"
+      ],
+      "swatches_rgb": [
+        "#792B36"
+      ]
+    },
+    {
+      "family": "PLA Sparkle",
+      "name_en": "Classic Gold Sparkle",
+      "name_de": "Klassisches Glitzer-Gold",
+      "product_color_code": "13402",
+      "filament_id": "GFA08",
+      "short_color_code": "Y1",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#CEA629FF"
+      ],
+      "swatches_rgb": [
+        "#CEA629"
+      ]
+    },
+    {
+      "family": "PLA Tough",
+      "name_en": "Orange",
+      "name_de": "Orange",
+      "product_color_code": "12300",
+      "filament_id": "GFA09",
+      "short_color_code": "A0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#FF7F41FF"
+      ],
+      "swatches_rgb": [
+        "#FF7F41"
+      ]
+    },
+    {
+      "family": "PLA Tough",
+      "name_en": "Light Blue",
+      "name_de": "Hellblau",
+      "product_color_code": "12600",
+      "filament_id": "GFA09",
+      "short_color_code": "B4",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#0085ADFF"
+      ],
+      "swatches_rgb": [
+        "#0085AD"
+      ]
+    },
+    {
+      "family": "PLA Tough",
+      "name_en": "Lavender Blue",
+      "name_de": "Lavendelblau",
+      "product_color_code": "12700",
+      "filament_id": "GFA09",
+      "short_color_code": "B5",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#6667ABFF"
+      ],
+      "swatches_rgb": [
+        "#6667AB"
+      ]
+    },
+    {
+      "family": "PLA Tough",
+      "name_en": "Gray",
+      "name_de": "Grau",
+      "product_color_code": "12102",
+      "filament_id": "GFA09",
+      "short_color_code": "D0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#515A6CFF"
+      ],
+      "swatches_rgb": [
+        "#515A6C"
+      ]
+    },
+    {
+      "family": "PLA Tough",
+      "name_en": "Silver",
+      "name_de": "Silber",
+      "product_color_code": "12103",
+      "filament_id": "GFA09",
+      "short_color_code": "D1",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#898D8DFF"
+      ],
+      "swatches_rgb": [
+        "#898D8D"
+      ]
+    },
+    {
+      "family": "PLA Tough",
+      "name_en": "Pine Green",
+      "name_de": "Tannengrün",
+      "product_color_code": "12500",
+      "filament_id": "GFA09",
+      "short_color_code": "G4",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#00482BFF"
+      ],
+      "swatches_rgb": [
+        "#00482B"
+      ]
+    },
+    {
+      "family": "PLA Tough",
+      "name_en": "Black",
+      "name_de": "Schwarz",
+      "product_color_code": "12101",
+      "filament_id": "GFA09",
+      "short_color_code": "K0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#25282AFF"
+      ],
+      "swatches_rgb": [
+        "#25282A"
+      ]
+    },
+    {
+      "family": "PLA Tough",
+      "name_en": "Vermilion Red",
+      "name_de": "Zinnoberrot",
+      "product_color_code": "12200",
+      "filament_id": "GFA09",
+      "short_color_code": "R3",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#DD3C22FF"
+      ],
+      "swatches_rgb": [
+        "#DD3C22"
+      ]
+    },
+    {
+      "family": "PLA Tough",
+      "name_en": "White",
+      "name_de": "Weiß",
+      "product_color_code": "12100",
+      "filament_id": "GFA09",
+      "short_color_code": "W3",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#F9F7F4FF"
+      ],
+      "swatches_rgb": [
+        "#F9F7F4"
+      ]
+    },
+    {
+      "family": "PLA Tough",
+      "name_en": "Yellow",
+      "name_de": "Gelb",
+      "product_color_code": "12400",
+      "filament_id": "GFA09",
+      "short_color_code": "Y0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#FEDB00FF"
+      ],
+      "swatches_rgb": [
+        "#FEDB00"
+      ]
+    },
+    {
+      "family": "PLA Aero",
+      "name_en": "Gray",
+      "name_de": "Grau",
+      "product_color_code": "14104",
+      "filament_id": "GFA11",
+      "short_color_code": "D0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#CDCECAFF"
+      ],
+      "swatches_rgb": [
+        "#CDCECA"
+      ]
+    },
+    {
+      "family": "PLA Aero",
+      "name_en": "Black",
+      "name_de": "Schwarz",
+      "product_color_code": "14103",
+      "filament_id": "GFA11",
+      "short_color_code": "K0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#000000FF"
+      ],
+      "swatches_rgb": [
+        "#000000"
+      ]
+    },
+    {
+      "family": "PLA Aero",
+      "name_en": "White",
+      "name_de": "Weiß",
+      "product_color_code": "14102",
+      "filament_id": "GFA11",
+      "short_color_code": "W0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#FFFFFFFF"
+      ],
+      "swatches_rgb": [
+        "#FFFFFF"
+      ]
+    },
+    {
+      "family": "PLA Glow",
+      "name_en": "Glow Orange",
+      "name_de": "Leuchtend-Orange",
+      "product_color_code": "15300",
+      "filament_id": "GFA12",
+      "short_color_code": "A0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#FF9D5BFF"
+      ],
+      "swatches_rgb": [
+        "#FF9D5B"
+      ]
+    },
+    {
+      "family": "PLA Glow",
+      "name_en": "Glow Blue",
+      "name_de": "Leuchtend-Blau",
+      "product_color_code": "15600",
+      "filament_id": "GFA12",
+      "short_color_code": "B0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#7AC0E9FF"
+      ],
+      "swatches_rgb": [
+        "#7AC0E9"
+      ]
+    },
+    {
+      "family": "PLA Glow",
+      "name_en": "Glow Green",
+      "name_de": "Leuchtend-Grün",
+      "product_color_code": "15500",
+      "filament_id": "GFA12",
+      "short_color_code": "G0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#A1FFACFF"
+      ],
+      "swatches_rgb": [
+        "#A1FFAC"
+      ]
+    },
+    {
+      "family": "PLA Glow",
+      "name_en": "Glow Pink",
+      "name_de": "Leuchtend-Pink",
+      "product_color_code": "15200",
+      "filament_id": "GFA12",
+      "short_color_code": "R0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#F17B8FFF"
+      ],
+      "swatches_rgb": [
+        "#F17B8F"
+      ]
+    },
+    {
+      "family": "PLA Glow",
+      "name_en": "Glow Yellow",
+      "name_de": "Leuchtend-Gelb",
+      "product_color_code": "15400",
+      "filament_id": "GFA12",
+      "short_color_code": "Y0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#F8FF80FF"
+      ],
+      "swatches_rgb": [
+        "#F8FF80"
+      ]
+    },
+    {
+      "family": "PLA Dynamic",
+      "name_en": "UV Color Changing - White to Coral",
+      "name_de": "UV-Farbwechsel – Weiß nach Koralle",
+      "product_color_code": "15100",
+      "filament_id": "GFA13",
+      "short_color_code": "W0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#FFFFFFFF"
+      ],
+      "swatches_rgb": [
+        "#FFFFFF"
+      ]
+    },
+    {
+      "family": "PLA Galaxy",
+      "name_en": "Purple",
+      "name_de": "Lila",
+      "product_color_code": "13602",
+      "filament_id": "GFA15",
+      "short_color_code": "B0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#594177FF"
+      ],
+      "swatches_rgb": [
+        "#594177"
+      ]
+    },
+    {
+      "family": "PLA Galaxy",
+      "name_en": "Green",
+      "name_de": "Grün",
+      "product_color_code": "13503",
+      "filament_id": "GFA15",
+      "short_color_code": "G0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#3B665EFF"
+      ],
+      "swatches_rgb": [
+        "#3B665E"
+      ]
+    },
+    {
+      "family": "PLA Galaxy",
+      "name_en": "Nebulae",
+      "name_de": "Nebel",
+      "product_color_code": "13504",
+      "filament_id": "GFA15",
+      "short_color_code": "G1",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#424379FF"
+      ],
+      "swatches_rgb": [
+        "#424379"
+      ]
+    },
+    {
+      "family": "PLA Galaxy",
+      "name_en": "Brown",
+      "name_de": "Braun",
+      "product_color_code": "13203",
+      "filament_id": "GFA15",
+      "short_color_code": "R0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#684A43FF"
+      ],
+      "swatches_rgb": [
+        "#684A43"
+      ]
+    },
+    {
+      "family": "PLA Wood",
+      "name_en": "Classic Birch",
+      "name_de": "Klassische Birke",
+      "product_color_code": "13505",
+      "filament_id": "GFA16",
+      "short_color_code": "G0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#918669FF"
+      ],
+      "swatches_rgb": [
+        "#918669"
+      ]
+    },
+    {
+      "family": "PLA Wood",
+      "name_en": "Black Walnut",
+      "name_de": "Schwarze Walnuss",
+      "product_color_code": "13107",
+      "filament_id": "GFA16",
+      "short_color_code": "K0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#4F3F24FF"
+      ],
+      "swatches_rgb": [
+        "#4F3F24"
+      ]
+    },
+    {
+      "family": "PLA Wood",
+      "name_en": "Clay Brown",
+      "name_de": "Lehmbraun",
+      "product_color_code": "13801",
+      "filament_id": "GFA16",
+      "short_color_code": "N0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#995F11FF"
+      ],
+      "swatches_rgb": [
+        "#995F11"
+      ]
+    },
+    {
+      "family": "PLA Wood",
+      "name_en": "Rosewood",
+      "name_de": "Rosenholz",
+      "product_color_code": "13204",
+      "filament_id": "GFA16",
+      "short_color_code": "R0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#4C241CFF"
+      ],
+      "swatches_rgb": [
+        "#4C241C"
+      ]
+    },
+    {
+      "family": "PLA Wood",
+      "name_en": "White Oak",
+      "name_de": "Weiße Eiche",
+      "product_color_code": "13106",
+      "filament_id": "GFA16",
+      "short_color_code": "W0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#D6CCA3FF"
+      ],
+      "swatches_rgb": [
+        "#D6CCA3"
+      ]
+    },
+    {
+      "family": "PLA Wood",
+      "name_en": "Ochre Yellow",
+      "name_de": "Ockergelb",
+      "product_color_code": "13403",
+      "filament_id": "GFA16",
+      "short_color_code": "Y0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#C98935FF"
+      ],
+      "swatches_rgb": [
+        "#C98935"
+      ]
+    },
+    {
+      "family": "PLA-CF",
+      "name_en": "Royal Blue",
+      "name_de": "Königsblau",
+      "product_color_code": "14601",
+      "filament_id": "GFA50",
+      "short_color_code": "B6",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#2842ADFF"
+      ],
+      "swatches_rgb": [
+        "#2842AD"
+      ]
+    },
+    {
+      "family": "PLA-CF",
+      "name_en": "Jeans Blue",
+      "name_de": "Jeansblau",
+      "product_color_code": "14600",
+      "filament_id": "GFA50",
+      "short_color_code": "B9",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#6e88bcFF"
+      ],
+      "swatches_rgb": [
+        "#6e88bc"
+      ]
+    },
+    {
+      "family": "PLA-CF",
+      "name_en": "Lava Gray",
+      "name_de": "Lava-Grau",
+      "product_color_code": "14101",
+      "filament_id": "GFA50",
+      "short_color_code": "D6",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#4d5054FF"
+      ],
+      "swatches_rgb": [
+        "#4d5054"
+      ]
+    },
+    {
+      "family": "PLA-CF",
+      "name_en": "Matcha Green",
+      "name_de": "Matcha-Grün",
+      "product_color_code": "14500",
+      "filament_id": "GFA50",
+      "short_color_code": "G7",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#5c9748FF"
+      ],
+      "swatches_rgb": [
+        "#5c9748"
+      ]
+    },
+    {
+      "family": "PLA-CF",
+      "name_en": "Black",
+      "name_de": "Schwarz",
+      "product_color_code": "14100",
+      "filament_id": "GFA50",
+      "short_color_code": "K0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#000000FF"
+      ],
+      "swatches_rgb": [
+        "#000000"
+      ]
+    },
+    {
+      "family": "PLA-CF",
+      "name_en": "Iris Purple",
+      "name_de": "Iris-Violett",
+      "product_color_code": "14700",
+      "filament_id": "GFA50",
+      "short_color_code": "P7",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#69398EFF"
+      ],
+      "swatches_rgb": [
+        "#69398E"
+      ]
+    },
+    {
+      "family": "PLA-CF",
+      "name_en": "Burgundy Red",
+      "name_de": "Burgunderrot",
+      "product_color_code": "14200",
+      "filament_id": "GFA50",
+      "short_color_code": "R4",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#951e23FF"
+      ],
+      "swatches_rgb": [
+        "#951e23"
+      ]
+    },
+    {
+      "family": "PLA Lite",
+      "name_en": "Black",
+      "name_de": "Black",
+      "product_color_code": "16100",
+      "filament_id": "GFA18",
+      "short_color_code": "K0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#000000FF"
+      ],
+      "swatches_rgb": [
+        "#000000"
+      ]
+    },
+    {
+      "family": "PLA Lite",
+      "name_en": "Yellow",
+      "name_de": "Yellow",
+      "product_color_code": "16400",
+      "filament_id": "GFA18",
+      "short_color_code": "Y0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#EFE255FF"
+      ],
+      "swatches_rgb": [
+        "#EFE255"
+      ]
+    },
+    {
+      "family": "PLA Lite",
+      "name_en": "White",
+      "name_de": "White",
+      "product_color_code": "16103",
+      "filament_id": "GFA18",
+      "short_color_code": "W0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#FFFFFFFF"
+      ],
+      "swatches_rgb": [
+        "#FFFFFF"
+      ]
+    },
+    {
+      "family": "PLA Lite",
+      "name_en": "Cyan",
+      "name_de": "Cyan",
+      "product_color_code": "16600",
+      "filament_id": "GFA18",
+      "short_color_code": "B0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#4DAFDAFF"
+      ],
+      "swatches_rgb": [
+        "#4DAFDA"
+      ]
+    },
+    {
+      "family": "PLA Lite",
+      "name_en": "Red",
+      "name_de": "Red",
+      "product_color_code": "16200",
+      "filament_id": "GFA18",
+      "short_color_code": "R0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#C6001AFF"
+      ],
+      "swatches_rgb": [
+        "#C6001A"
+      ]
+    },
+    {
+      "family": "PLA Lite",
+      "name_en": "Gray",
+      "name_de": "Grau",
+      "product_color_code": "16101",
+      "filament_id": "GFA18",
+      "short_color_code": "D0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#999D9DFF"
+      ],
+      "swatches_rgb": [
+        "#999D9D"
+      ]
+    },
+    {
+      "family": "PLA Translucent",
+      "name_en": "Red",
+      "name_de": "Red",
+      "product_color_code": "13210",
+      "filament_id": "GFA17",
+      "short_color_code": "R0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#B5001180"
+      ],
+      "swatches_rgb": [
+        "#B50011"
+      ]
+    },
+    {
+      "family": "PLA Translucent",
+      "name_en": "Cherry Pink",
+      "name_de": "Cherry Pink",
+      "product_color_code": "13211",
+      "filament_id": "GFA17",
+      "short_color_code": "R1",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#F5B6CD80"
+      ],
+      "swatches_rgb": [
+        "#F5B6CD"
+      ]
+    },
+    {
+      "family": "PLA Translucent",
+      "name_en": "Orange",
+      "name_de": "Orange",
+      "product_color_code": "13301",
+      "filament_id": "GFA17",
+      "short_color_code": "A0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#F74E0280"
+      ],
+      "swatches_rgb": [
+        "#F74E02"
+      ]
+    },
+    {
+      "family": "PLA Translucent",
+      "name_en": "Mellow Yellow",
+      "name_de": "Mellow Yellow",
+      "product_color_code": "13410",
+      "filament_id": "GFA17",
+      "short_color_code": "Y0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#F5DBAB80"
+      ],
+      "swatches_rgb": [
+        "#F5DBAB"
+      ]
+    },
+    {
+      "family": "PLA Translucent",
+      "name_en": "Light Jade",
+      "name_de": "Light Jade",
+      "product_color_code": "13510",
+      "filament_id": "GFA17",
+      "short_color_code": "G0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#96D8AF80"
+      ],
+      "swatches_rgb": [
+        "#96D8AF"
+      ]
+    },
+    {
+      "family": "PLA Translucent",
+      "name_en": "Ice Blue",
+      "name_de": "Ice Blue",
+      "product_color_code": "13610",
+      "filament_id": "GFA17",
+      "short_color_code": "B0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#B8CDE980"
+      ],
+      "swatches_rgb": [
+        "#B8CDE9"
+      ]
+    },
+    {
+      "family": "PLA Translucent",
+      "name_en": "Blue",
+      "name_de": "Blue",
+      "product_color_code": "13611",
+      "filament_id": "GFA17",
+      "short_color_code": "B1",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#0047BB80"
+      ],
+      "swatches_rgb": [
+        "#0047BB"
+      ]
+    },
+    {
+      "family": "PLA Translucent",
+      "name_en": "Teal",
+      "name_de": "Teal",
+      "product_color_code": "13612",
+      "filament_id": "GFA17",
+      "short_color_code": "B2",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#009FA180"
+      ],
+      "swatches_rgb": [
+        "#009FA1"
+      ]
+    },
+    {
+      "family": "PLA Translucent",
+      "name_en": "Purple",
+      "name_de": "Purple",
+      "product_color_code": "13710",
+      "filament_id": "GFA17",
+      "short_color_code": "P0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#8344B080"
+      ],
+      "swatches_rgb": [
+        "#8344B0"
+      ]
+    },
+    {
+      "family": "PLA Translucent",
+      "name_en": "Lavender",
+      "name_de": "Lavender",
+      "product_color_code": "13711",
+      "filament_id": "GFA17",
+      "short_color_code": "P1",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#B8ACD680"
+      ],
+      "swatches_rgb": [
+        "#B8ACD6"
+      ]
+    },
+    {
+      "family": "PLA Silk",
+      "name_en": "South Beach",
+      "name_de": "South Beach",
+      "product_color_code": "13906",
+      "filament_id": "GFA05",
+      "short_color_code": "M1",
+      "color_type_original": "渐变色",
+      "swatches_rgba": [
+        "#F772A4FF",
+        "#00918BFF"
+      ],
+      "swatches_rgb": [
+        "#F772A4",
+        "#00918B"
+      ]
+    },
+    {
+      "family": "PLA Silk",
+      "name_en": "Aurora Purple",
+      "name_de": "Aurora Purple",
+      "product_color_code": "13909",
+      "filament_id": "GFA05",
+      "short_color_code": "M4",
+      "color_type_original": "渐变色",
+      "swatches_rgba": [
+        "#7F3696FF",
+        "#006EC9FF"
+      ],
+      "swatches_rgb": [
+        "#7F3696",
+        "#006EC9"
+      ]
+    },
+    {
+      "family": "PLA Silk",
+      "name_en": "Dawn Radiance",
+      "name_de": "Dawn Radiance",
+      "product_color_code": "13912",
+      "filament_id": "GFA05",
+      "short_color_code": "M8",
+      "color_type_original": "渐变色",
+      "swatches_rgba": [
+        "#EC984CFF",
+        "#6CD4BCFF",
+        "#A66EB9FF",
+        "#D87694FF"
+      ],
+      "swatches_rgb": [
+        "#EC984C",
+        "#6CD4BC",
+        "#A66EB9",
+        "#D87694"
+      ]
+    },
+    {
+      "family": "PLA Tough+",
+      "name_en": "Black",
+      "name_de": "Black",
+      "product_color_code": "12104",
+      "filament_id": "GFA10",
+      "short_color_code": "K0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#000000FF"
+      ],
+      "swatches_rgb": [
+        "#000000"
+      ]
+    },
+    {
+      "family": "PLA Tough+",
+      "name_en": "Gray",
+      "name_de": "Gray",
+      "product_color_code": "12105",
+      "filament_id": "GFA10",
+      "short_color_code": "D0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#AFB1AEFF"
+      ],
+      "swatches_rgb": [
+        "#AFB1AE"
+      ]
+    },
+    {
+      "family": "PLA Tough+",
+      "name_en": "Silver",
+      "name_de": "Silver",
+      "product_color_code": "12106",
+      "filament_id": "GFA10",
+      "short_color_code": "D1",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#959698FF"
+      ],
+      "swatches_rgb": [
+        "#959698"
+      ]
+    },
+    {
+      "family": "PLA Tough+",
+      "name_en": "White",
+      "name_de": "White",
+      "product_color_code": "12107",
+      "filament_id": "GFA10",
+      "short_color_code": "W0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#FFFFFFFF"
+      ],
+      "swatches_rgb": [
+        "#FFFFFF"
+      ]
+    },
+    {
+      "family": "PLA Tough+",
+      "name_en": "Orange",
+      "name_de": "Orange",
+      "product_color_code": "12301",
+      "filament_id": "GFA10",
+      "short_color_code": "A0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#DC3A27FF"
+      ],
+      "swatches_rgb": [
+        "#DC3A27"
+      ]
+    },
+    {
+      "family": "PLA Tough+",
+      "name_en": "Yellow",
+      "name_de": "Yellow",
+      "product_color_code": "12401",
+      "filament_id": "GFA10",
+      "short_color_code": "Y0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#F4D53FFF"
+      ],
+      "swatches_rgb": [
+        "#F4D53F"
+      ]
+    },
+    {
+      "family": "PLA Tough+",
+      "name_en": "Cyan",
+      "name_de": "Cyan",
+      "product_color_code": "12601",
+      "filament_id": "GFA10",
+      "short_color_code": "B0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#009BD8FF"
+      ],
+      "swatches_rgb": [
+        "#009BD8"
+      ]
+    },
+    {
+      "family": "PLA Metal",
+      "name_en": "Iron Gray Metallic",
+      "name_de": "Iron Gray Metallic",
+      "product_color_code": "13100",
+      "filament_id": "GFA02",
+      "short_color_code": "D2",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#43403DFF"
+      ],
+      "swatches_rgb": [
+        "#43403D"
+      ]
+    },
+    {
+      "family": "PLA Metal",
+      "name_en": "Iridium Gold Metallic",
+      "name_de": "Iridium Gold Metallic",
+      "product_color_code": "13400",
+      "filament_id": "GFA02",
+      "short_color_code": "Y1",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#B39B84FF"
+      ],
+      "swatches_rgb": [
+        "#B39B84"
+      ]
+    },
+    {
+      "family": "PLA Metal",
+      "name_en": "Oxide Green Metallic",
+      "name_de": "Oxide Green Metallic",
+      "product_color_code": "13500",
+      "filament_id": "GFA02",
+      "short_color_code": "G2",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#1D7C6AFF"
+      ],
+      "swatches_rgb": [
+        "#1D7C6A"
+      ]
+    },
+    {
+      "family": "PLA Metal",
+      "name_en": "Cobalt Blue Metallic",
+      "name_de": "Cobalt Blue Metallic",
+      "product_color_code": "13600",
+      "filament_id": "GFA02",
+      "short_color_code": "B2",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#39699EFF"
+      ],
+      "swatches_rgb": [
+        "#39699E"
+      ]
+    },
+    {
+      "family": "PLA Metal",
+      "name_en": "Copper Brown Metallic",
+      "name_de": "Copper Brown Metallic",
+      "product_color_code": "13800",
+      "filament_id": "GFA02",
+      "short_color_code": "N3",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#AA6443FF"
+      ],
+      "swatches_rgb": [
+        "#AA6443"
+      ]
+    },
+    {
+      "family": "PLA Lite",
+      "name_en": "Blue",
+      "name_de": "Blue",
+      "product_color_code": "16601",
+      "filament_id": "GFA18",
+      "short_color_code": "B1",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#004EA8FF"
+      ],
+      "swatches_rgb": [
+        "#004EA8"
+      ]
+    },
+    {
+      "family": "PLA Lite",
+      "name_en": "Sunflower Yellow",
+      "name_de": "Sunflower Yellow",
+      "product_color_code": "16401",
+      "filament_id": "GFA18",
+      "short_color_code": "Y1",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#FFB549FF"
+      ],
+      "swatches_rgb": [
+        "#FFB549"
+      ]
+    },
+    {
+      "family": "PLA Lite",
+      "name_en": "Green",
+      "name_de": "Green",
+      "product_color_code": "16501",
+      "filament_id": "GFA18",
+      "short_color_code": "G1",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#00BB31FF"
+      ],
+      "swatches_rgb": [
+        "#00BB31"
+      ]
+    },
+    {
+      "family": "PLA Lite",
+      "name_en": "Orange",
+      "name_de": "Orange",
+      "product_color_code": "16301",
+      "filament_id": "GFA18",
+      "short_color_code": "A1",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#FF671FFF"
+      ],
+      "swatches_rgb": [
+        "#FF671F"
+      ]
+    },
+    {
+      "family": "PLA Lite",
+      "name_en": "Matte Beige",
+      "name_de": "Matte Beige",
+      "product_color_code": "16700",
+      "filament_id": "GFA18",
+      "short_color_code": "P0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#ECC3B2FF"
+      ],
+      "swatches_rgb": [
+        "#ECC3B2"
+      ]
+    },
+    {
+      "family": "PLA Lite",
+      "name_en": "Cocoa Brown",
+      "name_de": "Cocoa Brown",
+      "product_color_code": "16800",
+      "filament_id": "GFA18",
+      "short_color_code": "N0",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#745335FF"
+      ],
+      "swatches_rgb": [
+        "#745335"
+      ]
+    },
+    {
+      "family": "PLA Lite",
+      "name_en": "Dark Gray",
+      "name_de": "Dark Gray",
+      "product_color_code": "16102",
+      "filament_id": "GFA18",
+      "short_color_code": "D1",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#8c8b8cFF"
+      ],
+      "swatches_rgb": [
+        "#8c8b8c"
+      ]
+    },
+    {
+      "family": "PLA Silk",
+      "name_en": "Mystic Magenta",
+      "name_de": "Mystic Magenta",
+      "product_color_code": "13913",
+      "filament_id": "GFA05",
+      "short_color_code": "T7",
+      "color_type_original": "多拼色",
+      "swatches_rgba": [
+        "#720062FF",
+        "#3a913fFF"
+      ],
+      "swatches_rgb": [
+        "#720062",
+        "#3a913f"
+      ]
+    },
+    {
+      "family": "PLA Silk",
+      "name_en": "Phantom Blue",
+      "name_de": "Phantom Blue",
+      "product_color_code": "13916",
+      "filament_id": "GFA05",
+      "short_color_code": "T9",
+      "color_type_original": "多拼色",
+      "swatches_rgba": [
+        "#00629bFF",
+        "#000000FF"
+      ],
+      "swatches_rgb": [
+        "#00629b",
+        "#000000"
+      ]
+    },
+    {
+      "family": "PLA Pure",
+      "name_en": "Pure White",
+      "name_de": "Pure White",
+      "product_color_code": "17100",
+      "filament_id": "GFA19",
+      "short_color_code": "W00",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#FFFFFFFF"
+      ],
+      "swatches_rgb": [
+        "#FFFFFF"
+      ]
+    },
+    {
+      "family": "PLA Pure",
+      "name_en": "Absolute Black",
+      "name_de": "Absolute Black",
+      "product_color_code": "17101",
+      "filament_id": "GFA19",
+      "short_color_code": "K00",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#000000FF"
+      ],
+      "swatches_rgb": [
+        "#000000"
+      ]
+    },
+    {
+      "family": "PLA Pure",
+      "name_en": "Milky Pink",
+      "name_de": "Milky Pink",
+      "product_color_code": "17200",
+      "filament_id": "GFA19",
+      "short_color_code": "P00",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#f7ced7FF"
+      ],
+      "swatches_rgb": [
+        "#f7ced7"
+      ]
+    },
+    {
+      "family": "PLA Pure",
+      "name_en": "Baby Blue",
+      "name_de": "Baby Blue",
+      "product_color_code": "17600",
+      "filament_id": "GFA19",
+      "short_color_code": "B00",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#a4dbe8FF"
+      ],
+      "swatches_rgb": [
+        "#a4dbe8"
+      ]
+    },
+    {
+      "family": "PLA Pure",
+      "name_en": "Apricot",
+      "name_de": "Apricot",
+      "product_color_code": "17300",
+      "filament_id": "GFA19",
+      "short_color_code": "A00",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#ffb673FF"
+      ],
+      "swatches_rgb": [
+        "#ffb673"
+      ]
+    },
+    {
+      "family": "PLA Palette",
+      "name_en": "Cyan",
+      "name_de": "Cyan",
+      "product_color_code": "18600",
+      "filament_id": "GFA20",
+      "short_color_code": "B00",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#0090daFF"
+      ],
+      "swatches_rgb": [
+        "#0090da"
+      ]
+    },
+    {
+      "family": "PLA Palette",
+      "name_en": "Magenta",
+      "name_de": "Magenta",
+      "product_color_code": "18200",
+      "filament_id": "GFA20",
+      "short_color_code": "R00",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#E24585FF"
+      ],
+      "swatches_rgb": [
+        "#E24585"
+      ]
+    },
+    {
+      "family": "PLA Palette",
+      "name_en": "Yellow",
+      "name_de": "Yellow",
+      "product_color_code": "18400",
+      "filament_id": "GFA20",
+      "short_color_code": "Y00",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#fce300FF"
+      ],
+      "swatches_rgb": [
+        "#fce300"
+      ]
+    },
+    {
+      "family": "PLA Palette",
+      "name_en": "White",
+      "name_de": "White",
+      "product_color_code": "18100",
+      "filament_id": "GFA20",
+      "short_color_code": "W00",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#ffffffFF"
+      ],
+      "swatches_rgb": [
+        "#ffffff"
+      ]
+    },
+    {
+      "family": "PLA Palette",
+      "name_en": "Key",
+      "name_de": "Key",
+      "product_color_code": "18101",
+      "filament_id": "GFA20",
+      "short_color_code": "K00",
+      "color_type_original": "单色",
+      "swatches_rgba": [
+        "#000000FF"
+      ],
+      "swatches_rgb": [
+        "#000000"
+      ]
+    }
+  ]
+}
